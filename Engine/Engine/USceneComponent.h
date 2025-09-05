@@ -7,20 +7,30 @@ class USceneComponent : public UActorComponent
 public:
 	USceneComponent();
 	virtual ~USceneComponent();
-
-	// ======= 연산 관련 =========
-	FVector GetWorldLocation();
-	FVector SetWorldLocation(FVector Location);
-
-	// ======== 부모 컴포넌트에 해당 컴포넌트를 부착 ========
-	void AttachToComponent(USceneComponent* parent);
+  
+	void AttachToComponent(USceneComponent* parent); // 부모 컴포넌트에 나의 컴포넌트 부착
 	
-public:
+	void SetRelativeLocation(FVector relativeLocation);
+	void SetRelativeRotation(FVector relativeRotaition);
+	void SetRelativeScale3D(FVector relativeScale3D);
+
+	FVector GetRelativeLocation();
+	FVector GetRelativeRotation();
+	FVector GetRelativeScale3D();
+
+	FVector GetWorldLocation();
+	FVector GetWorldRotation();
+	FVector GetWorldScale3D();
+
+	void UpdateWorldTransform();
+private:
 	FVector RelativeLocation;
 	FVector RelativeRotation;
 	FVector RelativeScale3D;
-
+	FMatrix ModelMatrix;
 protected:
-	USceneComponent* ParentComponent;			// 계층 구조 관리를 위함 (언리얼에서는 Component간의 계층구조)
-	TArray<USceneComponent*> ChildComponents;   // 계층 구조 관리를 위함
+	// Component간의 계층 구조를 위한 멤버들
+	USceneComponent* ParentComponent; // nullptr이면 해당 컴포넌트가 루트
+	TArray<USceneComponent*> ChildComponents; 
+
 };
