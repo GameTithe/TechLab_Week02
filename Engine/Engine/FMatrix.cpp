@@ -383,7 +383,7 @@ FMatrix FMatrix::MakeLookAt(FVector eye, FVector at, FVector up)
 
 	FMatrix T_inv(
 		FVector4(1, 0, 0, -eye.X),
-		FVector4(0, 1, 0, eye.Y),
+		FVector4(0, 1, 0, -eye.Y),
 		FVector4(0, 0, 1, -eye.Z),
 		FVector4(0, 0, 0, 1)
 	);
