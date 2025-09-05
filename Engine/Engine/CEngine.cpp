@@ -142,6 +142,9 @@ bool CEngine::Run()
 			}
 		}
 
+		Update(ImGui::GetIO().DeltaTime); // Update
+		Render(); // Render
+
 		//basic movement  
 
 		// ImGui Update
@@ -156,9 +159,7 @@ bool CEngine::Run()
 		UpdateGUI(); // 추가적으로 사용할 GUI
 
 		ImGui::End();
-		Update(ImGui::GetIO().DeltaTime); // Update
 
-		Render(); // Render
 
 		ImGui::Render();
 

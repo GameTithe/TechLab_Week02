@@ -85,7 +85,7 @@ private:
 
 
 private:
-	bool m_bIsRunning;
+	//bool m_bIsRunning;
 	unsigned int Stride = 0;
 
 	D3D11_VIEWPORT ViewportInfo;
