@@ -1,3 +1,4 @@
+#include "ConsoleWindow.h"
 #include "CEngine.h"
 
 #include <windows.h>
@@ -20,7 +21,7 @@
 #include "FVertex.h"
 #include "FVector.h"
 
-//Å×½ºÆ®¿ë
+//ï¿½×½ï¿½Æ®ï¿½ï¿½
 FVertex triangle_vertices[] =
 {
 	{  {0.0f,  1.0f, 0.0f},  {1.0f, 0.0f, 0.0f, 1.0f} }, // Top vertex (red)
@@ -31,7 +32,7 @@ FVertex triangle_vertices[] =
 extern LRESULT ImGui_ImplWin32_WndProcHandler(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
 CEngine* gpCEngine = nullptr;
-// °¢Á¾ ¸Þ¼¼Áö¸¦ Ã³¸®ÇÒ ÇÔ¼ö
+// ï¿½ï¿½ï¿½ï¿½ ï¿½Þ¼ï¿½ï¿½ï¿½ï¿½ï¿½ Ã³ï¿½ï¿½ï¿½ï¿½ ï¿½Ô¼ï¿½
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
 	return gpCEngine->MsgProc(hWnd, message, wParam, lParam);
@@ -69,7 +70,7 @@ CEngine::~CEngine()
 	gpCEngine = nullptr;
 
 	//delete PCurrentScene;
-	// ¿©±â¿¡¼­ ImGui ¼Ò¸ê
+	// ï¿½ï¿½ï¿½â¿¡ï¿½ï¿½ ImGui ï¿½Ò¸ï¿½
 	ImGui_ImplDX11_Shutdown();
 	ImGui_ImplWin32_Shutdown();
 	ImGui::DestroyContext();
@@ -102,7 +103,7 @@ void CEngine::UpdateGUI()
 	/*ImGui_ImplDX11_NewFrame();
 	ImGui_ImplWin32_NewFrame();
 	ImGui::NewFrame();*/
-	// ImGui UI ÄÁÆ®·Ñ Ãß°¡´Â ImGui::NewFrame()°ú ImGui::Render() »çÀÌ¿¡
+	// ImGui UI ï¿½ï¿½Æ®ï¿½ï¿½ ï¿½ß°ï¿½ï¿½ï¿½ ImGui::NewFrame()ï¿½ï¿½ ImGui::Render() ï¿½ï¿½ï¿½Ì¿ï¿½
 	/*ImGui::Begin("Jungle Property Window");
 	ImGui::Text("Hello Jungle World!");*/
 	//ImGui TODO 
@@ -136,7 +137,7 @@ bool CEngine::Run()
 
 		MSG msg;
 
-		//¸Þ½ÃÁö Å¥¿¡¼­ msg¸¦ ²¨³»¿À°í Å¥¿¡¼­ Á¦°ÅÇÔ 
+		//ï¿½Þ½ï¿½ï¿½ï¿½ Å¥ï¿½ï¿½ï¿½ï¿½ msgï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Å¥ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ 
 		while (PeekMessageW(&msg, NULL, 0, 0, PM_REMOVE))
 		{
 			TranslateMessage(&msg);
@@ -160,20 +161,22 @@ bool CEngine::Run()
 		ImGui_ImplWin32_NewFrame();
 		ImGui::NewFrame();
 
-		// ImGui UI ÄÁÆ®·Ñ Ãß°¡´Â ImGui::NewFrame()°ú ImGui::Render() »çÀÌ¿¡
+		// ImGui UI ï¿½ï¿½Æ®ï¿½ï¿½ ï¿½ß°ï¿½ï¿½ï¿½ ImGui::NewFrame()ï¿½ï¿½ ImGui::Render() ï¿½ï¿½ï¿½Ì¿ï¿½
 		ImGui::Begin("Jungle Property Window");
 		ImGui::Text("Hello Jungle World!");
 
-		UpdateGUI(); // Ãß°¡ÀûÀ¸·Î »ç¿ëÇÒ GUI
+		UpdateGUI(); // ï¿½ß°ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ GUI
 
 		ImGui::End();
 
+        bool bConsoleDraw = true;
+        ShowExampleAppConsole(&bConsoleDraw);
 
 		ImGui::Render();
 
 		ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
 
-		SwapChain->Present(1, 0); // È­¸é Ç¥½Ã
+		SwapChain->Present(1, 0); // È­ï¿½ï¿½ Ç¥ï¿½ï¿½
 	}
 
 	return true;
@@ -181,19 +184,19 @@ bool CEngine::Run()
 
 bool CEngine::InitWindow(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nShowCmd)
 {
-	// À©µµ¿ì Å¬·¡½º ÀÌ¸§
+	// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Å¬ï¿½ï¿½ï¿½ï¿½ ï¿½Ì¸ï¿½
 	WCHAR WindowClass[] = L"JungleWindowClass";
 
-	// À©µµ¿ì Å¸ÀÌÆ²¹Ù ÀÌ¸§
+	// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Å¸ï¿½ï¿½Æ²ï¿½ï¿½ ï¿½Ì¸ï¿½
 	WCHAR Title[] = L"Game Tech Lab";
 
-	// °¢Á¾ ¸Þ¼¼Áö¸¦ Ã³¸®ÇÒ ÇÔ¼öÀÎ WndProcÀÇ ÇÔ¼ö Æ÷ÀÎÅÍ¸¦ WindowClass ±¸Á¶Ã¼¿¡ µî·Ï
+	// ï¿½ï¿½ï¿½ï¿½ ï¿½Þ¼ï¿½ï¿½ï¿½ï¿½ï¿½ Ã³ï¿½ï¿½ï¿½ï¿½ ï¿½Ô¼ï¿½ï¿½ï¿½ WndProcï¿½ï¿½ ï¿½Ô¼ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Í¸ï¿½ WindowClass ï¿½ï¿½ï¿½ï¿½Ã¼ï¿½ï¿½ ï¿½ï¿½ï¿½
 	WNDCLASSW wndClass = { 0, WndProc, 0, 0, 0, 0, 0, 0, 0, WindowClass };
 
-	// À©µµ¿ì Å¬·¡½º µî·Ï
+	// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Å¬ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½
 	RegisterClassW(&wndClass);
 
-	// 1024 * 1024 Å©±âÀÇ À©µµ¿ì »ý¼º
+	// 1024 * 1024 Å©ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 	HWnd = CreateWindowExW(0, WindowClass, Title, WS_POPUP | WS_VISIBLE | WS_OVERLAPPEDWINDOW,
 		CW_USEDEFAULT, CW_USEDEFAULT, 1024, 1024, nullptr, nullptr, hInstance, nullptr);
 
@@ -209,10 +212,10 @@ bool CEngine::InitD3D()
 
 	CreateRasterizerState();
 
-	// vs, ps, InputLayout »ý¼º
+	// vs, ps, InputLayout ï¿½ï¿½ï¿½ï¿½
 	CreateShader();
 
-	// Å×½ºÆ®¿ë ÀÓ½Ã
+	// ï¿½×½ï¿½Æ®ï¿½ï¿½ ï¿½Ó½ï¿½
 	CreateConstantBuffer();
 	CreateVertexBuffer(triangle_vertices, sizeof(triangle_vertices));
 
@@ -232,43 +235,43 @@ bool CEngine::InitImGui()
 
 void CEngine::CreateDeviceAndSwapChain(HWND hWindow)
 {
-	// Áö¿øÇÏ´Â Direct3D ±â´É ·¹º§À» Á¤ÀÇ
+	// ï¿½ï¿½ï¿½ï¿½ï¿½Ï´ï¿½ Direct3D ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 	D3D_FEATURE_LEVEL featurelevels[] = { D3D_FEATURE_LEVEL_11_0 };
 
-	// ½º¿Ò Ã¼ÀÎ ¼³Á¤ ±¸Á¶Ã¼ ÃÊ±âÈ­
+	// ï¿½ï¿½ï¿½ï¿½ Ã¼ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Ã¼ ï¿½Ê±ï¿½È­
 	DXGI_SWAP_CHAIN_DESC swapchaindesc = {};
-	swapchaindesc.BufferDesc.Width = 0; // Ã¢ Å©±â¿¡ ¸Â°Ô ÀÚµ¿À¸·Î ¼³Á¤
-	swapchaindesc.BufferDesc.Height = 0; // Ã¢ Å©±â¿¡ ¸Â°Ô ÀÚµ¿À¸·Î ¼³Á¤
-	swapchaindesc.BufferDesc.Format = DXGI_FORMAT_B8G8R8A8_UNORM; // »ö»ó Æ÷¸Ë
-	swapchaindesc.SampleDesc.Count = 1; // ¸ÖÆ¼ »ùÇÃ¸µ ºñÈ°¼ºÈ­
-	swapchaindesc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT; // ·»´õ Å¸°ÙÀ¸·Î »ç¿ë
-	swapchaindesc.BufferCount = 2; // ´õºí ¹öÆÛ¸µ
-	swapchaindesc.OutputWindow = hWindow; // ·»´õ¸µÇÒ Ã¢ ÇÚµé
-	swapchaindesc.Windowed = TRUE; // Ã¢ ¸ðµå
-	swapchaindesc.SwapEffect = DXGI_SWAP_EFFECT_FLIP_DISCARD; // ½º¿Ò ¹æ½Ä
+	swapchaindesc.BufferDesc.Width = 0; // Ã¢ Å©ï¿½â¿¡ ï¿½Â°ï¿½ ï¿½Úµï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+	swapchaindesc.BufferDesc.Height = 0; // Ã¢ Å©ï¿½â¿¡ ï¿½Â°ï¿½ ï¿½Úµï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+	swapchaindesc.BufferDesc.Format = DXGI_FORMAT_B8G8R8A8_UNORM; // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+	swapchaindesc.SampleDesc.Count = 1; // ï¿½ï¿½Æ¼ ï¿½ï¿½ï¿½Ã¸ï¿½ ï¿½ï¿½È°ï¿½ï¿½È­
+	swapchaindesc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT; // ï¿½ï¿½ï¿½ï¿½ Å¸ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½
+	swapchaindesc.BufferCount = 2; // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Û¸ï¿½
+	swapchaindesc.OutputWindow = hWindow; // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Ã¢ ï¿½Úµï¿½
+	swapchaindesc.Windowed = TRUE; // Ã¢ ï¿½ï¿½ï¿½
+	swapchaindesc.SwapEffect = DXGI_SWAP_EFFECT_FLIP_DISCARD; // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½
 
-	// Direct3D ÀåÄ¡¿Í ½º¿Ò Ã¼ÀÎÀ» »ý¼º
+	// Direct3D ï¿½ï¿½Ä¡ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ Ã¼ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 	D3D11CreateDeviceAndSwapChain(nullptr, D3D_DRIVER_TYPE_HARDWARE, nullptr,
 		D3D11_CREATE_DEVICE_BGRA_SUPPORT | D3D11_CREATE_DEVICE_DEBUG,
 		featurelevels, ARRAYSIZE(featurelevels), D3D11_SDK_VERSION,
 		&swapchaindesc, &SwapChain, &Device, nullptr, &DeviceContext);
 
-	// »ý¼ºµÈ ½º¿Ò Ã¼ÀÎÀÇ Á¤º¸ °¡Á®¿À±â
+	// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ Ã¼ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	SwapChain->GetDesc(&swapchaindesc);
 
-	// ºäÆ÷Æ® Á¤º¸ ¼³Á¤
+	// ï¿½ï¿½ï¿½ï¿½Æ® ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 	ViewportInfo = { 0.0f, 0.0f, (float)swapchaindesc.BufferDesc.Width, (float)swapchaindesc.BufferDesc.Height, 0.0f, 1.0f };
 }
 
 void CEngine::CreateFrameBuffer()
 {
-	// ½º¿Ò Ã¼ÀÎÀ¸·ÎºÎÅÍ ¹é ¹öÆÛ ÅØ½ºÃ³ °¡Á®¿À±â
+	// ï¿½ï¿½ï¿½ï¿½ Ã¼ï¿½ï¿½ï¿½ï¿½ï¿½Îºï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ø½ï¿½Ã³ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	SwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (void**)&FrameBuffer);
 
-	// ·»´õ Å¸°Ù ºä »ý¼º
+	// ï¿½ï¿½ï¿½ï¿½ Å¸ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 	D3D11_RENDER_TARGET_VIEW_DESC framebufferRTVdesc = {};
-	framebufferRTVdesc.Format = DXGI_FORMAT_B8G8R8A8_UNORM_SRGB; // »ö»ó Æ÷¸Ë
-	framebufferRTVdesc.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2D; // 2D ÅØ½ºÃ³
+	framebufferRTVdesc.Format = DXGI_FORMAT_B8G8R8A8_UNORM_SRGB; // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+	framebufferRTVdesc.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2D; // 2D ï¿½Ø½ï¿½Ã³
 
 	Device->CreateRenderTargetView(FrameBuffer, &framebufferRTVdesc, &FrameBufferRTV);
 }
@@ -276,8 +279,8 @@ void CEngine::CreateFrameBuffer()
 void CEngine::CreateRasterizerState()
 {
 	D3D11_RASTERIZER_DESC rasterizerdesc = {};
-	rasterizerdesc.FillMode = D3D11_FILL_SOLID; // Ã¤¿ì±â ¸ðµå
-	rasterizerdesc.CullMode = D3D11_CULL_BACK; // ¹é ÆäÀÌ½º ÄÃ¸µ
+	rasterizerdesc.FillMode = D3D11_FILL_SOLID; // Ã¤ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½
+	rasterizerdesc.CullMode = D3D11_CULL_BACK; // ï¿½ï¿½ ï¿½ï¿½ï¿½Ì½ï¿½ ï¿½Ã¸ï¿½
 
 	Device->CreateRasterizerState(&rasterizerdesc, &RasterizerState);
 }
@@ -313,7 +316,7 @@ void CEngine::CreateShader()
 
 void CEngine::Update(float deltaTime)
 {
-	// »ó¼ö¹öÆÛ ¾÷µ¥ÀÌÆ®?
+	// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ®?
 
 }
 
@@ -340,7 +343,7 @@ void CEngine::Render()
 	DeviceContext->OMSetRenderTargets(1, &FrameBufferRTV, nullptr);
 	DeviceContext->OMSetBlendState(nullptr, nullptr, 0xffffffff);
 
-	// Å×½ºÆ®¿ë
+	// ï¿½×½ï¿½Æ®ï¿½ï¿½
 	if (ConstantBuffer && MVPConstantBuffer)
 	{
 		DeviceContext->VSSetConstantBuffers(0, 1, &ConstantBuffer); 
@@ -368,7 +371,7 @@ void CEngine::Release()
 		ConstantBuffer = nullptr;
 	}
 
-	// Shader °ü·Ã ¸®¼Ò½º ÇØÁ¦
+	// Shader ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ò½ï¿½ ï¿½ï¿½ï¿½ï¿½
 	if (SimpleInputLayout)
 	{
 		SimpleInputLayout->Release();
@@ -387,10 +390,10 @@ void CEngine::Release()
 
 	RasterizerState->Release();
 
-	// ·»´õ Å¸°ÙÀ» ÃÊ±âÈ­
+	// ï¿½ï¿½ï¿½ï¿½ Å¸ï¿½ï¿½ï¿½ï¿½ ï¿½Ê±ï¿½È­
 	DeviceContext->OMSetRenderTargets(0, nullptr, nullptr);
 
-	// FrameBuffer °ü·Ã ¸®¼Ò½º ÇØÁ¦
+	// FrameBuffer ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ò½ï¿½ ï¿½ï¿½ï¿½ï¿½
 	if (FrameBuffer)
 	{
 		FrameBuffer->Release();
@@ -402,10 +405,10 @@ void CEngine::Release()
 		FrameBufferRTV = nullptr;
 	}
 
-	// Direct3D ÀåÄ¡ ¹× ½º¿Ò Ã¼ÀÎÀ» ÇØÁ¦
+	// Direct3D ï¿½ï¿½Ä¡ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ Ã¼ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 	if (DeviceContext)
 	{
-		DeviceContext->Flush(); // ³²¾ÆÀÖ´Â GPU ¸í·É ½ÇÇà
+		DeviceContext->Flush(); // ï¿½ï¿½ï¿½ï¿½ï¿½Ö´ï¿½ GPU ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 	}
 
 	if (SwapChain)
