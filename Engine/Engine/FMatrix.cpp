@@ -376,42 +376,22 @@ FMatrix FMatrix::MakeTranslationMatrix(FVector4 tranlation)
 }
 
 FMatrix FMatrix::MakeLookAt(FVector eye, FVector at, FVector up)
-{
-	//FVector front = at - eye;
-	//front.Normalize();
-	//
-	//FVector right = up.Cross(front);
-	//right.Normalize();
-	//
-	//up = front.Cross(right);
-	//
-	//FMatrix invTranslation({
-	//	FVector4(1, 0, 0, -eye.X),
-	//	FVector4(0, 1, 0, -eye.Y),
-	//	FVector4(0, 0, 1, -eye.Z),
-	//	FVector4(0, 0, 0, 1),
-	//	});
-	//FMatrix invRotation({
-	//	FVector4(right.X, up.X, front.X, 0),
-	//	FVector4(right.Y, up.Y, front.Y, 0),
-	//	FVector4(right.Z, up.Z, front.Z, 0),
-	//	FVector4(0, 0, 0, 0),
-	//	});
-	FVector f = at - eye;   f.Normalize();                 // forward (+z)
+{ 
+	FVector f = at;                   
 	FVector r = up.Cross(f); r.Normalize();                // right  = up ¡¿ forward (LH)
-	FVector u = f.Cross(r);
+	FVector u = f.Cross(r); u.Normalize();
 
 	FMatrix T_inv(
 		FVector4(1, 0, 0, -eye.X),
-		FVector4(0, 1, 0, -eye.Y),
+		FVector4(0, 1, 0, eye.Y),
 		FVector4(0, 0, 1, -eye.Z),
 		FVector4(0, 0, 0, 1)
 	);
 	 
 	FMatrix R_inv(
-		FVector4(r.X, u.X, f.X, 0.0f),   // col0
-		FVector4(r.Y, u.Y, f.Y, 0.0f),   // col1
-		FVector4(r.Z, u.Z, f.Z, 0.0f),   // col2
+		FVector4(r.X, r.Y, r.Z, 0.0f),   // col0
+		FVector4(u.X, u.Y, u.Z, 0.0f),   // col1
+		FVector4(f.X, f.Y, f.Z, 0.0f),   // col2
 		FVector4(0.0f, 0.0f, 0.0f, 1.0f) // col3 
 	);
 	FMatrix view = R_inv * T_inv;
