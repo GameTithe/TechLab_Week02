@@ -51,10 +51,22 @@
     <ClCompile Include="FMatrix.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="UActorComponent.h">
+      <Filter>헤더 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="AActor.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="USceneComponent.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
     <ClCompile Include="CEngine.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="CScene.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="D3DUtil.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="PipelineStateObject.cpp">
@@ -98,22 +110,40 @@
     <ClInclude Include="FMatrix.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
+    <ClInclude Include="UObject.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="AActor.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="USceneComponent.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="UPrimitiveComponent.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="TArray.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
     <ClInclude Include="CEngine.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="ConsoleWindow.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="CScene.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="json.hpp">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="FVertex.h">
+    <ClInclude Include="D3DUtil.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="FConstant.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="ConsoleWindow.h">
+    <ClInclude Include="PipelineStateObject.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Resources.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="CSceneManager.h">

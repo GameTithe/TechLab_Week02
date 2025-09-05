@@ -4,8 +4,7 @@
 #include <string>
 #include <vector>
 using FString = std::string;
-template<typename T>
-using TArray = std::vector<T>;
+
 
 class CScene
 {

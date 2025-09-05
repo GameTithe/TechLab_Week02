@@ -123,9 +123,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="AActor.cpp" />
     <ClCompile Include="CEngine.cpp" />
     <ClCompile Include="CScene.cpp" />
-    <ClCompile Include="CSceneManager.cpp" />
+    <ClCompile Include="D3DUtil.cpp" />
     <ClCompile Include="FMatrix.cpp" />
     <ClCompile Include="FVector.cpp" />
     <ClCompile Include="ImGui\imgui.cpp" />
@@ -137,16 +138,18 @@
     <ClCompile Include="ImGui\imgui_widgets.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="PipelineStateObject.cpp" />
+    <ClCompile Include="UActorComponent.h" />
+    <ClCompile Include="USceneComponent.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AActor.h" />
     <ClInclude Include="CEngine.h" />
     <ClInclude Include="ConsoleWindow.h" />
     <ClInclude Include="CScene.h" />
-    <ClInclude Include="CSceneManager.h" />
+    <ClInclude Include="D3DUtil.h" />
     <ClInclude Include="FConstant.h" />
     <ClInclude Include="FMatrix.h" />
     <ClInclude Include="FVector.h" />
-    <ClInclude Include="FVertex.h" />
     <ClInclude Include="ImGui\imconfig.h" />
     <ClInclude Include="ImGui\imgui.h" />
     <ClInclude Include="ImGui\imgui_impl_dx11.h" />
@@ -155,10 +158,13 @@
     <ClInclude Include="ImGui\imstb_rectpack.h" />
     <ClInclude Include="ImGui\imstb_textedit.h" />
     <ClInclude Include="ImGui\imstb_truetype.h" />
-    <ClInclude Include="json.hpp" />
-    <ClInclude Include="Sphere.h">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-    </ClInclude>
+    <ClInclude Include="PipelineStateObject.h" />
+    <ClInclude Include="Resources.h" />
+    <ClInclude Include="Sphere.h" />
+    <ClInclude Include="TArray.h" />
+    <ClInclude Include="UObject.h" />
+    <ClInclude Include="UPrimitiveComponent.h" />
+    <ClInclude Include="USceneComponent.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="ShaderW0.hlsl">
