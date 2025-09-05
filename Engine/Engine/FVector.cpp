@@ -1,11 +1,19 @@
 #include "FVector.h"
 #include <cmath>
 #include <cassert>
+#include "FMatrix.h"
 
 /**
 * FVector 
 * A three-dimensional vector.
-*/
+*/ 
+const FVector FVector::RIGHT	{ 0.0f, 1.0f, 0.0f };
+const FVector FVector::LEFT		{ 0.0f, -1.0f, 0.0f };
+const FVector FVector::FRONT	{ 1.0f, 0.0f, 0.0f };
+const FVector FVector::BACK	 	{ -1.0f, 0.0f, 0.0f };
+const FVector FVector::UP		{ 0.0f, 0.0f, 1.0f };
+const FVector FVector::DOWN		{ 0.0f, 0.0f, -1.0f };
+
 float FVector::Dot(const FVector& rhs) const
 {
 	return X * rhs.X + Y * rhs.Y + Z * rhs.Z;
@@ -56,6 +64,16 @@ FVector FVector::Direction() const
 	{
 		return FVector(0.0f, 0.0f, 0.0f);
 	}
+}
+
+FVector4 FVector4::Lerp(const FVector4& v1, const FVector4& v2, float t)
+{
+	return FVector4(
+		v1.X * (1 - t) + v2.X * t,
+		v1.Y * (1 - t) + v2.Y * t,
+		v1.Z * (1 - t) + v2.Z * t,
+		0.0f
+	);
 }
 
 FVector FVector::operator+(const FVector& rhs) const
@@ -155,6 +173,13 @@ FVector& FVector::operator/=(const float rhs)
 * A four-dimensional vector.
 */
 
+const FVector4 FVector4::RIGHT	{ 0.0f, 1.0f, 0.0f, 0.0f};
+const FVector4 FVector4::LEFT	{ 0.0f, -1.0f, 0.0f, 0.0f};
+const FVector4 FVector4::FRONT	{ 1.0f, 0.0f, 0.0f, 0.0f };
+const FVector4 FVector4::BACK	{ -1.0f, 0.0f, 0.0f, 0.0f};
+const FVector4 FVector4::UP		{ 0.0f, 0.0f, 1.0f, 0.0f};
+const FVector4 FVector4::DOWN	{ 0.0f, 0.0f, -1.0f, 0.0f};
+
 float FVector4::Dot(const FVector4& rhs) const
 { 
 	return X * rhs.X + Y * rhs.Y + Z * rhs.Z + W * rhs.W;
@@ -215,6 +240,26 @@ FVector4 FVector4::Direction() const
 	}
 } 
 
+FVector4 Lerp(const FVector4& v1, const FVector4& v2, float t)
+{
+	return FVector4(
+		v1.X * (1 - t)  + v2.X * t,
+		v1.Y * (1 - t)  + v2.Y * t,
+		v1.Z * (1 - t)  + v2.Z * t,
+		0.0f
+	);
+}
+
+FVector4 FVector4::operator* (const FMatrix& rhs) const
+{
+	return FVector4(
+		X * rhs.M[0][0] + Y * rhs.M[1][0] + Z * rhs.M[2][0] + W * rhs.M[3][0],
+		X * rhs.M[0][1] + Y * rhs.M[1][1] + Z * rhs.M[2][1] + W * rhs.M[3][1],
+		X * rhs.M[0][2] + Y * rhs.M[1][2] + Z * rhs.M[2][2] + W * rhs.M[3][2],
+		X * rhs.M[0][3] + Y * rhs.M[1][3] + Z * rhs.M[2][3] + W * rhs.M[3][3]
+	);
+}
+
 FVector4 FVector4::operator+(const FVector4& rhs) const
 {
 	return FVector4(X + rhs.X, Y + rhs.Y, Z + rhs.Z, W + rhs.W);
@@ -273,7 +318,7 @@ FVector4& FVector4::operator/=(const FVector4& rhs)
 	X /= rhs.X; 
 	Y /= rhs.Y; 
 	Z /= rhs.Z; 
-	W /= 0.0f;
+	W = 0.0f;
 
 	return *this;
 } 

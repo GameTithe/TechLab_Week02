@@ -4,6 +4,9 @@
 * FVector
 * A three-dimensional vector
 */
+ 
+struct FMatrix; 
+
 struct FVector
 {
 public:
@@ -16,7 +19,16 @@ public:
 	float Length() const;
 	float LengthSquared() const;
 	void Normalize(); 
-	FVector Direction() const ;
+	FVector Direction() const ; 
+
+	static FVector Lerp(const FVector& v1, const FVector& v2, float t);  
+
+	static const FVector RIGHT;
+	static const FVector LEFT;
+	static const FVector FRONT;
+	static const FVector BACK;
+	static const FVector UP;
+	static const FVector DOWN;
 
 public:
 	FVector operator+	(const FVector& rhs) const;
@@ -44,7 +56,7 @@ inline FVector operator* (float lhs, const FVector& rhs)
 
 /**
 * FVector4 (For Homogenous)
-* A four-dimensional vector
+* A four-dimensional Vector
 */
 struct FVector4
 {
@@ -60,7 +72,18 @@ public:
 	void Normalize();
 	FVector4 Direction() const;
 
+	static FVector4 Lerp(const FVector4& v1, const FVector4& v2, float t);
+
+	static const FVector4 RIGHT;
+	static const FVector4 LEFT;
+	static const FVector4 FRONT;
+	static const FVector4 BACK;
+	static const FVector4 UP;
+	static const FVector4 DOWN;
+
 public:
+	FVector4 operator*		(const FMatrix& rhs) const;
+
 	FVector4 operator+		(const FVector4& rhs) const;
 	FVector4& operator+=	(const FVector4& rhs);
 	FVector4 operator-		(const FVector4& rhs) const;
