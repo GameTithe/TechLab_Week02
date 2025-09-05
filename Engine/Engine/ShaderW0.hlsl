@@ -3,6 +3,14 @@ cbuffer constants : register(b0)
     float3 Offset;
     float Scale;
 }
+
+cbuffer MVPTransform : register(b1)
+{
+    float4x4 model;
+    float4x4 view;
+    float4x4 projection;   
+}
+
 struct VS_INPUT
 {
     float4 position : POSITION;    // input position

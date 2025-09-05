@@ -385,7 +385,7 @@ FMatrix FMatrix::MakeLookAt(FVector eye, FVector at, FVector up)
 	FVector right = up.Cross(front);
 	right.Normalize();
 
-	FVector up = front.Cross(right);
+	up = front.Cross(right);
 	
 	return FMatrix( 
 		FVector4(right.X, right.Y, right.Z, 0.0f),

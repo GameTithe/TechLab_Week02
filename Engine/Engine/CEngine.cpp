@@ -140,9 +140,10 @@ bool CEngine::Run()
 				bIsExit = true;
 				break;
 			}
-		}
-
+		} 
 		Update(ImGui::GetIO().DeltaTime); // Update
+
+
 		Render(); // Render
 
 		//basic movement  

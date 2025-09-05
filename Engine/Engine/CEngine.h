@@ -65,6 +65,7 @@ private:
 		constantbufferdesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
 
 		Device->CreateBuffer(&constantbufferdesc, nullptr, &ConstantBuffer);
+
 	}
 
 	void UpdateConstant(FVector Offset, float radius)
@@ -108,4 +109,6 @@ private:
 	//테스트용 임시
 	ID3D11Buffer* ConstantBuffer = nullptr;
 	ID3D11Buffer* VertexBuffer = nullptr;
+
+	ID3D11Buffer* MVPBuffer = nullptr;
 };
