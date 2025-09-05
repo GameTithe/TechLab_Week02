@@ -1,5 +1,5 @@
 #pragma once
-#include "AActor.h"
+#include "UOBject.h"
 #include <memory>
 class UActorComponent : public UObject
 {

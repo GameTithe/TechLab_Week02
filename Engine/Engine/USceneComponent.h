@@ -2,7 +2,7 @@
 #include "UActorComponent.h"
 #include "FVector.h"
 #include "FMatrix.h"
-
+#include "TArray.h"
 class USceneComponent : public UActorComponent
 {
 public:

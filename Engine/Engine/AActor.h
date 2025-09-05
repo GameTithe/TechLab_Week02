@@ -1,7 +1,8 @@
 #pragma once
 #include "UObject.h"
-#include "USceneComponent.h"
 #include "TArray.h"
+#include "UActorComponent.h"
+#include "USceneComponent.h"
 class AActor : public UObject {
 public:
 	AActor();
