@@ -125,6 +125,7 @@
   <ItemGroup>
     <ClCompile Include="CEngine.cpp" />
     <ClCompile Include="CScene.cpp" />
+    <ClCompile Include="CSceneManager.cpp" />
     <ClCompile Include="FMatrix.cpp" />
     <ClCompile Include="FVector.cpp" />
     <ClCompile Include="ImGui\imgui.cpp" />
@@ -141,6 +142,7 @@
     <ClInclude Include="CEngine.h" />
     <ClInclude Include="ConsoleWindow.h" />
     <ClInclude Include="CScene.h" />
+    <ClInclude Include="CSceneManager.h" />
     <ClInclude Include="FConstant.h" />
     <ClInclude Include="FMatrix.h" />
     <ClInclude Include="FVector.h" />
