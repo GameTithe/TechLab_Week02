@@ -67,3 +67,12 @@ FVector USceneComponent::GetWorldScale3D()
 {
 	return FVector();
 }
+
+void USceneComponent::UpdateWorldTransform()
+{
+	if (ParentComponent)
+	{
+		//ModelMatix = FMatrix::Make
+	}
+	
+}

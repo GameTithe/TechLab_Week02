@@ -1,6 +1,7 @@
 #pragma once
 #include "UActorComponent.h"
 #include "FVector.h"
+#include "FMatrix.h"
 
 class USceneComponent : public UActorComponent
 {
