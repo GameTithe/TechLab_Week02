@@ -123,6 +123,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="CEngine.cpp" />
+    <ClCompile Include="CScene.cpp" />
     <ClCompile Include="FMatrix.cpp" />
     <ClCompile Include="FVector.cpp" />
     <ClCompile Include="ImGui\imgui.cpp" />
@@ -136,9 +138,11 @@
     <ClCompile Include="PipelineStateObject.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="D3DUtil.h" />
+    <ClInclude Include="CEngine.h" />
+    <ClInclude Include="CScene.h" />
     <ClInclude Include="FMatrix.h" />
     <ClInclude Include="FVector.h" />
+    <ClInclude Include="FVertex.h" />
     <ClInclude Include="ImGui\imconfig.h" />
     <ClInclude Include="ImGui\imgui.h" />
     <ClInclude Include="ImGui\imgui_impl_dx11.h" />
@@ -147,9 +151,10 @@
     <ClInclude Include="ImGui\imstb_rectpack.h" />
     <ClInclude Include="ImGui\imstb_textedit.h" />
     <ClInclude Include="ImGui\imstb_truetype.h" />
-    <ClInclude Include="PipelineStateObject.h" />
-    <ClInclude Include="Resources.h" />
-    <ClInclude Include="Sphere.h" />
+    <ClInclude Include="json.hpp" />
+    <ClInclude Include="Sphere.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="ShaderW0.hlsl">
