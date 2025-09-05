@@ -66,13 +66,12 @@ FVector FVector::Direction() const
 	}
 }
 
-FVector4 FVector4::Lerp(const FVector4& v1, const FVector4& v2, float t)
+FVector FVector::Lerp(const FVector& v1, const FVector& v2, float t)
 {
-	return FVector4(
+	return FVector(
 		v1.X * (1 - t) + v2.X * t,
 		v1.Y * (1 - t) + v2.Y * t,
-		v1.Z * (1 - t) + v2.Z * t,
-		0.0f
+		v1.Z * (1 - t) + v2.Z * t
 	);
 }
  
@@ -240,7 +239,7 @@ FVector4 FVector4::Direction() const
 	}
 } 
 
-FVector4 Lerp(const FVector4& v1, const FVector4& v2, float t)
+FVector4 FVector4::Lerp(const FVector4& v1, const FVector4& v2, float t)
 {
 	return FVector4(
 		v1.X * (1 - t)  + v2.X * t,
