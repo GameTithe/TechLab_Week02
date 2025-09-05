@@ -31,7 +31,9 @@ public:
 
 	static const FMatrix Identity;
 
-public:
+public:    
+	bool Inverse(FMatrix& out) const; 
+
 	static FMatrix MakeScaleMatrix(float scale);
 	static FMatrix MakeScaleMatrix(float scale0, float scale1, float scale2); 
 
@@ -41,11 +43,11 @@ public:
 	  
 	static FMatrix MakeTranslationMatrix(FVector4 tranlation);
 
+	static FMatrix MakeLookAt(FVector eye, FVector at, FVector up);
+	static FMatrix MakePerspectiveMatrix(float fovy, float aspect, float zNear, float zFar); 
+
 public:
 	float M[4][4];
-
-private:
-	const int rowCount = 4;
-	const int columnCount = 4; 
+	 
 };
  

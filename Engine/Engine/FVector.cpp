@@ -7,12 +7,12 @@
 * FVector 
 * A three-dimensional vector.
 */ 
-const FVector FVector::RIGHT	{ 0.0f, 1.0f, 0.0f };
-const FVector FVector::LEFT		{ 0.0f, -1.0f, 0.0f };
-const FVector FVector::FRONT	{ 1.0f, 0.0f, 0.0f };
-const FVector FVector::BACK	 	{ -1.0f, 0.0f, 0.0f };
-const FVector FVector::UP		{ 0.0f, 0.0f, 1.0f };
-const FVector FVector::DOWN		{ 0.0f, 0.0f, -1.0f };
+const FVector FVector::RIGHT	{ 1.0f, 0.0f, 0.0f };
+const FVector FVector::LEFT		{ -1.0f, 0.0f, 0.0f };
+const FVector FVector::FRONT	{ 0.0f, 0.0f, 1.0f };
+const FVector FVector::BACK	 	{ 0.0f, 0.0f, -1.0f };
+const FVector FVector::UP		{ 0.0f, 1.0f, 0.0f };
+const FVector FVector::DOWN		{ 0.0f, -1.0f, 0.0f };
 
 float FVector::Dot(const FVector& rhs) const
 {
@@ -66,15 +66,15 @@ FVector FVector::Direction() const
 	}
 }
 
-FVector4 FVector4::Lerp(const FVector4& v1, const FVector4& v2, float t)
+FVector FVector::Lerp(const FVector& v1, const FVector& v2, float t)
 {
-	return FVector4(
+	return FVector(
 		v1.X * (1 - t) + v2.X * t,
 		v1.Y * (1 - t) + v2.Y * t,
-		v1.Z * (1 - t) + v2.Z * t,
-		0.0f
+		v1.Z * (1 - t) + v2.Z * t
 	);
 }
+ 
 
 FVector FVector::operator+(const FVector& rhs) const
 {
@@ -172,13 +172,12 @@ FVector& FVector::operator/=(const float rhs)
 * FVector4 (For Homogenous)
 * A four-dimensional vector.
 */
-
-const FVector4 FVector4::RIGHT	{ 0.0f, 1.0f, 0.0f, 0.0f};
-const FVector4 FVector4::LEFT	{ 0.0f, -1.0f, 0.0f, 0.0f};
-const FVector4 FVector4::FRONT	{ 1.0f, 0.0f, 0.0f, 0.0f };
-const FVector4 FVector4::BACK	{ -1.0f, 0.0f, 0.0f, 0.0f};
-const FVector4 FVector4::UP		{ 0.0f, 0.0f, 1.0f, 0.0f};
-const FVector4 FVector4::DOWN	{ 0.0f, 0.0f, -1.0f, 0.0f};
+const FVector4 FVector4::RIGHT	{ 1.0f, 0.0f, 0.0f, 0.0f};
+const FVector4 FVector4::LEFT	{ -1.0f, 0.0f, 0.0f, 0.0f};
+const FVector4 FVector4::FRONT	{ 0.0f, 0.0f, 1.0f, 0.0f };
+const FVector4 FVector4::BACK	{ 0.0f, 0.0f, -1.0f, 0.0f};
+const FVector4 FVector4::UP		{ 0.0f, 1.0f, 0.0f, 0.0f};
+const FVector4 FVector4::DOWN	{ 0.0f, -1.0f, 0.0f, 0.0f};
 
 float FVector4::Dot(const FVector4& rhs) const
 { 
@@ -240,7 +239,7 @@ FVector4 FVector4::Direction() const
 	}
 } 
 
-FVector4 Lerp(const FVector4& v1, const FVector4& v2, float t)
+FVector4 FVector4::Lerp(const FVector4& v1, const FVector4& v2, float t)
 {
 	return FVector4(
 		v1.X * (1 - t)  + v2.X * t,
@@ -352,7 +351,7 @@ FVector4& FVector4::operator/=(const float rhs)
 	X /= rhs; 
 	Y /= rhs; 
 	Z /= rhs; 
-	W /= 0.0f;
+	W = 0.0f;
 
 	return *this;
 }
