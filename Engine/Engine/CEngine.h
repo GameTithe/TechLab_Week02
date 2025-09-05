@@ -11,7 +11,6 @@ public:
 	CEngine();
 	~CEngine();
 	bool Init(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nShowCmd);
-	void Release();
 	bool Run();
 
 	LRESULT MsgProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
@@ -25,6 +24,7 @@ private:
 	void UpdateGUI();
 	void Update(float deltaTime);
 	void Render();
+	void Release();
 
 	void CreateDeviceAndSwapChain(HWND hWindow);
 	//void InitializeAndSetPipeline();

@@ -72,6 +72,8 @@ CEngine::~CEngine()
 	ImGui_ImplDX11_Shutdown();
 	ImGui_ImplWin32_Shutdown();
 	ImGui::DestroyContext();
+
+	Release();
 }
 
 bool CEngine::Init(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nShowCmd)
@@ -288,7 +290,7 @@ void CEngine::CreateShader()
 	{
 		{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 		{ "COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-		{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 28, D3D11_INPUT_PER_VERTEX_DATA, 0 }
+		/*{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 28, D3D11_INPUT_PER_VERTEX_DATA, 0 }*/
 	};
 
 	Device->CreateInputLayout(layout, ARRAYSIZE(layout),
@@ -339,10 +341,78 @@ void CEngine::Render()
 
 	UINT offset = 0;
 	DeviceContext->IASetVertexBuffers(0, 1, &VertexBuffer, &Stride, &offset);
-	//
-
 
 	const UINT numVertices = sizeof(triangle_vertices) / sizeof(FVertex);
+	//
+
 	DeviceContext->Draw(numVertices, 0);
-	
+}
+
+void CEngine::Release()
+{
+	VertexBuffer->Release();
+
+	if (ConstantBuffer)
+	{
+		ConstantBuffer->Release();
+		ConstantBuffer = nullptr;
+	}
+
+	// Shader 관련 리소스 해제
+	if (SimpleInputLayout)
+	{
+		SimpleInputLayout->Release();
+		SimpleInputLayout = nullptr;
+	}
+	if (SimplePixelShader)
+	{
+		SimplePixelShader->Release();
+		SimplePixelShader = nullptr;
+	}
+	if (SimpleVertexShader)
+	{
+		SimpleVertexShader->Release();
+		SimpleVertexShader = nullptr;
+	}
+
+	RasterizerState->Release();
+
+	// 렌더 타겟을 초기화
+	DeviceContext->OMSetRenderTargets(0, nullptr, nullptr);
+
+	// FrameBuffer 관련 리소스 해제
+	if (FrameBuffer)
+	{
+		FrameBuffer->Release();
+		FrameBuffer = nullptr;
+	}
+	if (FrameBufferRTV)
+	{
+		FrameBufferRTV->Release();
+		FrameBufferRTV = nullptr;
+	}
+
+	// Direct3D 장치 및 스왑 체인을 해제
+	if (DeviceContext)
+	{
+		DeviceContext->Flush(); // 남아있는 GPU 명령 실행
+	}
+
+	if (SwapChain)
+	{
+		SwapChain->Release();
+		SwapChain = nullptr;
+	}
+
+	if (Device)
+	{
+		Device->Release();
+		Device = nullptr;
+	}
+
+	if (DeviceContext)
+	{
+		DeviceContext->Release();
+		DeviceContext = nullptr;
+	}
 }
