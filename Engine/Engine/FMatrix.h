@@ -48,9 +48,6 @@ public:
 
 public:
 	float M[4][4];
-
-private:
-	const int rowCount = 4;
-	const int columnCount = 4; 
+	 
 };
  

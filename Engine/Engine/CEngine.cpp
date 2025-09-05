@@ -334,9 +334,10 @@ void CEngine::Render()
 	DeviceContext->OMSetBlendState(nullptr, nullptr, 0xffffffff);
 
 	// 테스트용
-	if (ConstantBuffer)
+	if (ConstantBuffer && MVPConstantBuffer)
 	{
-		DeviceContext->VSSetConstantBuffers(0, 1, &ConstantBuffer);
+		DeviceContext->VSSetConstantBuffers(0, 1, &ConstantBuffer); 
+		DeviceContext->VSSetConstantBuffers(1, 1, &MVPConstantBuffer);
 	}
 
 	UpdateConstant({ 0.0f, 0.0f, 0.0f }, 1.0f);

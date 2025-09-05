@@ -5,6 +5,8 @@
 #include "CScene.h"
 #include "FVertex.h"
 
+#include "FConstant.h"
+
 class CEngine
 {
 public:
@@ -49,15 +51,10 @@ private:
 		Device->CreateBuffer(&vertexbufferdesc, &vertexbufferSRD, &VertexBuffer);
 	}
 
-	struct FConstants
-	{
-		FVector Offset;
-		float Radius;
-		//float Pad;
-	};
 
 	void CreateConstantBuffer()
 	{
+		//const Offset Scale
 		D3D11_BUFFER_DESC constantbufferdesc = {};
 		constantbufferdesc.ByteWidth = sizeof(FConstants) + 0xf & 0xfffffff0; // ensure constant buffer size is multiple of 16 bytes(+가 먼저 계산됨)
 		constantbufferdesc.Usage = D3D11_USAGE_DYNAMIC; // will be updated from CPU every frame
@@ -66,11 +63,19 @@ private:
 
 		Device->CreateBuffer(&constantbufferdesc, nullptr, &ConstantBuffer);
 
+		//const MVP
+		D3D11_BUFFER_DESC ConstantMVPBufferDesc = {};
+		ConstantMVPBufferDesc.ByteWidth = sizeof(FMVPConstants) + 0xf & 0xfffffff0; // ensure constant buffer size is multiple of 16 bytes(+가 먼저 계산됨)
+		ConstantMVPBufferDesc.Usage = D3D11_USAGE_DYNAMIC; // will be updated from CPU every frame
+		ConstantMVPBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+		ConstantMVPBufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+
+		Device->CreateBuffer(&ConstantMVPBufferDesc, nullptr, &MVPConstantBuffer); 
 	}
 
 	void UpdateConstant(FVector Offset, float radius)
 	{
-		if (ConstantBuffer)
+		if (ConstantBuffer && MVPConstantBuffer)
 		{
 			D3D11_MAPPED_SUBRESOURCE constantbufferMSR;
 
@@ -81,6 +86,17 @@ private:
 				constants->Radius = radius;
 			}
 			DeviceContext->Unmap(ConstantBuffer, 0);
+
+
+			D3D11_MAPPED_SUBRESOURCE mvpConstantBufferMSR;
+			DeviceContext->Map(MVPConstantBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mvpConstantBufferMSR); // update constant buffer every frame
+			FMVPConstants* mvpConstants = (FMVPConstants*)mvpConstantBufferMSR.pData;
+			{
+			
+				mvpConstants->Model = FMatrix::MakeScaleMatrix(radius);
+			}
+			DeviceContext->Unmap(ConstantBuffer, 0);
+
 		}
 	}
 
@@ -108,6 +124,8 @@ private:
 
 	//테스트용 임시
 	ID3D11Buffer* ConstantBuffer = nullptr;
+	ID3D11Buffer* MVPConstantBuffer = nullptr;
+
 	ID3D11Buffer* VertexBuffer = nullptr;
 
 	ID3D11Buffer* MVPBuffer = nullptr;

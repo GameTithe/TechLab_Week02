@@ -140,6 +140,7 @@
   <ItemGroup>
     <ClInclude Include="CEngine.h" />
     <ClInclude Include="CScene.h" />
+    <ClInclude Include="FConstant.h" />
     <ClInclude Include="FMatrix.h" />
     <ClInclude Include="FVector.h" />
     <ClInclude Include="FVertex.h" />

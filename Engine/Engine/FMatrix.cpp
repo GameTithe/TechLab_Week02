@@ -196,9 +196,9 @@ bool FMatrix::Inverse(FMatrix& out) const {
 
 void FMatrix::Transpose()
 {
-	for (int i = 0; i < rowCount; i++)
+	for (int i = 0; i < 4; i++)
 	{
-		for (int j = i + 1; j < columnCount; j++)
+		for (int j = i + 1; j < 4; j++)
 		{
 			std::swap(M[i][j], M[j][i]);
 		}
@@ -208,9 +208,9 @@ void FMatrix::Transpose()
 FMatrix FMatrix::operator+(const FMatrix& rhs) const
 {
 	FMatrix temp; 
-	for (int i = 0; i < rowCount; ++i)
+	for (int i = 0; i < 4; ++i)
 	{
-		for (int j = 0; j < columnCount; ++j)
+		for (int j = 0; j < 4; ++j)
 		{
 			temp.M[i][j] = M[i][j] + rhs.M[i][j];
 		}
@@ -220,9 +220,9 @@ FMatrix FMatrix::operator+(const FMatrix& rhs) const
 
 FMatrix& FMatrix::operator+=(const FMatrix& rhs)
 {
-	for (int i = 0; i < rowCount; ++i)
+	for (int i = 0; i < 4; ++i)
 	{
-		for (int j = 0; j < columnCount; ++j)
+		for (int j = 0; j < 4; ++j)
 		{
 			M[i][j] += rhs.M[i][j];
 		}
@@ -233,9 +233,9 @@ FMatrix& FMatrix::operator+=(const FMatrix& rhs)
 FMatrix FMatrix::operator-(const FMatrix& rhs) const
 {
 	FMatrix temp;
-	for (int i = 0; i < rowCount; ++i)
+	for (int i = 0; i < 4; ++i)
 	{
-		for (int j = 0; j < columnCount; ++j)
+		for (int j = 0; j < 4; ++j)
 		{
 			temp.M[i][j] = M[i][j] - rhs.M[i][j];
 		}
@@ -245,9 +245,9 @@ FMatrix FMatrix::operator-(const FMatrix& rhs) const
 
 FMatrix& FMatrix::operator-=(const FMatrix& rhs)
 {
-	for (int i = 0; i < rowCount; ++i)
+	for (int i = 0; i < 4; ++i)
 	{
-		for (int j = 0; j < columnCount; ++j)
+		for (int j = 0; j < 4; ++j)
 		{
 			M[i][j] -= rhs.M[i][j];
 		}
@@ -256,16 +256,14 @@ FMatrix& FMatrix::operator-=(const FMatrix& rhs)
 }
 
 FMatrix FMatrix::operator*(const FMatrix& rhs) const
-{
-	assert(columnCount == rhs.rowCount);
-
+{ 
 	FMatrix temp;
-	for (int i = 0; i < rowCount; ++i)
+	for (int i = 0; i < 4; ++i)
 	{
-		for (int j = 0; j < rhs.columnCount; ++j)
+		for (int j = 0; j < 4; ++j)
 		{
 			temp.M[i][j] = 0.0f;
-			for (int k = 0; k < columnCount; ++k)
+			for (int k = 0; k < 4; ++k)
 			{
 				temp.M[i][j] += M[i][k] * rhs.M[k][j];
 			}
@@ -279,9 +277,9 @@ FMatrix FMatrix::operator*(const FMatrix& rhs) const
 FMatrix FMatrix::operator*(const float rhs) const
 { 
 	FMatrix temp;
-	for (int i = 0; i < rowCount; ++i)
+	for (int i = 0; i < 4; ++i)
 	{
-		for (int j = 0; j < columnCount; ++j)
+		for (int j = 0; j < 4; ++j)
 		{
 			temp.M[i][j] = M[i][j] * rhs;	
 		}
@@ -292,9 +290,9 @@ FMatrix FMatrix::operator*(const float rhs) const
 
 FMatrix& FMatrix::operator*=(const float rhs)
 {  
-	for (int i = 0; i < rowCount; ++i)
+	for (int i = 0; i < 4; ++i)
 	{
-		for (int j = 0; j < columnCount; ++j)
+		for (int j = 0; j < 4; ++j)
 		{
 			M[i][j] = M[i][j] * rhs;	
 		}
