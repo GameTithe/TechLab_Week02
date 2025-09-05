@@ -3,7 +3,7 @@
 
 AActor::AActor()
 {
-	USceneComponent* rootComponent = new USceneComponent();
+	USceneComponent* rootComponent = new USceneComponent(this);
 	SetRootComponent(rootComponent); // 생성자에서 기본으로 루트 컴포넌트 설정
 }
 

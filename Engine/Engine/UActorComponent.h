@@ -6,6 +6,7 @@ class UActorComponent : public UObject
 	friend class AActor; // AActor는 protected, private 접근 가능하도록
 
 public:
+	UActorComponent() {}
 	UActorComponent(AActor* owner) : OwnerActor(owner), bIsActive(true) {}
 	virtual ~UActorComponent() {}
 

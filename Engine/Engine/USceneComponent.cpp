@@ -1,5 +1,17 @@
 #include "USceneComponent.h"
 
+USceneComponent::USceneComponent()
+{
+}
+
+USceneComponent::USceneComponent(AActor* owner): UActorComponent(owner)
+{
+}
+
+USceneComponent::~USceneComponent()
+{
+}
+
 void USceneComponent::AttachToComponent(USceneComponent* parent)
 {
 	// 나의 부모 컴포넌트가 존재하면
@@ -55,7 +67,7 @@ FVector USceneComponent::GetRelativeScale3D()
 
 FVector USceneComponent::GetWorldLocation()
 {
-	return;
+	return FVector();
 }
 
 FVector USceneComponent::GetWorldRotation()
