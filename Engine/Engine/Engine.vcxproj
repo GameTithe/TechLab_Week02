@@ -139,6 +139,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CEngine.h" />
+    <ClInclude Include="ConsoleWindow.h" />
     <ClInclude Include="CScene.h" />
     <ClInclude Include="FConstant.h" />
     <ClInclude Include="FMatrix.h" />

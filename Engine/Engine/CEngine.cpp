@@ -1,3 +1,4 @@
+#include "ConsoleWindow.h"
 #include "CEngine.h"
 
 #include <windows.h>
@@ -91,16 +92,7 @@ bool CEngine::Init(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
 void CEngine::UpdateGUI()
 {
-	/*ImGui_ImplDX11_NewFrame();
-	ImGui_ImplWin32_NewFrame();
-	ImGui::NewFrame();*/
-	// ImGui UI 컨트롤 추가는 ImGui::NewFrame()과 ImGui::Render() 사이에
-	/*ImGui::Begin("Jungle Property Window");
-	ImGui::Text("Hello Jungle World!");*/
-	//ImGui TODO 
-	/*ImGui::End();
-	ImGui::Render();
-	ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());*/
+    
 }
 
 //void CEngine::Update(float deltaTime)
@@ -161,6 +153,8 @@ bool CEngine::Run()
 
 		ImGui::End();
 
+        bool bConsoleDraw = true;
+        ShowExampleAppConsole(&bConsoleDraw);
 
 		ImGui::Render();
 
