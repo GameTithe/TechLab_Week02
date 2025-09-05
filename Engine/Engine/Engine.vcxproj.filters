@@ -51,6 +51,12 @@
     <ClCompile Include="FMatrix.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="UActorComponent.h">
+      <Filter>헤더 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="AActor.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ImGui\imconfig.h">
@@ -84,6 +90,21 @@
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="FMatrix.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="UObject.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="AActor.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="USceneComponent.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="UPrimitiveComponent.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="TArray.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>

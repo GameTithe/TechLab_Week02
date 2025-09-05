@@ -123,6 +123,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="AActor.cpp" />
     <ClCompile Include="FMatrix.cpp" />
     <ClCompile Include="FVector.cpp" />
     <ClCompile Include="ImGui\imgui.cpp" />
@@ -133,8 +134,10 @@
     <ClCompile Include="ImGui\imgui_tables.cpp" />
     <ClCompile Include="ImGui\imgui_widgets.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="UActorComponent.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AActor.h" />
     <ClInclude Include="FMatrix.h" />
     <ClInclude Include="FVector.h" />
     <ClInclude Include="ImGui\imconfig.h" />
@@ -146,6 +149,10 @@
     <ClInclude Include="ImGui\imstb_textedit.h" />
     <ClInclude Include="ImGui\imstb_truetype.h" />
     <ClInclude Include="Sphere.h" />
+    <ClInclude Include="TArray.h" />
+    <ClInclude Include="UObject.h" />
+    <ClInclude Include="UPrimitiveComponent.h" />
+    <ClInclude Include="USceneComponent.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="ShaderW0.hlsl">
