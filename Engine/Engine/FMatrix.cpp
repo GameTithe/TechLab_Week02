@@ -377,7 +377,7 @@ FMatrix FMatrix::MakeTranslationMatrix(FVector4 tranlation)
 
 FMatrix FMatrix::MakeLookAt(FVector eye, FVector at, FVector up)
 { 
-	FVector f = at - eye;   f.Normalize();                 // forward (+z)
+	FVector f = at;                   
 	FVector r = up.Cross(f); r.Normalize();                // right  = up ¡¿ forward (LH)
 	FVector u = f.Cross(r); u.Normalize();
 

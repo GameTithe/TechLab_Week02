@@ -96,11 +96,10 @@ private:
 				mvpConstants->Model = FMatrix::MakeScaleMatrix(0.5) * FMatrix::MakeRotationYMatrix(rot) *  FMatrix::MakeTranslationMatrix(offset);
 
 				FVector camPos = { cam.X, cam.Y, cam.Z};
-				FVector forward = FVector::FRONT;
-				FVector target = camPos + forward;
+				FVector at = FVector::FRONT; 
 				FVector up = { 0.0f, 1.0f, 0.0f };
 
-				mvpConstants->View = FMatrix::MakeLookAt(camPos, target, up); 
+				mvpConstants->View = FMatrix::MakeLookAt(camPos, at, up); 
 
 				FMatrix perspect = FMatrix::MakePerspectiveMatrix(30.0f, 1.0f, 0.1f, 100.0f);
 				mvpConstants->Perspective = perspect;
