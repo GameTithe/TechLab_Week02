@@ -73,7 +73,7 @@ private:
 		Device->CreateBuffer(&ConstantMVPBufferDesc, nullptr, &MVPConstantBuffer); 
 	}
 
-	void UpdateConstant(FVector Offset, float radius)
+	void UpdateConstant(FVector Offset, float radius, FVector moldePos, float rot)
 	{
 		if (ConstantBuffer && MVPConstantBuffer)
 		{
@@ -92,10 +92,20 @@ private:
 			DeviceContext->Map(MVPConstantBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mvpConstantBufferMSR); // update constant buffer every frame
 			FMVPConstants* mvpConstants = (FMVPConstants*)mvpConstantBufferMSR.pData;
 			{
-			
-				mvpConstants->Model = FMatrix::MakeScaleMatrix(radius);
+				FVector4 offset = { 0.0f, 0.0f, 0.0f, 0.0f };
+				mvpConstants->Model = FMatrix::MakeRotationYMatrix(rot) *  FMatrix::MakeScaleMatrix(0.5) * FMatrix::MakeTranslationMatrix(offset);
+
+				FVector modelPosition = { moldePos.X, moldePos.Y, moldePos.Z};
+				FVector at = { 0.0f, 0.0f, 0.0f };
+				FVector up = { 0.0f, 1.0f, 0.0f };
+				mvpConstants->View = FMatrix::MakeLookAt(modelPosition, at, up);
+
+				FMatrix perspect = FMatrix::MakePerspectiveMatrix(30.0f, 1.8f, 0.1f, 100.0f);
+				mvpConstants->Perspective = perspect;
+
+				 
 			}
-			DeviceContext->Unmap(ConstantBuffer, 0);
+			DeviceContext->Unmap(MVPConstantBuffer, 0);
 
 		}
 	}

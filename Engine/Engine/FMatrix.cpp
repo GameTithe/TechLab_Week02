@@ -368,28 +368,54 @@ FMatrix FMatrix::MakeRotationZMatrix(float degree)
 FMatrix FMatrix::MakeTranslationMatrix(FVector4 tranlation)
 {
 	return FMatrix(
-		FVector4(1.0f, 0.0f, 0.0f, 0.0f),
-		FVector4(0.0f, 1.0f, 0.0f, 0.0f),
-		FVector4(0.0f, 0.0f, 1.0f, 0.0f),
-		FVector4(tranlation.X, tranlation.Y, tranlation.Z, 1.0f)
+		FVector4(1.0f, 0.0f, 0.0f, tranlation.X),
+		FVector4(0.0f, 1.0f, 0.0f, tranlation.Y),
+		FVector4(0.0f, 0.0f, 1.0f, tranlation.Z),
+		FVector4(0.0f, 0.0f, 0.0, 1.0f)
 	);
 }
 
 FMatrix FMatrix::MakeLookAt(FVector eye, FVector at, FVector up)
 {
-	FVector front = at - eye;
-	front.Normalize();
+	//FVector front = at - eye;
+	//front.Normalize();
+	//
+	//FVector right = up.Cross(front);
+	//right.Normalize();
+	//
+	//up = front.Cross(right);
+	//
+	//FMatrix invTranslation({
+	//	FVector4(1, 0, 0, -eye.X),
+	//	FVector4(0, 1, 0, -eye.Y),
+	//	FVector4(0, 0, 1, -eye.Z),
+	//	FVector4(0, 0, 0, 1),
+	//	});
+	//FMatrix invRotation({
+	//	FVector4(right.X, up.X, front.X, 0),
+	//	FVector4(right.Y, up.Y, front.Y, 0),
+	//	FVector4(right.Z, up.Z, front.Z, 0),
+	//	FVector4(0, 0, 0, 0),
+	//	});
+	FVector f = at - eye;   f.Normalize();                 // forward (+z)
+	FVector r = up.Cross(f); r.Normalize();                // right  = up ¡¿ forward (LH)
+	FVector u = f.Cross(r);
 
-	FVector right = up.Cross(front);
-	right.Normalize();
-
-	up = front.Cross(right);
-	
-	return FMatrix( 
-		FVector4(right.X, right.Y, right.Z, 0.0f),
-		FVector4(up.X, up.Y, up.Z, 0.0f),
-		FVector4(front.X, front.Y, front.Z, 0.0f),
-		FVector4(-right.Dot(eye), -up.Dot(eye), -front.Dot(eye), 1.0f));
+	FMatrix T_inv(
+		FVector4(1, 0, 0, -eye.X),
+		FVector4(0, 1, 0, -eye.Y),
+		FVector4(0, 0, 1, -eye.Z),
+		FVector4(0, 0, 0, 1)
+	);
+	 
+	FMatrix R_inv(
+		FVector4(r.X, u.X, f.X, 0.0f),   // col0
+		FVector4(r.Y, u.Y, f.Y, 0.0f),   // col1
+		FVector4(r.Z, u.Z, f.Z, 0.0f),   // col2
+		FVector4(0.0f, 0.0f, 0.0f, 1.0f) // col3 
+	);
+	FMatrix view = R_inv * T_inv;
+	return view;
 }
    
 FMatrix FMatrix::MakePerspectiveMatrix(float fovy, float aspect, float zNear, float zFar)
@@ -407,12 +433,18 @@ FMatrix FMatrix::MakePerspectiveMatrix(float fovy, float aspect, float zNear, fl
 	// [ 0    0    A   1 ]
 	// [ 0    0    B   0 ]
 	// => clip: x¡Ç=xS*x, y¡Ç=yS*y, z¡Ç=A*z + B, w¡Ç=z
+	//xscale 0 0 0
+	// 
+	//
+	// 
+	// 
+	 
 	return FMatrix(
 		FVector4(xScale, 0.0f, 0.0f, 0.0f),
 		FVector4(0.0f, yScale, 0.0f, 0.0f),
-		FVector4(0.0f, 0.0f, A, 1.0f),
-		FVector4(0.0f, 0.0f, B, 0.0f)
-	);
+		FVector4(0.0f, 0.0f, A, B),
+		FVector4(0.0f, 0.0f, 1.0f, 0.0f)
+	); 
 }
  
 #pragma region Legacy

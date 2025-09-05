@@ -6,7 +6,7 @@ struct FMVPConstants
 {
 	FMatrix Model;
 	FMatrix View;
-	FMatrix Projection;
+	FMatrix Perspective;
 };
 struct FConstants
 {

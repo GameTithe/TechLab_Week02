@@ -18,6 +18,7 @@
 #include "imGui/imgui_impl_win32.h"
 
 #include "FVertex.h"
+#include "FVector.h"
 
 //테스트용
 FVertex triangle_vertices[] =
@@ -89,8 +90,15 @@ bool CEngine::Init(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	return true;
 }
 
+FVector modelTest(0.0f, 0.0f, -1.0f);
+//FVector camRotTest(0.0f, 0.0f, -1.0f);
+float modelRotTest= 0.0f;
 void CEngine::UpdateGUI()
 {
+	bool changed = ImGui::SliderFloat3("Model Pos (x,y,z)", &modelTest.X, -4.0f, 4.0f, "%.3f");
+	bool changed2= ImGui::SliderFloat3("Model Rotation (x,y,z)", &modelRotTest, -180.0f, 180.0f, "%.3f");
+
+
 	/*ImGui_ImplDX11_NewFrame();
 	ImGui_ImplWin32_NewFrame();
 	ImGui::NewFrame();*/
@@ -117,7 +125,6 @@ void CEngine::UpdateGUI()
 //	//ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
 //	//renderer.SwapChain->Present(0, 0);
 //}
-
 
 bool CEngine::Run()
 {
@@ -340,7 +347,7 @@ void CEngine::Render()
 		DeviceContext->VSSetConstantBuffers(1, 1, &MVPConstantBuffer);
 	}
 
-	UpdateConstant({ 0.0f, 0.0f, 0.0f }, 1.0f);
+	UpdateConstant({ 0.0f, 0.0f, 0.0f }, 1.0f , modelTest, modelRotTest);
 
 	UINT offset = 0;
 	DeviceContext->IASetVertexBuffers(0, 1, &VertexBuffer, &Stride, &offset);

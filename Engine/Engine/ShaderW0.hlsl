@@ -6,9 +6,9 @@ cbuffer constants : register(b0)
 
 cbuffer MVPTransform : register(b1)
 {
-    float4x4 model;
-    float4x4 view;
-    float4x4 projection;   
+    float4x4 Model;
+    float4x4 View;
+    float4x4 Perspective;
 }
 
 struct VS_INPUT
@@ -26,7 +26,10 @@ struct PS_INPUT
 PS_INPUT mainVS(VS_INPUT input)
 {
     PS_INPUT output;
-    output.position = input.position * float4(Scale, Scale, Scale,1) + float4(Offset, 0);
+    //output.position = input.position * float4(Scale, Scale, Scale,1) + float4(Offset, 0);
+    output.position = mul(Model, input.position);
+    output.position = mul(View, output.position);
+    output.position = mul(Perspective, output.position);
     output.color = input.color; 
     
     return output;
