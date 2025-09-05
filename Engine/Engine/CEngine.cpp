@@ -91,12 +91,14 @@ bool CEngine::Init(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	return true;
 }
 
-FVector modelTest(0.0f, 0.0f, -1.0f);
-//FVector camRotTest(0.0f, 0.0f, -1.0f);
+FVector camPosTest(0.0f, 0.0f, -3.0f); 
+FVector modelPosTest(0.0f, 0.0f, 0.0f); 
 float modelRotTest= 0.0f;
+
 void CEngine::UpdateGUI()
 {
-	bool changed = ImGui::SliderFloat3("Model Pos (x,y,z)", &modelTest.X, -4.0f, 4.0f, "%.3f");
+	bool changed = ImGui::SliderFloat3("Cam Pos (x,y,z)", &camPosTest.X, -4.0f, 4.0f, "%.3f");
+	bool changed1 = ImGui::SliderFloat3("Model Pos (x,y,z)", &modelPosTest.X, -4.0f, 4.0f, "%.3f");
 	bool changed2= ImGui::SliderFloat3("Model Rotation (x,y,z)", &modelRotTest, -180.0f, 180.0f, "%.3f");
 
 
@@ -350,7 +352,7 @@ void CEngine::Render()
 		DeviceContext->VSSetConstantBuffers(1, 1, &MVPConstantBuffer);
 	}
 
-	UpdateConstant({ 0.0f, 0.0f, 0.0f }, 1.0f , modelTest, modelRotTest);
+	UpdateConstant({ 0.0f, 0.0f, 0.0f }, 1.0f , camPosTest, modelPosTest, modelRotTest);
 
 	UINT offset = 0;
 	DeviceContext->IASetVertexBuffers(0, 1, &VertexBuffer, &Stride, &offset);
