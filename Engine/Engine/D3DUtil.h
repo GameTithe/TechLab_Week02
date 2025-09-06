@@ -1,6 +1,6 @@
 #pragma once
 
-//.libÆÄÀÏ ¸µÅ· Áö½Ã¹®
+//.libíŒŒì¼ ë§í‚¹ ì§€ì‹œë¬¸
 #pragma comment(lib, "d3d11")
 #pragma comment(lib, "d3dcompiler")
 
@@ -11,12 +11,12 @@
 using namespace std;
 class D3DUtil
 {
-	//vertexbuffer »ı¼º => FVertex ÇÊ¿ä
-	//indexbuffer »ı¼º
-	//VS, InputLayout »ı¼º
-	//PS »ı¼º
-	//CBuffer»ı¼º
-	//CBuffer ¾÷µ¥ÀÌÆ® <T>
+	//vertexbuffer ìƒì„± => FVertex í•„ìš”
+	//indexbuffer ìƒì„±
+	//VS, InputLayout ìƒì„±
+	//PS ìƒì„±
+	//CBufferìƒì„±
+	//CBuffer ì—…ë°ì´íŠ¸ <T>
 
 public:
 
@@ -25,9 +25,9 @@ public:
 	{
 		D3D11_MAPPED_SUBRESOURCE cBufferMSR;
 
-		//gpu¸Ş¸ğ¸®¸¦ cpu°¡ Á¢±ÙÇÒ ¼ö ÀÖµµ·Ï Àá±İ
-		//D3D11_MAP_WRITE_DISCARD : gpu¾ÈÀÇ µ¥ÀÌÅÍ¸¦ ¹ö¸®°í cpu¿¡¼­ ³Ö´Â µ¥ÀÌÅÍ·Î µ¤¾î¾º¿ò 
-		//gpu³»¿ëÀ» ¹ö¸²À¸·Î½á gpu¾ÈÀÇ ¸Ş¸ğ¸®¸¦ ÀĞ´Â °úÁ¤ »ı·«
+		//gpuë©”ëª¨ë¦¬ë¥¼ cpuê°€ ì ‘ê·¼í•  ìˆ˜ ìˆë„ë¡ ì ê¸ˆ
+		//D3D11_MAP_WRITE_DISCARD : gpuì•ˆì˜ ë°ì´í„°ë¥¼ ë²„ë¦¬ê³  cpuì—ì„œ ë„£ëŠ” ë°ì´í„°ë¡œ ë®ì–´ì”Œì›€ 
+		//gpuë‚´ìš©ì„ ë²„ë¦¼ìœ¼ë¡œì¨ gpuì•ˆì˜ ë©”ëª¨ë¦¬ë¥¼ ì½ëŠ” ê³¼ì • ìƒëµ
 		context->Map(cBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &cBufferMSR);
 		memcpy(cBufferMSR.pData, &cBufferData, sizeof(T));
 		context->Unmap(cBuffer, 0);
@@ -41,7 +41,7 @@ public:
 
 	static void CreateCBuffer(ID3D11Buffer** cBuffer);
 	static void CreateVertexBuffer(ID3D11Buffer** vertexBuffer);
-	static void CreateIndexBuffer(ID3D11Buffer** indexBuffer);
+	static void CreateIndexBuffer(ID3D11Buffer** indexBuffer); 
 	static void CreateVSAndInputLayout(const wstring& filePath, ID3D11VertexShader** vs, ID3D11InputLayout** inputLayout, D3D11_INPUT_ELEMENT_DESC& inputLayoutDesc);
 	static void CreatePS(const wstring& filePath, ID3D11PixelShader** ps);
 };

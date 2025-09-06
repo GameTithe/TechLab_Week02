@@ -1,4 +1,5 @@
 #pragma once
+
 #include <d3d11.h>
 #include <windows.h>
 
@@ -17,12 +18,14 @@ public:
 
 	LRESULT MsgProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
 
+	//void AddLog(const char* fmt, ...);
+
 private:
 
 	bool InitWindow(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nShowCmd);
 	bool InitD3D();
 	bool InitImGui();
-
+	 
 	void UpdateGUI();
 	void Update(float deltaTime);
 	void Render();
@@ -37,7 +40,7 @@ private:
 	//void CreateTextureSampler();
 	//void SetRenderingPipeline();
 
-	// Å×½ºÆ®¿ë ÀÓ½Ã ÇÔ¼öµé
+	// í…ŒìŠ¤íŠ¸ìš© ì„ì‹œ í•¨ìˆ˜ë“¤
 	void CreateVertexBuffer(FVertex* vertices, UINT byteWidth)
 	{
 		// 2. Create a vertex buffer
@@ -56,7 +59,7 @@ private:
 	{
 		//const Offset Scale
 		D3D11_BUFFER_DESC constantbufferdesc = {};
-		constantbufferdesc.ByteWidth = sizeof(FConstants) + 0xf & 0xfffffff0; // ensure constant buffer size is multiple of 16 bytes(+°¡ ¸ÕÀú °è»êµÊ)
+		constantbufferdesc.ByteWidth = sizeof(FConstants) + 0xf & 0xfffffff0; // ensure constant buffer size is multiple of 16 bytes(+ê°€ ë¨¼ì € ê³„ì‚°ë¨)
 		constantbufferdesc.Usage = D3D11_USAGE_DYNAMIC; // will be updated from CPU every frame
 		constantbufferdesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
 		constantbufferdesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
@@ -65,7 +68,7 @@ private:
 
 		//const MVP
 		D3D11_BUFFER_DESC ConstantMVPBufferDesc = {};
-		ConstantMVPBufferDesc.ByteWidth = sizeof(FMVPConstants) + 0xf & 0xfffffff0; // ensure constant buffer size is multiple of 16 bytes(+°¡ ¸ÕÀú °è»êµÊ)
+		ConstantMVPBufferDesc.ByteWidth = sizeof(FMVPConstants) + 0xf & 0xfffffff0; // ensure constant buffer size is multiple of 16 bytes(+ê°€ ë¨¼ì € ê³„ì‚°ë¨)
 		ConstantMVPBufferDesc.Usage = D3D11_USAGE_DYNAMIC; // will be updated from CPU every frame
 		ConstantMVPBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
 		ConstantMVPBufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
@@ -132,7 +135,7 @@ private:
 	ID3D11VertexShader* SimpleVertexShader = nullptr;
 	ID3D11PixelShader* SimplePixelShader = nullptr;
 
-	//Å×½ºÆ®¿ë ÀÓ½Ã
+	//í…ŒìŠ¤íŠ¸ìš© ì„ì‹œ
 	ID3D11Buffer* ConstantBuffer = nullptr;
 	ID3D11Buffer* MVPConstantBuffer = nullptr;
 

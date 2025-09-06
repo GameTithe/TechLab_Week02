@@ -18,7 +18,7 @@ float FVector::Dot(const FVector& rhs) const
 {
 	return X * rhs.X + Y * rhs.Y + Z * rhs.Z;
 }
-
+ 
 FVector FVector::Cross(const FVector& rhs) const
 {
 	return FVector(Y * rhs.Z - Z * rhs.Y, 

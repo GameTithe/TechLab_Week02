@@ -2,7 +2,7 @@
 #include "UActorComponent.h"
 #include "FVector.h"
 #include "FMatrix.h"
-#include "TArray.h"
+#include "Typedef.h"
 class USceneComponent : public UActorComponent
 {
 public:
@@ -10,7 +10,7 @@ public:
 	USceneComponent(AActor* owner);
 	virtual ~USceneComponent();
   
-	void AttachToComponent(USceneComponent* parent); // ºÎ¸ğ ÄÄÆ÷³ÍÆ®¿¡ ³ªÀÇ ÄÄÆ÷³ÍÆ® ºÎÂø
+	void AttachToComponent(USceneComponent* parent); // ë¶€ëª¨ ì»´í¬ë„ŒíŠ¸ì— ë‚˜ì˜ ì»´í¬ë„ŒíŠ¸ ë¶€ì°©
 	
 	void SetRelativeLocation(FVector relativeLocation);
 	void SetRelativeRotation(FVector relativeRotaition);
@@ -30,10 +30,10 @@ private:
 	FVector RelativeLocation;
 	FVector RelativeRotation;
 	FVector RelativeScale3D;
-	FMatrix ModelMatrix;
+	FMatrix ModelMatrix; 
 protected:
-	// Component°£ÀÇ °èÃş ±¸Á¶¸¦ À§ÇÑ ¸â¹öµé
-	USceneComponent* ParentComponent; // nullptrÀÌ¸é ÇØ´ç ÄÄÆ÷³ÍÆ®°¡ ·çÆ®
+	// Componentê°„ì˜ ê³„ì¸µ êµ¬ì¡°ë¥¼ ìœ„í•œ ë©¤ë²„ë“¤
+	USceneComponent* ParentComponent; // nullptrì´ë©´ í•´ë‹¹ ì»´í¬ë„ŒíŠ¸ê°€ ë£¨íŠ¸
 	TArray<USceneComponent*> ChildComponents; 
 
 };

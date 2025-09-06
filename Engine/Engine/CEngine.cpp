@@ -1,5 +1,7 @@
-#include "ConsoleWindow.h"
+#define UE_LOG(fmt, ...) ConsoleWindow::GetInstance().AddLog(fmt, ##__VA_ARGS__)
+
 #include "CEngine.h"
+#include "ConsoleWindow.h"
 
 #include <windows.h>
 
@@ -8,7 +10,7 @@
 #pragma comment(lib, "d3d11")
 #pragma comment(lib, "d3dcompiler")	
 
-// D3D headers
+// D3D headers 
 #include <d3d11.h>
 #include <d3dcompiler.h>	
 
@@ -63,6 +65,9 @@ CEngine::CEngine()
 {
 	//PCurrentScene = new CScene();
 	gpCEngine = this;
+
+	ConsoleWindow::GetInstance().AddLog("hi");
+	//UE_LOG("hi");
 }
 
 CEngine::~CEngine()
@@ -131,6 +136,8 @@ void CEngine::UpdateGUI()
 
 bool CEngine::Run()
 {
+	UE_LOG("hi");
+
 	bool bIsExit = false;
 
 	// Main Loop 
@@ -172,7 +179,7 @@ bool CEngine::Run()
 		ImGui::End();
 
         bool bConsoleDraw = true;
-        ShowExampleAppConsole(&bConsoleDraw);
+		ConsoleWindow::GetInstance().Draw("Example: Console", &bConsoleDraw);
 
 		ImGui::Render();
 
@@ -183,6 +190,11 @@ bool CEngine::Run()
 
 	return true;
 }
+
+//void CEngine::AddLog(const char* fmt, ...)
+//{
+//	PConsoleWindow->AddLog(fmt);
+//}
 
 bool CEngine::InitWindow(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nShowCmd)
 {

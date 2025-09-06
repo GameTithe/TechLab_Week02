@@ -1,9 +1,9 @@
 #pragma once
 
-// ¾Æ·¡ °ÍµéÀº ³ªÁß¿¡ »èÁ¦ ¿¹Á¤
+// ì•„ë˜ ê²ƒë“¤ì€ ë‚˜ì¤‘ì— ì‚­ì œ ì˜ˆì •
 #include <string>
 #include <vector>
-using FString = std::string;
+#include "Typedef.h"
 
 
 class CScene
@@ -18,3 +18,4 @@ class CScene
 //	void AddObject(UObject* obj);
 //	void RemoveObject(UObject* obj);
 };
+ 

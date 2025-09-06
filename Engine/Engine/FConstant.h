@@ -13,4 +13,4 @@ struct FConstants
 	FVector Offset;
 	float Radius;
 	//float Pad;
-};
+}; 

@@ -13,7 +13,7 @@ const FMatrix FMatrix::Identity = { FVector4(1,0,0,0),FVector4(0,1,0,0),FVector4
 
 FMatrix::FMatrix()
 {
-	M[0][0] = 0.0f;
+	M[0][0] = 0.0f; 
 	M[1][0] = 0.0f;
 	M[2][0] = 0.0f;
 	M[3][0] = 0.0f;
@@ -62,7 +62,7 @@ bool FMatrix::Inverse(FMatrix& out) const {
 	double inv[16];
 	double m[16];
 
-	// FMatrix °Ê 1¬˜ø¯ πËø≠ (row-major ∂Û∞Ì ∞°¡§)
+	// FMatrix ‚Üí 1Ï∞®Ïõê Î∞∞Ïó¥ (row-major ÎùºÍ≥† Í∞ÄÏ†ï)
 	for (int i = 0; i < 4; i++)
 		for (int j = 0; j < 4; j++)
 			m[i * 4 + j] = static_cast<double>(M[i][j]);
@@ -186,7 +186,7 @@ bool FMatrix::Inverse(FMatrix& out) const {
 	for (int i = 0; i < 16; i++)
 		inv[i] *= det;
 
-	// 1¬˜ø¯ πËø≠ °Ê FMatrix
+	// 1Ï∞®Ïõê Î∞∞Ïó¥ ‚Üí FMatrix
 	for (int i = 0; i < 4; i++)
 		for (int j = 0; j < 4; j++)
 			out.M[i][j] = static_cast<float>(inv[i * 4 + j]);
@@ -378,12 +378,12 @@ FMatrix FMatrix::MakeTranslationMatrix(FVector4 tranlation)
 FMatrix FMatrix::MakeLookAt(FVector eye, FVector at, FVector up)
 { 
 	FVector f = at;                   
-	FVector r = up.Cross(f); r.Normalize();                // right  = up °ø forward (LH)
+	FVector r = up.Cross(f); r.Normalize();                // right  = up √ó forward (LH)
 	FVector u = f.Cross(r); u.Normalize();
 
 	FMatrix T_inv(
 		FVector4(1, 0, 0, -eye.X),
-		FVector4(0, 1, 0, eye.Y),
+		FVector4(0, 1, 0, -eye.Y),
 		FVector4(0, 0, 1, -eye.Z),
 		FVector4(0, 0, 0, 1)
 	);
@@ -407,12 +407,12 @@ FMatrix FMatrix::MakePerspectiveMatrix(float fovy, float aspect, float zNear, fl
 	const float A = zFar / (zFar - zNear);
 	const float B = -zNear * A;
 
-	// ø≠ ±‚¡ÿ πËƒ°:
+	// Ïó¥ Í∏∞Ï§Ä Î∞∞Ïπò:
 	// [ xS   0    0   0 ]
 	// [ 0    yS   0   0 ]
 	// [ 0    0    A   1 ]
 	// [ 0    0    B   0 ]
-	// => clip: x°«=xS*x, y°«=yS*y, z°«=A*z + B, w°«=z
+	// => clip: x‚Ä≤=xS*x, y‚Ä≤=yS*y, z‚Ä≤=A*z + B, w‚Ä≤=z
 	//xscale 0 0 0
 	// 
 	//

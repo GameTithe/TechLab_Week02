@@ -4,7 +4,7 @@ class UObject {
 public:
 	uint32 UUID;
 	uint32 InternalIndex; // Index of GUObjectArray
-protected: // public °í¹Î
+protected: // public ê³ ë¯¼
 	UObject() {}
 	virtual ~UObject() {}
-};
+}; 

@@ -1,9 +1,10 @@
 #include "CSceneManager.h"
-#include "Json.hpp" //¹«Á¶°Ç cpp¿¡ ÀÖ¾î¾ßÇÔ
+#include "Json.hpp" //ë¬´ì¡°ê±´ cppì— ìˆì–´ì•¼í•¨
 
-//¾À¸Å´ÏÀú json Á¤º¸±¸Á¶
+//ì”¬ë§¤ë‹ˆì € json ì •ë³´êµ¬ì¡°
 //CurSceneName : ""
 //SceneNames : ["", "", ""]
+
 
 using namespace json;
 
@@ -15,15 +16,15 @@ const string CSceneManager::DefaultSceneName = "DefaultScene";
 
 CSceneManager::CSceneManager()
 {
-	//¾À¸Å´ÏÀú Á¤º¸ ÀûÈù ÆÄÀÏ Ã£±â
+	//ì”¬ë§¤ë‹ˆì € ì •ë³´ ì íŒ íŒŒì¼ ì°¾ê¸°
 	ifstream sceneMangerInfoReadStream(SceneManagerInfoPath);
 	if (sceneMangerInfoReadStream.good() == false)
 	{
-		//¾À¸Å´ÏÀú Á¤º¸ ÀûÈù ÆÄÀÏ »ı¼º
+		//ì”¬ë§¤ë‹ˆì € ì •ë³´ ì íŒ íŒŒì¼ ìƒì„±
 		ofstream createFileStream(SceneManagerInfoPath);
 		JSON sceneManagerInfoJson;
 
-		//¾À¸Å´ÏÀú Á¤º¸ ÃÊ±â µ¥ÀÌÅÍ ¼¼ÆÃ
+		//ì”¬ë§¤ë‹ˆì € ì •ë³´ ì´ˆê¸° ë°ì´í„° ì„¸íŒ…
 		sceneManagerInfoJson[CurSceneNameKey] = DefaultSceneName;
 		sceneManagerInfoJson[SceneNamesKey] = Array(DefaultSceneName);
 		createFileStream << sceneManagerInfoJson;
@@ -43,10 +44,10 @@ CSceneManager::CSceneManager()
 		}
 		sceneMangerInfoReadStream.close();
 
-		//¾À ÀÌ¸§ÀÌ ¾øÀ»°æ¿ì
+		//ì”¬ ì´ë¦„ì´ ì—†ì„ê²½ìš°
 		if (SceneNames.size() == 0)
 		{
-			//default ¾À ÀÌ¸§ Ãß°¡
+			//default ì”¬ ì´ë¦„ ì¶”ê°€
 			ofstream sceneMangerInfoWriteStream(SceneManagerInfoPath);
 			if (sceneMangerInfoWriteStream.is_open())
 			{
@@ -57,7 +58,7 @@ CSceneManager::CSceneManager()
 				sceneMangerInfoWriteStream.close();
 			}
 
-			//SceneNamesÆÄÀÏ¿¡ DefaultSceneÃß°¡
+			//SceneNamesíŒŒì¼ì— DefaultSceneì¶”ê°€
 			SceneNames.push_back(DefaultSceneName);
 		}
 	}
@@ -83,7 +84,7 @@ CSceneManager::CSceneManager()
 		}
 		else
 		{
-			//¾À »ı¼º
+			//ì”¬ ìƒì„±
 			//CreateScene(SceneNames[i]);
 		}
 	}
@@ -99,7 +100,7 @@ bool CSceneManager::CreateScene(const string& sceneName)
 		ss << sceneReadStream.rdbuf();
 		JSON sceneNamesJson = JSON::Load(ss.str());
 
-		//ÄÚµå Ãß°¡ ÇÊ¿ä
+		//ì½”ë“œ ì¶”ê°€ í•„ìš”
 		return true;
 	}
 	else
@@ -117,7 +118,7 @@ bool CSceneManager::LoadScene(const string& sceneName, CScene& outScene)
 		ss << sceneNamesReadStream.rdbuf();
 		JSON sceneNamesJson = JSON::Load(ss.str());
 
-		//ÄÚµå Ãß°¡ ÇÊ¿ä
+		//ì½”ë“œ ì¶”ê°€ í•„ìš”
 		return true;
 	}
 	else
