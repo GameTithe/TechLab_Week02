@@ -2,6 +2,8 @@ cbuffer constants : register(b0)
 {
     float3 Offset;
     float Scale;
+    int Pick;
+    float Padding; 
 }
 
 cbuffer MVPTransform : register(b1)
@@ -10,7 +12,7 @@ cbuffer MVPTransform : register(b1)
     float4x4 View;
     float4x4 Perspective;
 }
-
+ 
 struct VS_INPUT
 {
     float4 position : POSITION;    // input position
@@ -38,6 +40,9 @@ PS_INPUT mainVS(VS_INPUT input)
 
 float4 mainPS(PS_INPUT input) : SV_Target
 {
-    float2 norm = input.position.xy / 1024.0f;
-    return float4(norm, norm.x, 1.0f);
+    float4 color = input.color;
+    if (Pick)
+        color * 1.5;
+    
+    return color;
 }

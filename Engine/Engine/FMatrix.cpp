@@ -331,8 +331,8 @@ FMatrix FMatrix::MakeRotationXMatrix(float degree)
 
 	return FMatrix(
 		FVector4(1.0f, 0.0f, 0.0f, 0.0f),
-		FVector4(0.0f, c, s, 0.0f),
-		FVector4(0.0f, -s, c, 0.0f),
+		FVector4(0.0f, c, -s, 0.0f),
+		FVector4(0.0f, s, c, 0.0f),
 		FVector4(0.0f, 0.0f, 0.0f, 1.0f)
 	);
 }
@@ -344,9 +344,9 @@ FMatrix FMatrix::MakeRotationYMatrix(float degree)
 	float s = std::sin(rad); 
 
 	return FMatrix(
-		FVector4(c, 0.0f, -s, 0.0f),
+		FVector4(c, 0.0f, s, 0.0f),
 		FVector4(0.0f, 1.0f, 0.0f, 0.0f),
-		FVector4(s, 0.0f, c, 0.0f),
+		FVector4(-s, 0.0f, c, 0.0f),
 		FVector4(0.0f, 0.0f, 0.0f, 1.0f)
 	);
 }
@@ -358,8 +358,8 @@ FMatrix FMatrix::MakeRotationZMatrix(float degree)
 	float s = std::sin(rad); 
 
 	return FMatrix(
-		FVector4(c, s, 0.0f, 0.0f),
-		FVector4(-s, c, 0.0f, 0.0f),
+		FVector4(c, -s, 0.0f, 0.0f),
+		FVector4(s, c, 0.0f, 0.0f),
 		FVector4(0.0f, 0.0f, 1.0f, 0.0f),
 		FVector4(0.0f, 0.0f, 0.0f, 1.0f)
 	);
@@ -427,12 +427,11 @@ FMatrix FMatrix::MakePerspectiveMatrix(float fovy, float aspect, float zNear, fl
 	); 
 }
  
-#pragma region Legacy
-/*
+#pragma region Legacy 
 // x: forward 
 // y: right
 // z: up
-static FMatrix MakeLookAt(FVector eye, FVector at, FVector up)
+FMatrix FMatrix::L_MakeLookAt(FVector eye, FVector at, FVector up)
 {
 	// X
 	FVector forward = at - eye; 
@@ -443,14 +442,14 @@ static FMatrix MakeLookAt(FVector eye, FVector at, FVector up)
 	right.Normalize();
 
 	// Z
-	FVector up = right.Cross(forward);
-	up.Normalize();
+	FVector upVector = right.Cross(forward);
+	upVector.Normalize();
 
 	FMatrix camInvVM
 	{
-		FVector4(forward.X, right.X, up.X, 0.0f),
-		FVector4(forward.Y, right.Y, up.Y, 0.0f),
-		FVector4(forward.Z, right.Z, up.Z, 0.0f),
+		FVector4(forward.X, right.X, upVector.X, 0.0f),
+		FVector4(forward.Y, right.Y, upVector.Y, 0.0f),
+		FVector4(forward.Z, right.Z, upVector.Z, 0.0f),
 		FVector4(0.0f, 0.0f, 0.0f, 1.0f)
 	}; 
 	camInvVM.Transpose();
@@ -466,7 +465,7 @@ static FMatrix MakeLookAt(FVector eye, FVector at, FVector up)
 	return camInvTM* camInvVM; 
 }
 
-FMatrix FMatrix::MakePerspectiveMatrix(float fovz, float aspect, float zNear, float zFar)
+FMatrix FMatrix::L_MakePerspectiveMatrix(float fovz, float aspect, float zNear, float zFar)
 {
 	const float sy = 1.0f / std::tan(fovz * 0.5f);
 	const float sx = sy / aspect;
@@ -479,6 +478,5 @@ FMatrix FMatrix::MakePerspectiveMatrix(float fovz, float aspect, float zNear, fl
 		FVector4(0.0f, 0.0f, sx, 0.0f),
 		FVector4(1.0f, 0.0f, 0.0f, 0.0f)
 	);
-}
-*/
+} 
 #pragma endregion

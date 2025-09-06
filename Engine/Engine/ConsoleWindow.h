@@ -360,4 +360,10 @@ static void ShowExampleAppConsole(bool* p_open)
 {
     static ConsoleWindow console;
     console.Draw("Example: Console", p_open);
-}
+
+    ImGuiIO& io = ImGui::GetIO();
+    ImVec2 screenPos = io.MousePos; // 화면 기준 (스크린 좌표, 픽셀 단위)
+
+    // 예시: 콘솔에 찍기
+    console.AddLog("Mouse Screen Pos = (%.1f, %.1f)", screenPos.x, screenPos.y);
+}   
