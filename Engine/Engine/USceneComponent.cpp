@@ -131,6 +131,8 @@ void USceneComponent::UpdateModelMatrix()
 void USceneComponent::Render()
 {
 	FMatrix modelMat = GetModelMatrix();
+	modelMat.Transpose();
+
 	D3DUtil::CBufferUpdate(CEngine::gpCEngine->GetDeviceContext(),TransformCBuffer, modelMat);
 	CEngine::gpCEngine->GetDeviceContext()->VSSetConstantBuffers(0,1,&TransformCBuffer);
 	CEngine::gpCEngine->GetDeviceContext()->Draw(36, 0);
