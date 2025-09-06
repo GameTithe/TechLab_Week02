@@ -108,7 +108,7 @@ private:
 
 	ID3D11Buffer* PickingCBuffer = nullptr;
 	CSceneManager* SceneManager;
-
+	
 
 public:
 	static CEngine* gpCEngine;

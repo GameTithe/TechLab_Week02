@@ -223,16 +223,49 @@ void CEngine::UpdateGUI()
 {
 	//UE_LOG("%d",PickTest);
 
+	//transform
 	ImGui::SliderFloat3("modelPos (x,y,z)",&modelPos.X,-4.0f,4.0f,"%.3f");
 	ImGui::SliderFloat3("modelRot(x,y,z)",&modelRot.X,-180.0f,180.0f,"%.3f");
 	ImGui::SliderFloat3("modelScale(x,y,z)",&modelScale.X,-4.0f,4.0f,"%.3f");
 	ImGui::SliderFloat3("camPos (x,y,z)",&CamPos.X, -10, 10);
 	ImGui::SliderFloat3("camRot(x,y,z)",&CamRot.X,-10,10);
 
-	SceneManager->GetScene().SceneActors[0]->GetRootComponent()->SetRelativeLocation(modelPos);
-	SceneManager->GetScene().SceneActors[0]->GetRootComponent()->SetRelativeRotation(modelRot);
-	SceneManager->GetScene().SceneActors[0]->GetRootComponent()->SetRelativeScale3D(modelScale);
-	 
+	//cam
+	if(SceneManager->GetScene().SceneActors.size()>0){
+		SceneManager->GetScene().SceneActors[0]->GetRootComponent()->SetRelativeLocation(modelPos);
+		SceneManager->GetScene().SceneActors[0]->GetRootComponent()->SetRelativeRotation(modelRot);
+		SceneManager->GetScene().SceneActors[0]->GetRootComponent()->SetRelativeScale3D(modelScale);
+	}
+
+	//SceneEditor
+	//오브젝트 생성
+	//오브젝트 제거
+	//씬 변경
+	//씬 생성
+	//씬 제거
+	if(ImGui::Button("Create Actor"))
+	{
+		SceneManager->GetScene().CreateActor();
+	}
+	if(ImGui::Button("Remove Actor"))
+	{
+		SceneManager->GetScene().DestroyActor();
+	}
+
+	if(ImGui::Button("Save Scene"))
+	{
+		SceneManager->SaveScene();
+	}
+	
+	if(ImGui::Button("Create Scene"))
+	{
+
+	}
+	if(ImGui::Button("Remove Scene"))
+	{
+
+	}
+
 }
 
 //void CEngine::Update(float deltaTime)
@@ -627,8 +660,10 @@ void CEngine::Render()
 	DeviceContext->ClearDepthStencilView(DepthStencilView,D3D11_CLEAR_DEPTH,1.0f,0);
 
 	//CommonConstantBuffer
-	FCommonConstantBuffer commonCBufferData;
-	
+	FCommonConstantBuffer commonCBufferData; 
+	DeviceContext->ClearRenderTargetView(FrameBufferRTV,ClearColor);
+	DeviceContext->ClearDepthStencilView(DepthStencilView,D3D11_CLEAR_DEPTH,1.0f,0);
+
 	FVector eye = FVector(0,0,-10);
 	FVector at = FVector::FRONT;
 	FVector up = {0.0f,1.0f,0.0f};

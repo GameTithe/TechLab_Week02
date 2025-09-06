@@ -19,6 +19,7 @@ void InitDSS()
 	D3D11_DEPTH_STENCIL_DESC desc = {};
 	desc.DepthEnable = true;
 	desc.DepthFunc = D3D11_COMPARISON_LESS_EQUAL;
+	desc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
 	desc.StencilEnable = false;
 	D3DUtil::CreateDepthStencilState(&SimpleDSS,desc);
 }
