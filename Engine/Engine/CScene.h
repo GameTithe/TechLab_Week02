@@ -3,7 +3,7 @@
 // 아래 것들은 나중에 삭제 예정
 #include <string>
 #include <vector>
-using FString = std::string;
+#include "Typedef.h"
 
 
 class CScene
