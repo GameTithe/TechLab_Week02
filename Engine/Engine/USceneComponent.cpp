@@ -14,22 +14,23 @@ USceneComponent::~USceneComponent()
 
 void USceneComponent::AttachToComponent(USceneComponent* parent)
 {
-	// 나의 부모 컴포넌트가 존재하면
+	// 기존에 부모 있으면
 	if (ParentComponent)
 	{
-		// 부모 컴포넌트의 자식 목록에서 나를 제거
+		// 부모의 자식 목록에서 나를 지움
 		ParentComponent->ChildComponents.erase(
 			std::remove(ParentComponent->ChildComponents.begin(), ParentComponent->ChildComponents.end(), this), 
 			ParentComponent->ChildComponents.end());
 	} 
 
-	// 나의 새 부모 설정
+	// 새 부모 설정
 	ParentComponent = parent;
 
-	// 부모의 자식 목록에 나 추가
+	// 부모의 자식 목록의 나를 추가
 	if (parent)
 	{
 		ParentComponent->ChildComponents.push_back(this);
+		UpdateModelMatrix();
 	}
 
 }
@@ -37,16 +38,19 @@ void USceneComponent::AttachToComponent(USceneComponent* parent)
 void USceneComponent::SetRelativeLocation(FVector relativeLocation)
 {
 	RelativeLocation = relativeLocation;
+	UpdateModelMatrix();
 }
 
 void USceneComponent::SetRelativeRotation(FVector relativeRotaition)
 {
 	RelativeRotation = relativeRotaition;
+	UpdateModelMatrix();
 }
 
 void USceneComponent::SetRelativeScale3D(FVector relativeScale3D)
 {
 	RelativeScale3D = relativeScale3D;
+	UpdateModelMatrix();
 }
 
 FVector USceneComponent::GetRelativeLocation()
@@ -86,9 +90,12 @@ FMatrix USceneComponent::GetModelMatrix()
 	return ModelMatrix;
 }
 
+// 언제 호출되어야 하는가
+// 1. 컴포넌트 자체가 움직일 때 
+// 2. 다른 컴포넌트에 자식으로 부착될 때
 void USceneComponent::UpdateModelMatrix()
 {
-	// ��� Transform���� ��� ��� ���ϱ�
+	// 상대 Transform으로 상대 행렬 구하기
 	// Calculate relative matrix(transform matrix) using relative transform
 	FMatrix relativeMatrix = FMatrix::MakeScaleMatrix(RelativeScale3D.X, RelativeScale3D.Y, RelativeScale3D.Z)
 		* FMatrix::MakeRotationXMatrix(RelativeRotation.X)
@@ -97,20 +104,20 @@ void USceneComponent::UpdateModelMatrix()
 		* FMatrix::MakeTranslationMatrix({ RelativeLocation.X, RelativeLocation.Y, RelativeLocation.Z, 1 });
 	if (!ParentComponent)
 	{
-		// �θ� ������
-		// ���� Model Matrix = ����� ��� ���
+		// 부모가 없으면
+		// 나의 Model Matrix = 계산한 상대 행렬
 		// my model matrix is just relative matrix calculated 
 		ModelMatrix = relativeMatrix;
 	}
 	else
 	{
-		// �θ� ������
-		// ���� Model Matrix = ����� ��� ��� * �θ��� Model Matrix
+		// 부모 있으면
+		// 나의 Model Matrix = 계산한 상대 행렬 * 부모의 Model Matrix
 		// my model matrix is relative matrix * parent's model matrix
 		ModelMatrix = relativeMatrix * ParentComponent->GetModelMatrix();
 		
 	}
-	// �ڽ� ������Ʈ�� �θ��� Model Matrix ������� ����
+	// 자식 컴포넌트에 부모의 Model Matrix 변경됨을 전파
 	for (USceneComponent* child : ChildComponents)
 	{
 		child->UpdateModelMatrix();
