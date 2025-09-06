@@ -29,6 +29,8 @@ public:
 	static const FVector BACK;
 	static const FVector UP;
 	static const FVector DOWN;
+	static const FVector ZERO;
+	static const FVector ONE;
 
 public:
 	FVector operator+	(const FVector& rhs) const;

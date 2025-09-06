@@ -9,6 +9,7 @@ class USceneComponent : public UActorComponent
 public:
 	USceneComponent();
 	USceneComponent(AActor* owner);
+	void Init();
 	virtual ~USceneComponent();
   
 	void AttachToComponent(USceneComponent* parent); // 부모 컴포넌트에 나의 컴포넌트 부착

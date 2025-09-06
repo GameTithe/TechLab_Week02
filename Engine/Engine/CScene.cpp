@@ -5,11 +5,24 @@ void CScene::ClearScene()
 {
 
 }
+FVector tempPos;
 AActor* CScene::CreateActor()
 {
 	AActor* actor = new AActor();
+	actor->GetRootComponent()->SetRelativeLocation(tempPos);
+	tempPos.X += 2;
 	SceneActors.push_back(actor);
 	return actor;
+}
+void CScene::DestroyActor()
+{
+	if(SceneActors.size() == 0)
+	{
+		return;
+	}
+	AActor* lastActor = SceneActors.back();
+	delete lastActor;
+	SceneActors.pop_back();
 }
 void CScene::RenderScene()
 {

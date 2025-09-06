@@ -3,13 +3,21 @@
 
 USceneComponent::USceneComponent()
 {
+	Init();
 	D3DUtil::CreateCBuffer(&TransformCBuffer,sizeof(FMatrix));
 }
 
 USceneComponent::USceneComponent(AActor* owner): UActorComponent(owner)
 {
+	Init();
 	D3DUtil::CreateCBuffer(&TransformCBuffer,sizeof(FMatrix));
 
+}
+void USceneComponent::Init()
+{
+	RelativeLocation = FVector::ZERO;
+	RelativeRotation = FVector::ZERO;
+	RelativeScale3D = FVector::ONE;
 }
 
 USceneComponent::~USceneComponent()

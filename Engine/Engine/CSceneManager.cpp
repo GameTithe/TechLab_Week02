@@ -136,7 +136,7 @@ bool CSceneManager::CreateScene(const string& sceneName)
 	JSON cameraJson;
 	cameraJson = CSceneManager::USceneComponentNameKey;
 	cameraJson[CSceneManager::USceneComponentNameKey][EComponentTypeNameKey] = (int)EComponentType::UCamera;
-	cameraJson[CSceneManager::USceneComponentNameKey][CSceneManager::UScenePositionNameKey] = json::Array(0.0f,0.0f,-10.0f);
+	cameraJson[CSceneManager::USceneComponentNameKey][CSceneManager::UScenePositionNameKey] = json::Array(0.0f, 0.0f, -10.0f);
 	cameraJson[CSceneManager::USceneComponentNameKey][CSceneManager::USceneRotationNameKey] = json::Array(0.0f,0.0f,0.0f);
 	cameraJson[CSceneManager::USceneComponentNameKey][CSceneManager::USceneScaleNameKey] = json::Array(1.0f,1.0f,1.0f);
 	JSON actorJson;
@@ -220,6 +220,42 @@ bool CSceneManager::LoadScene(const string& sceneName)
 	{
 		return false;
 	}
+}
+bool CSceneManager::SaveScene()
+{
+	//씬 기본 JSON
+	FVector camPos = CEngine::gpCEngine->CamPos;
+	FVector camRot = CEngine::gpCEngine->CamRot;
+
+	JSON sceneJson;
+	JSON cameraJson;
+	cameraJson = CSceneManager::USceneComponentNameKey;
+	cameraJson[CSceneManager::USceneComponentNameKey][EComponentTypeNameKey] = (int)EComponentType::UCamera;
+	cameraJson[CSceneManager::USceneComponentNameKey][CSceneManager::UScenePositionNameKey] = json::Array(camPos.X,camPos.Y,camPos.Z);
+	cameraJson[CSceneManager::USceneComponentNameKey][CSceneManager::USceneRotationNameKey] = json::Array(camRot.X,camRot.Y,camRot.Z);
+	cameraJson[CSceneManager::USceneComponentNameKey][CSceneManager::USceneScaleNameKey] = json::Array(1.0f,1.0f,1.0f);
+
+	int actorCount = Scene.SceneActors.size();
+	
+	for(int i=0;i<actorCount;i++)
+	{
+
+	}
+	
+	JSON actorJson;
+	actorJson = CSceneManager::USceneComponentNameKey;
+	actorJson[CSceneManager::USceneComponentNameKey][EComponentTypeNameKey] = (int)EComponentType::USceneComponent;
+	actorJson[CSceneManager::USceneComponentNameKey][CSceneManager::UScenePositionNameKey] = json::Array(0.0f,0.0f,0.0f);
+	actorJson[CSceneManager::USceneComponentNameKey][CSceneManager::USceneRotationNameKey] = json::Array(0.0f,0.0f,0.0f);
+	actorJson[CSceneManager::USceneComponentNameKey][CSceneManager::USceneScaleNameKey] = json::Array(1.0f,1.0f,1.0f);
+	sceneJson.append(cameraJson);
+	sceneJson.append(actorJson);
+	cameraJson = CSceneManager::USceneComponentNameKey;
+	cameraJson[CSceneManager::USceneComponentNameKey][EComponentTypeNameKey] = (int)EComponentType::UCamera;
+	cameraJson[CSceneManager::USceneComponentNameKey][CSceneManager::UScenePositionNameKey] = json::Array(FVector(0,0,0));
+	cameraJson[CSceneManager::USceneComponentNameKey][CSceneManager::USceneRotationNameKey] = json::Array(0.0f,0.0f,0.0f);
+	cameraJson[CSceneManager::USceneComponentNameKey][CSceneManager::USceneScaleNameKey] = json::Array(1.0f,1.0f,1.0f);
+	return true;
 }
 
 bool CSceneManager::CheckExistSceneFileName(const string& sceneName)

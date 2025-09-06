@@ -14,6 +14,8 @@ public:
 	
 	void ClearScene();
 	AActor* CreateActor();
+	void DestroyActor();
+
 	void RenderScene();
 	
 };
