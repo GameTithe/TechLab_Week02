@@ -81,7 +81,7 @@ void UCameraComponent::UpdateAngleAndDirection(int mouseX,int mouseY, float scre
 	//rotationYMTranspose.Transpose();
 
 	FMatrix rotationXMTranspose = FMatrix::MakeRotationXMatrix(Pitch);
-	rotationXMTranspose.Transpose();
+	rotationXMTranspose.Transpose(); // -z방향 바라보면 반대로 회전함
 
 	const FVector4 front4OnlyYawRoation = FVector4::FRONT * rotationYMTranspose;
 	const FVector4 Front4 = front4OnlyYawRoation * rotationXMTranspose;

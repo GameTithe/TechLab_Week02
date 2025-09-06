@@ -683,8 +683,11 @@ void CEngine::Render()
 	//UE_LOG("eye: (%f, %f, %f)",eye.X,eye.Y,eye.Z);
 	UE_LOG("at: (%f, %f, %f)",at.X,at.Y,at.Z);
 	commonCBufferData.View = FMatrix::MakeLookAt(eye, at, up);
+	//commonCBufferData.View.Transpose();
 
 	commonCBufferData.Perspective = FMatrix::MakePerspectiveMatrix(30.0f,1.0f,0.1f,100.0f);
+	//commonCBufferData.Perspective.Transpose();
+
 	D3DUtil::CBufferUpdate(DeviceContext,CommonCBuffer,commonCBufferData);
 	DeviceContext->VSSetConstantBuffers(1,1,&CommonCBuffer);
 
