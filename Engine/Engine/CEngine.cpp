@@ -258,12 +258,7 @@ bool CEngine::InitWindow(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpC
 		ex,WindowClass,Title,style | WS_VISIBLE,
 		CW_USEDEFAULT,CW_USEDEFAULT,W,H,
 		nullptr,nullptr,hInstance,nullptr);
-
-
-	// 1024 * 1024 ũ���� ������ ����
-	//HWnd = CreateWindowExW(0, WindowClass, Title, WS_POPUP | WS_VISIBLE | WS_OVERLAPPEDWINDOW,
-	//	CW_USEDEFAULT, CW_USEDEFAULT, 1024, 1024, nullptr, nullptr, hInstance, nullptr);
-
+	 
 	return true;
 }
 
@@ -473,6 +468,7 @@ int CEngine::RenderPickIDAndRead(int mouseX, int mouseY)
 		
 		FObjectPicking* pickConst = (FObjectPicking*)pickBufferMSR.pData;
 		{
+			pickConst->Pick = 0.0;
 			pickConst->ObjectID = 1; 
 		}
 		DeviceContext->Unmap(PickID_CB, 0);
@@ -556,9 +552,12 @@ void CEngine::Render()
 	if (ConstantBuffer && MVPConstantBuffer)
 	{
 		DeviceContext->VSSetConstantBuffers(0, 1, &ConstantBuffer); 
+		DeviceContext->PSSetConstantBuffers(0, 1, &ConstantBuffer); 
+
 		DeviceContext->VSSetConstantBuffers(1, 1, &MVPConstantBuffer);
 		
-		DeviceContext->PSSetConstantBuffers(0, 1, &ConstantBuffer); 
+		DeviceContext->PSSetConstantBuffers(2, 1, &PickID_CB);
+		
 	}
 
 	UpdateConstant({ 0.0f, 0.0f, 0.0f }, 1.0f , camPosTest, modelPosTest, modelRotTest, PickTest);

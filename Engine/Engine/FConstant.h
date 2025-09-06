@@ -11,14 +11,13 @@ struct FMVPConstants
 struct FConstants
 {
 	FVector Offset;
-	float Radius;
-	int Pick;
-	float Padding[3];
+	float Radius;  
 };
 
 struct FObjectPicking
 {
-	int ObjectID;
-	float Padding[3];
-	 
-};
+	int Pick;
+	int ObjectID; 
+	float Padding[2];
+	       
+}; 

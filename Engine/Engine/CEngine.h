@@ -103,8 +103,7 @@ private:
 			FConstants* constants = (FConstants*)constantbufferMSR.pData;
 			{
 				constants->Offset = Offset;
-				constants->Radius = radius;
-				constants->Pick = PickTest;
+				constants->Radius = radius; 
 			}
 			DeviceContext->Unmap(ConstantBuffer, 0);
 
@@ -129,8 +128,18 @@ private:
 				FMatrix perspect = FMatrix::MakePerspectiveMatrix(30.0f, 1.0f, 0.1f, 100.0f);
 				mvpConstants->Perspective = perspect;
 				 
+			} 
+			DeviceContext->Unmap(MVPConstantBuffer,0);
+
+			D3D11_MAPPED_SUBRESOURCE pickBufferMSR{};
+			DeviceContext->Map(PickID_CB,0,D3D11_MAP_WRITE_DISCARD,0,&pickBufferMSR); 
+			FObjectPicking* pickConst = (FObjectPicking*)pickBufferMSR.pData;
+			{
+				pickConst->Pick = PickTest;
+				pickConst->ObjectID = 1;
 			}
-			DeviceContext->Unmap(MVPConstantBuffer, 0);
+			DeviceContext->Unmap(PickID_CB,0);
+
 
 		}
 	}
