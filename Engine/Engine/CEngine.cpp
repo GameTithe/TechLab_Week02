@@ -131,10 +131,9 @@ bool RayPlaneHit(const Ray& r,const FVector& p0,const FVector& N,FVector& outHit
 }
 ////////////////////////////////////////////////
  
-extern LRESULT ImGui_ImplWin32_WndProcHandler(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
+extern LRESULT ImGui_ImplWin32_WndProcHandler(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam); 
+CEngine* CEngine::gpCEngine = nullptr; 
 
-CEngine* CEngine::gpCEngine = nullptr;
-// ���� �޼����� ó���� �Լ�
 InputManager gInput = InputManager::Get();
 
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
@@ -169,16 +168,14 @@ CEngine::CEngine()
 {
 	//PCurrentScene = new CScene();
 	gpCEngine = this;
-
-	//ConsoleWindow::GetInstance().AddLog("hi");
+	  
 }
 
 CEngine::~CEngine()
 {
 	gpCEngine = nullptr;
 
-	//delete PCurrentScene;
-	// ���⿡�� ImGui �Ҹ�
+	//delete PCurrentScene; 
 	ImGui_ImplDX11_Shutdown();
 	ImGui_ImplWin32_Shutdown();
 	ImGui::DestroyContext();
@@ -193,14 +190,24 @@ bool CEngine::Init(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	if (!InitD3D())
 		return false;
 	if (!InitImGui())
-		return false;
-	//PCurrentScene->Load();
+		return false; 
 
 	return true;
 }
 void CEngine::Load()
 {
 	D3DUtil::CreateCBuffer(&CommonCBuffer,sizeof(CommonConstantBuffer));
+	//Picking
+	//D3DUtil::CreateCBuffer()
+	/* 
+		
+		D3D11_BUFFER_DESC pickingBufferDesc{};
+		pickingBufferDesc.ByteWidth = 16;
+		pickingBufferDesc.Usage = D3D11_USAGE_DYNAMIC;
+		pickingBufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+		pickingBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+		Device->CreateBuffer(&pickingBufferDesc, nullptr, &PickID_CB);
+	*/
 	SceneManager = new CSceneManager();
 	PSO::InitPSOResource();
 }
@@ -354,9 +361,7 @@ bool CEngine::InitD3D()
 	CreateDeviceAndSwapChain(HWnd);
 
 	CreateFrameBuffer();
-
-	// �׽�Ʈ�� �ӽ�
-	CreateConstantBuffer();
+	 
 	//CreateVertexBuffer(triangle_vertices, sizeof(triangle_vertices));
 	CreateVertexBuffer(cube_vertices, &CubeVertexBuffer, sizeof(cube_vertices));
 	CreateVertexBuffer(quad_vertices, &QuadVertexBuffer, sizeof(quad_vertices));
@@ -470,26 +475,26 @@ void CEngine::CreatePickTargets()
 	td.SampleDesc.Count = 1; // MUST OFF MSAA
 	td.Usage = D3D11_USAGE_DEFAULT;
 	td.BindFlags = D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE; 
-	Device->CreateTexture2D(&td, nullptr, &PickIDTex);
+	Device->CreateTexture2D(&td, nullptr, &PickingTex);
 
 	// read용 texture 
 	td.BindFlags = 0;
 	td.Usage = D3D11_USAGE_STAGING;
 	td.CPUAccessFlags = D3D11_CPU_ACCESS_READ;
-	Device->CreateTexture2D(&td, nullptr, &PickID_Staging);
+	Device->CreateTexture2D(&td, nullptr, &PickingStagingTex);
 
 	// RTV
 	D3D11_RENDER_TARGET_VIEW_DESC rtvDesc{};
 	rtvDesc.Format = td.Format;
 	rtvDesc.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2D;
-	Device->CreateRenderTargetView(PickIDTex, &rtvDesc, &PickID_RTV);
+	Device->CreateRenderTargetView(PickingTex, &rtvDesc, &PickingRTV);
 
 	// SRV
 	D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc{};
 	srvDesc.Format = td.Format;
 	srvDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
 	srvDesc.Texture2D.MipLevels = 1;
-	Device->CreateShaderResourceView(PickIDTex, &srvDesc, &PickID_SRV);
+	Device->CreateShaderResourceView(PickingTex, &srvDesc, &PickingSRV);
 	 
 }
 
@@ -536,7 +541,7 @@ void CEngine::CreatePickDepth()
 	D3D11_DEPTH_STENCIL_VIEW_DESC dsvDesc{};
 	dsvDesc.Format = td.Format;
 	dsvDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
-	Device->CreateDepthStencilView(PickDepthTex, &dsvDesc, &PickDepth_DSV);	
+	Device->CreateDepthStencilView(PickDepthTex, &dsvDesc, &PickingDSV);	
 }
 
 int CEngine::RenderPickIDAndRead(int mouseX, int mouseY)
@@ -548,9 +553,9 @@ int CEngine::RenderPickIDAndRead(int mouseX, int mouseY)
 
 	// clear
 	float clearID[4] = { 0, 0 ,0 , 0 };
-	DeviceContext->OMSetRenderTargets(1, &PickID_RTV, PickDepth_DSV); 
-	DeviceContext->ClearRenderTargetView(PickID_RTV, clearID);
-	DeviceContext->ClearDepthStencilView(PickDepth_DSV, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
+	DeviceContext->OMSetRenderTargets(1, &PickingRTV, PickingDSV); 
+	DeviceContext->ClearRenderTargetView(PickingRTV, clearID);
+	DeviceContext->ClearDepthStencilView(PickingDSV, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 
 	//picking pipeline 
 	DeviceContext->RSSetViewports(1, &ViewportInfo);
@@ -563,16 +568,16 @@ int CEngine::RenderPickIDAndRead(int mouseX, int mouseY)
 	for(int i = 1; i <= 2; i++)
 	{
 		D3D11_MAPPED_SUBRESOURCE pickBufferMSR{};
-		DeviceContext->Map(PickID_CB, 0, D3D11_MAP_WRITE_DISCARD, 0, &pickBufferMSR);
+		DeviceContext->Map(PickingCBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &pickBufferMSR);
 		
 		FObjectPicking* pickConst = (FObjectPicking*)pickBufferMSR.pData;
 		{
 			pickConst->Pick = 0.0;
 			pickConst->ObjectID = i; 
 		}
-		DeviceContext->Unmap(PickID_CB, 0);
+		DeviceContext->Unmap(PickingCBuffer, 0);
 
-		DeviceContext->PSSetConstantBuffers(0, 1, &PickID_CB);
+		DeviceContext->PSSetConstantBuffers(0, 1, &PickingCBuffer);
 
 		//// 동일한 VS 상수(MVP) 바인딩
 		//if (ConstantBuffer && MVPConstantBuffer)
@@ -618,13 +623,13 @@ int CEngine::RenderPickIDAndRead(int mouseX, int mouseY)
     box.bottom = box.top  + 1;
     box.back   = 1;
 
-    DeviceContext->CopySubresourceRegion(PickID_Staging, 0, 0, 0, 0, PickIDTex, 0, &box);
+    DeviceContext->CopySubresourceRegion(PickingStagingTex, 0, 0, 0, 0, PickingTex, 0, &box);
 
     D3D11_MAPPED_SUBRESOURCE mapped{};
-    DeviceContext->Map(PickID_Staging, 0, D3D11_MAP_READ, 0, &mapped);
+    DeviceContext->Map(PickingStagingTex, 0, D3D11_MAP_READ, 0, &mapped);
     // 행 pitch 고려: 1픽셀만 읽으므로 첫 DWORD
     int picked = *(int*)mapped.pData;
-    DeviceContext->Unmap(PickID_Staging, 0);
+    DeviceContext->Unmap(PickingStagingTex, 0);
 
     // 6) 상태 복원
     DeviceContext->OMSetRenderTargets(1, &oldRTV, oldDSV);
@@ -651,10 +656,28 @@ void CEngine::Render()
 	FVector eye = FVector(0,0,-10);
 	FVector at = FVector::FRONT;
 	FVector up = {0.0f,1.0f,0.0f};
-	commonCBufferData.View = FMatrix::MakeLookAt(eye, at, up);
-
-	commonCBufferData.Perspective = FMatrix::MakePerspectiveMatrix(30.0f,1.0f,0.1f,100.0f);
+	commonCBufferData.View = FMatrix::MakeLookAt(eye, at, up); 
+	commonCBufferData.Perspective = FMatrix::MakePerspectiveMatrix(30.0f,1.0f,0.1f,100.0f); 
 	D3DUtil::CBufferUpdate(DeviceContext,CommonCBuffer,commonCBufferData);
+
+	//TODO 
+	//Picking Constant Buffer
+	FObjectPicking pickingCBufferData;
+	//ID Test
+	pickingCBufferData.ObjectID = 1; 
+	//D3DUtil::CBufferUpdate(DeviceContext,PickID_CB,pickingCBufferData);
+	/*
+	
+			D3D11_MAPPED_SUBRESOURCE pickBufferMSR{};
+			DeviceContext->Map(PickID_CB,0,D3D11_MAP_WRITE_DISCARD,0,&pickBufferMSR); 
+			FObjectPicking* pickConst = (FObjectPicking*)pickBufferMSR.pData;
+			{
+				pickConst->Pick = PickTest;
+				pickConst->ObjectID = objId;
+			}
+			DeviceContext->Unmap(PickID_CB,0);
+
+	*/
 	DeviceContext->VSSetConstantBuffers(1,1,&CommonCBuffer);
 
 	DeviceContext->OMSetRenderTargets(1,&FrameBufferRTV,DepthStencilView);
