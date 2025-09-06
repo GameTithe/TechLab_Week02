@@ -80,11 +80,40 @@ FVector USceneComponent::GetWorldScale3D()
 	return FVector();
 }
 
-void USceneComponent::UpdateWorldTransform()
+FMatrix USceneComponent::GetModelMatrix()
 {
-	if (ParentComponent)
+
+	return ModelMatrix;
+}
+
+void USceneComponent::UpdateModelMatrix()
+{
+	// 상대 Transform으로 상대 행렬 구하기
+	// Calculate relative matrix(transform matrix) using relative transform
+	FMatrix relativeMatrix = FMatrix::MakeScaleMatrix(RelativeScale3D.X, RelativeScale3D.Y, RelativeScale3D.Z)
+		* FMatrix::MakeRotationXMatrix(RelativeRotation.X)
+		* FMatrix::MakeRotationYMatrix(RelativeRotation.Y)
+		* FMatrix::MakeRotationZMatrix(RelativeRotation.Z)
+		* FMatrix::MakeTranslationMatrix({ RelativeLocation.X, RelativeLocation.Y, RelativeLocation.Z, 1 });
+	if (!ParentComponent)
 	{
-		//ModelMatix = FMatrix::Make
+		// 부모가 없으면
+		// 나의 Model Matrix = 계산한 상대 행렬
+		// my model matrix is just relative matrix calculated 
+		ModelMatrix = relativeMatrix;
+	}
+	else
+	{
+		// 부모 있으면
+		// 나의 Model Matrix = 계산한 상대 행렬 * 부모의 Model Matrix
+		// my model matrix is relative matrix * parent's model matrix
+		ModelMatrix = relativeMatrix * ParentComponent->GetModelMatrix();
+		
+	}
+	// 자식 컴포넌트에 부모의 Model Matrix 변경됨을 전파
+	for (USceneComponent* child : ChildComponents)
+	{
+		child->UpdateModelMatrix();
 	}
 	
 }

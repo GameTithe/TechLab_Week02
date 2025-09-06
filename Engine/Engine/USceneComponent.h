@@ -23,8 +23,9 @@ public:
 	FVector GetWorldLocation();
 	FVector GetWorldRotation();
 	FVector GetWorldScale3D();
+	FMatrix GetModelMatrix();
+	void UpdateModelMatrix();
 
-	void UpdateWorldTransform();
 private:
 	FVector RelativeLocation;
 	FVector RelativeRotation;
