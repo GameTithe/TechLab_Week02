@@ -34,7 +34,7 @@ FVertex triangle_vertices[] =
 	{ {-1.0f, -1.0f, 0.0f},  {0.0f, 0.0f, 1.0f, 1.0f} }  // Bottom-left vertex (blue)
 };
 
-//TODO d
+//TODO 
 FVertex cube_vertices[] =
 {
 	// +X (Right, red)
@@ -61,10 +61,20 @@ FVertex cube_vertices[] =
 	{ {+1, -1, -1}, {0,1,1,1} }, { {-1, -1, -1}, {0,1,1,1} }, { {-1, +1, -1}, {0,1,1,1} },
 	{ {+1, -1, -1}, {0,1,1,1} }, { {-1, +1, -1}, {0,1,1,1} }, { {+1, +1, -1}, {0,1,1,1} },
 };
+ 
+// 정점 4개 (사각형)
+FVertex quad_vertices[] =
+{
+	
+	{{-1.0f,1.0f,1.0f},{1.0f,0.0f,0.0f,1.0f}}, // Top-left (red)
+	{{1.0f,1.0f,1.0f},{0.0f,1.0f,0.0f,1.0f}}, // Top-right (green)
+	{{1.0f,-1.0f,1.0f},{0.0f,0.0f,1.0f,1.0f}}, // Bottom-right (blue)
 
-
-
-
+	{{1.0f,-1.0f,1.0f},{0.0f,0.0f,1.0f,1.0f}}, // Bottom-right (blue)
+	{{-1.0f,-1.0f,1.0f},{1.0f,1.0f,0.0f,1.0f}},  // Bottom-left (yellow)
+	{{-1.0f,1.0f,1.0f},{1.0f,0.0f,0.0f,1.0f}}, // Top-left (red)
+};
+ 
 extern LRESULT ImGui_ImplWin32_WndProcHandler(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
 CEngine* gpCEngine = nullptr; 
@@ -204,6 +214,7 @@ bool CEngine::Run()
 		Update(ImGui::GetIO().DeltaTime); // Update
 
 		PickTest = RenderPickIDAndRead(gInput.GetX(),gInput.GetY());
+		UE_LOG("%d",PickTest); 
 		Render(); // Render
 
 		//basic movement  
@@ -285,6 +296,10 @@ bool CEngine::InitD3D()
 	//CreateVertexBuffer(triangle_vertices, sizeof(triangle_vertices));
 	CreateVertexBuffer(triangle_vertices, &VertexBuffer, sizeof(triangle_vertices));
 	CreateVertexBuffer(cube_vertices, &CubeVertexBuffer, sizeof(cube_vertices));
+	CreateVertexBuffer(quad_vertices, &QuadVertexBuffer, sizeof(quad_vertices));
+
+	//Depth Buffer
+	CreateDepthBuffer();
 
 	//Picking Setting
 	CreatePickTargets();
@@ -427,6 +442,32 @@ void CEngine::CreatePickTargets()
 	 
 }
 
+void CEngine::CreateDepthBuffer()
+{
+	D3D11_TEXTURE2D_DESC depthDesc = {};
+	depthDesc.Width = (UINT)ViewportInfo.Width;
+	depthDesc.Height = (UINT)ViewportInfo.Height;
+	depthDesc.MipLevels = 1;
+	depthDesc.ArraySize = 1;
+	depthDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
+	depthDesc.SampleDesc.Count = 1;
+	depthDesc.SampleDesc.Quality = 0;
+	depthDesc.Usage = D3D11_USAGE_DEFAULT;
+	depthDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
+
+	Device->CreateTexture2D(&depthDesc,nullptr,&DepthBuffer);
+
+	// 깊이 스텐실 뷰 생성
+	D3D11_DEPTH_STENCIL_VIEW_DESC dsvDesc = {};
+	dsvDesc.Format = depthDesc.Format;
+	dsvDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
+	dsvDesc.Texture2D.MipSlice = 0;
+
+	Device->CreateDepthStencilView(DepthBuffer,&dsvDesc,&DepthBufferDSV);
+
+
+}
+
 void CEngine::CreatePickDepth()
 {
 	D3D11_TEXTURE2D_DESC td{};
@@ -468,6 +509,7 @@ int CEngine::RenderPickIDAndRead(int mouseX, int mouseY)
 	DeviceContext->PSSetShader(PickID_PixelShader, nullptr, 0);
 
 	// Draw All Actors For Picking
+	for(int i = 1; i <= 2; i++)
 	{
 		D3D11_MAPPED_SUBRESOURCE pickBufferMSR{};
 		DeviceContext->Map(PickID_CB, 0, D3D11_MAP_WRITE_DISCARD, 0, &pickBufferMSR);
@@ -475,22 +517,37 @@ int CEngine::RenderPickIDAndRead(int mouseX, int mouseY)
 		FObjectPicking* pickConst = (FObjectPicking*)pickBufferMSR.pData;
 		{
 			pickConst->Pick = 0.0;
-			pickConst->ObjectID = 1; 
+			pickConst->ObjectID = i; 
 		}
 		DeviceContext->Unmap(PickID_CB, 0);
-
-		DeviceContext->PSSetConstantBuffers(0, 1, &PickID_CB);
-
+		 
 		// 동일한 VS 상수(MVP) 바인딩
 		if (ConstantBuffer && MVPConstantBuffer)
 		{
 			DeviceContext->VSSetConstantBuffers(0, 1, &ConstantBuffer);
 			DeviceContext->VSSetConstantBuffers(1, 1, &MVPConstantBuffer);
 		}
+		DeviceContext->PSSetConstantBuffers(0,1,&PickID_CB);
 
-		UINT offset = 0;
-		DeviceContext->IASetVertexBuffers(0, 1, &CubeVertexBuffer, &Stride, &offset);
-		const UINT numVertices = sizeof(cube_vertices) / sizeof(FVertex);
+		UINT offset = 0; 
+		UINT numVertices = 0;
+		switch(i)
+		{
+		case 1:
+		{
+			UpdateConstant({0.0f,0.0f,0.0f},1.0f,camPosTest,modelPosTest,modelRotTest,PickTest,i);
+			DeviceContext->IASetVertexBuffers(0,1,&CubeVertexBuffer,&Stride,&offset);
+			numVertices = sizeof(cube_vertices) / sizeof(FVertex);
+		}break;
+		case 2:
+		{
+			UpdateConstant({0.0f,0.0f,0.0f},1.0f,camPosTest,FVector(0.5,0.0,0.0),FVector(0,0,0),PickTest,i);
+
+			DeviceContext->IASetVertexBuffers(0,1,&QuadVertexBuffer, &Stride,&offset);
+			numVertices = sizeof(quad_vertices) / sizeof(FVertex);
+		}
+		}
+		 
 		DeviceContext->Draw(numVertices, 0);
 	}
 
@@ -535,6 +592,7 @@ void CEngine::Render()
 {
 	// Clear
 	DeviceContext->ClearRenderTargetView(FrameBufferRTV, ClearColor);
+	DeviceContext->ClearDepthStencilView(DepthBufferDSV,D3D11_CLEAR_DEPTH,1.0f,0);
 
 	// IA
 	DeviceContext->IASetInputLayout(SimpleInputLayout);
@@ -551,7 +609,7 @@ void CEngine::Render()
 	DeviceContext->PSSetShader(SimplePixelShader, nullptr, 0);
 
 	// OM
-	DeviceContext->OMSetRenderTargets(1, &FrameBufferRTV, nullptr);
+	DeviceContext->OMSetRenderTargets(1, &FrameBufferRTV, DepthBufferDSV);
 	DeviceContext->OMSetBlendState(nullptr, nullptr, 0xffffffff);
 
 	// �׽�Ʈ��
@@ -565,17 +623,39 @@ void CEngine::Render()
 		DeviceContext->PSSetConstantBuffers(2, 1, &PickID_CB);
 		
 	}
+	UINT numVertices = 0;
+	for(int i = 1; i <= 2; i++)
+	{ 
+		UINT offset = 0;
+		switch(i)
+		{
+		case 1:
+		{
+			UpdateConstant({0.0f,0.0f,0.0f},1.0f,camPosTest,modelPosTest,modelRotTest,PickTest, i);
 
-	UpdateConstant({ 0.0f, 0.0f, 0.0f }, 1.0f , camPosTest, modelPosTest, modelRotTest, PickTest);
+			//DeviceContext->IASetVertexBuffers(0, 1, &VertexBuffer, &Stride, &offset);
+			DeviceContext->IASetVertexBuffers(0,1,&CubeVertexBuffer,&Stride,&offset);
 
-	UINT offset = 0;
-	//DeviceContext->IASetVertexBuffers(0, 1, &VertexBuffer, &Stride, &offset);
-	DeviceContext->IASetVertexBuffers(0, 1, &CubeVertexBuffer, &Stride, &offset);
+			//const UINT numVertices = sizeof(triangle_vertices) / sizeof(FVertex); //
+			numVertices = sizeof(cube_vertices) / sizeof(FVertex); //  
+			 
+		}break;
+		case 2:
+		{
+			UpdateConstant({0.0f,0.0f,0.0f},1.0f,camPosTest,FVector(0.5, 0.0, 0.0),FVector(0,0,0),PickTest, i);
 
-	//const UINT numVertices = sizeof(triangle_vertices) / sizeof(FVertex); //
-	const UINT numVertices = sizeof(cube_vertices) / sizeof(FVertex); //
+			//DeviceContext->IASetVertexBuffers(0, 1, &VertexBuffer, &Stride, &offset);
+			DeviceContext->IASetVertexBuffers(0,1,&QuadVertexBuffer,&Stride,&offset); 
+			//const UINT numVertices = sizeof(triangle_vertices) / sizeof(FVertex); // 
+			 numVertices = sizeof(quad_vertices) / sizeof(FVertex); //
+		}
+		break;
+		}
 
-	DeviceContext->Draw(numVertices, 0);
+
+		DeviceContext->Draw(numVertices,0);
+
+	}
 }
 
 void CEngine::Release()
@@ -655,5 +735,9 @@ void CEngine::Release()
 	PickDepthTex);
 	PickID_PixelShader);
 	PickID_CB);
+
+	DepthByuffERDSV
+	DepthBuffer
+
 	*/
 }
