@@ -1,8 +1,5 @@
 #pragma once
 
-#define _CRT_SECURE_NO_WARNINGS
-// 위 define은 항상 모든 include보다 상단에 있어야 함.
-
 #include <ctype.h>
 #include <stdio.h> 
 
@@ -196,7 +193,7 @@ struct ConsoleWindow
             Strtrim(s);
             if (s[0])
                 ExecCommand(s);
-            strcpy(s, "");
+            strcpy_s(s, sizeof(InputBuf), "");
             reclaim_focus = true;
         }
 

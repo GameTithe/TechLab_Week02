@@ -1,4 +1,8 @@
-#pragma once
+﻿#pragma once
+#define UE_LOG(fmt, ...) AddLog(fmt, ##__VA_ARGS__)
+
+#include "ConsoleWindow.h"
+
 #include <d3d11.h>
 #include <windows.h>
 
@@ -16,6 +20,8 @@ public:
 	bool Run();
 
 	LRESULT MsgProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
+
+	void AddLog(const char* fmt, ...);
 
 private:
 
@@ -120,6 +126,8 @@ private:
 
 	HWND HWnd;
 	CScene* PCurrentScene;
+
+	ConsoleWindow* PConsoleWindow = nullptr;
 
 	ID3D11Device* Device = nullptr;
 	ID3D11DeviceContext* DeviceContext = nullptr;
