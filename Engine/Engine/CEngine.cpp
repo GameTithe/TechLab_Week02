@@ -64,11 +64,11 @@ FVertex cube_vertices[] =
 
 extern LRESULT ImGui_ImplWin32_WndProcHandler(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
-CEngine* gpCEngine = nullptr;
+CEngine* CEngine::gpCEngine = nullptr;
 // ���� �޼����� ó���� �Լ�
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
-	return gpCEngine->MsgProc(hWnd, message, wParam, lParam);
+	return CEngine::gpCEngine->MsgProc(hWnd, message, wParam, lParam);
 }
 
 LRESULT CEngine::MsgProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
@@ -126,20 +126,23 @@ bool CEngine::Init(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
 	return true;
 }
-
+void CEngine::Load()
+{
+	SceneManager = new CSceneManager();
+}
 //Test 변수
-FVector camPosTest(0.0f, 0.0f, -3.0f); 
-FVector modelPosTest(0.0f, 0.0f, 0.0f); 
-FVector modelRotTest(0.0f, 0.0f, 0.0f);
+//FVector camPosTest(0.0f, 0.0f, -3.0f); 
+//FVector modelPosTest(0.0f, 0.0f, 0.0f); 
+//FVector modelRotTest(0.0f, 0.0f, 0.0f);
 int PickTest = 0;
 
 void CEngine::UpdateGUI()
 {
 	UE_LOG("%d",PickTest);
 
-	bool changed = ImGui::SliderFloat3("Cam Pos (x,y,z)", &camPosTest.X, -4.0f, 4.0f, "%.3f");
-	bool changed1 = ImGui::SliderFloat3("Model Pos (x,y,z)", &modelPosTest.X, -4.0f, 4.0f, "%.3f");
-	bool changed2= ImGui::SliderFloat3("Model Rotation (x,y,z)", &modelRotTest.X, -180.0f, 180.0f, "%.3f");
+	//bool changed = ImGui::SliderFloat3("Cam Pos (x,y,z)", &camPosTest.X, -4.0f, 4.0f, "%.3f");
+	//bool changed1 = ImGui::SliderFloat3("Model Pos (x,y,z)", &modelPosTest.X, -4.0f, 4.0f, "%.3f");
+	//bool changed2= ImGui::SliderFloat3("Model Rotation (x,y,z)", &modelRotTest.X, -180.0f, 180.0f, "%.3f");
 
 
 
@@ -563,7 +566,7 @@ void CEngine::Render()
 		
 	}
 
-	UpdateConstant({ 0.0f, 0.0f, 0.0f }, 1.0f , camPosTest, modelPosTest, modelRotTest, PickTest);
+	//UpdateConstant({ 0.0f, 0.0f, 0.0f }, 1.0f , CamPos, modelPosTest, modelRotTest, PickTest);
 
 	UINT offset = 0;
 	//DeviceContext->IASetVertexBuffers(0, 1, &VertexBuffer, &Stride, &offset);
