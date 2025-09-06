@@ -219,11 +219,11 @@ void CEngine::UpdateGUI()
 	ImGui::SliderFloat3("modelPos (x,y,z)",&modelPos.X,-4.0f,4.0f,"%.3f");
 	ImGui::SliderFloat3("modelRot(x,y,z)",&modelRot.X,-180.0f,180.0f,"%.3f");
 	ImGui::SliderFloat3("modelScale(x,y,z)",&modelScale.X,-4.0f,4.0f,"%.3f");
-	if(ImGui::SliderFloat3("camPos (x,y,z)",&CamPos.X,-360.0f, 360.0f))
+	if(ImGui::SliderFloat3("camPos (x,y,z)",&CamPos.X,-20.0f,20.0f))
 	{
 		CameraComponent.SetPosition(CamPos);
 	}
-	if(ImGui::SliderFloat3("camRot(x,y,z)",&CamRot.X,-10,10))
+	if(ImGui::SliderFloat3("camRot(x,y,z)",&CamRot.X,-360.0f,360.0f))
 	{
 		CameraComponent.SetRotation(CamRot);
 	}
