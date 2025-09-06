@@ -23,6 +23,9 @@
 #include "FVertex.h"
 #include "FVector.h"
 
+//input
+#include "InputManager.h"
+
 //�׽�Ʈ��
 FVertex triangle_vertices[] =
 {
@@ -66,6 +69,8 @@ extern LRESULT ImGui_ImplWin32_WndProcHandler(HWND hwnd, UINT msg, WPARAM wParam
 
 CEngine* CEngine::gpCEngine = nullptr;
 // ���� �޼����� ó���� �Լ�
+InputManager gInput = InputManager::Get();
+
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
 	return CEngine::gpCEngine->MsgProc(hWnd, message, wParam, lParam);
@@ -77,7 +82,9 @@ LRESULT CEngine::MsgProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	{
 		return true;
 	}
-
+	 
+	gInput.ProcessMessage(message,wParam,lParam);
+	
 	switch (message)
 	{
 	case WM_DESTROY:
@@ -138,7 +145,7 @@ int PickTest = 0;
 
 void CEngine::UpdateGUI()
 {
-	UE_LOG("%d",PickTest);
+	//UE_LOG("%d",PickTest);
 
 	//bool changed = ImGui::SliderFloat3("Cam Pos (x,y,z)", &camPosTest.X, -4.0f, 4.0f, "%.3f");
 	//bool changed1 = ImGui::SliderFloat3("Model Pos (x,y,z)", &modelPosTest.X, -4.0f, 4.0f, "%.3f");
@@ -199,11 +206,7 @@ bool CEngine::Run()
 		} 
 		Update(ImGui::GetIO().DeltaTime); // Update
 
-		ImGuiIO& io = ImGui::GetIO();
-		ImVec2 mousePos = io.MousePos;
-		UE_LOG("%.2f %.2f",mousePos.x ,mousePos.y);
-
-		PickTest = RenderPickIDAndRead(mousePos.x,mousePos.y);
+		PickTest = RenderPickIDAndRead(gInput.GetX(),gInput.GetY());
 		Render(); // Render
 
 		//basic movement  
