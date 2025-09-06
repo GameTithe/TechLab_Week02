@@ -382,3 +382,10 @@ public:
 //    static ConsoleWindow console;
 //    console.Draw("Example: Console", p_open);
 //}
+//
+//    ImGuiIO& io = ImGui::GetIO();
+//    ImVec2 screenPos = io.MousePos; // ȭ�� ���� (��ũ�� ��ǥ, �ȼ� ����)
+//
+//    // ����: �ֿܼ� ���
+//    console.AddLog("Mouse Screen Pos = (%.1f, %.1f)", screenPos.x, screenPos.y);
+//}   

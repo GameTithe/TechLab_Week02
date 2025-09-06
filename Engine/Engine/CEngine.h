@@ -40,8 +40,13 @@ private:
 	//void CreateTextureSampler();
 	//void SetRenderingPipeline();
 
-	// 테스트용 임시 함수들
-	void CreateVertexBuffer(FVertex* vertices, UINT byteWidth)
+	//Picking
+	void CreatePickTargets();
+	void CreatePickDepth();
+	int RenderPickIDAndRead(int mouseX, int mouseY);
+
+	// �׽�Ʈ�� �ӽ� �Լ���
+	void CreateVertexBuffer(FVertex* vertices, ID3D11Buffer** buffer, UINT byteWidth)
 	{
 		// 2. Create a vertex buffer
 		D3D11_BUFFER_DESC vertexbufferdesc = {};
@@ -51,10 +56,11 @@ private:
 
 		D3D11_SUBRESOURCE_DATA vertexbufferSRD = { vertices };
 
-		Device->CreateBuffer(&vertexbufferdesc, &vertexbufferSRD, &VertexBuffer);
+		Device->CreateBuffer(&vertexbufferdesc, &vertexbufferSRD, buffer);
+
+		 
 	}
-
-
+	 
 	void CreateConstantBuffer()
 	{
 		//const Offset Scale
@@ -74,9 +80,17 @@ private:
 		ConstantMVPBufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
 
 		Device->CreateBuffer(&ConstantMVPBufferDesc, nullptr, &MVPConstantBuffer); 
+
+		//Picking 
+		D3D11_BUFFER_DESC pickingBufferDesc{};
+		pickingBufferDesc.ByteWidth = 16;
+		pickingBufferDesc.Usage = D3D11_USAGE_DYNAMIC;
+		pickingBufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+		pickingBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+		Device->CreateBuffer(&pickingBufferDesc, nullptr, &PickID_CB);
 	}
 
-	void UpdateConstant(FVector Offset, float radius, FVector cam, FVector model, float rot)
+	void UpdateConstant(FVector Offset, float radius, FVector cam, FVector model, FVector rot, int PickTest)
 	{
 		if (ConstantBuffer && MVPConstantBuffer)
 		{
@@ -86,7 +100,7 @@ private:
 			FConstants* constants = (FConstants*)constantbufferMSR.pData;
 			{
 				constants->Offset = Offset;
-				constants->Radius = radius;
+				constants->Radius = radius; 
 			}
 			DeviceContext->Unmap(ConstantBuffer, 0);
 
@@ -96,7 +110,11 @@ private:
 			FMVPConstants* mvpConstants = (FMVPConstants*)mvpConstantBufferMSR.pData;
 			{
 				FVector4 offset = { model.X, model.Y , model.Z , 0.0f };
-				mvpConstants->Model = FMatrix::MakeScaleMatrix(0.5) * FMatrix::MakeRotationYMatrix(rot) *  FMatrix::MakeTranslationMatrix(offset);
+				FMatrix Scale = FMatrix::MakeScaleMatrix(0.2);
+				FMatrix Rotation = FMatrix::MakeRotationZMatrix(rot.Z)* FMatrix::MakeRotationYMatrix(rot.Y)* FMatrix::MakeRotationXMatrix(rot.X);
+				FMatrix Translation = FMatrix::MakeTranslationMatrix(offset);
+
+				mvpConstants->Model = Scale * Rotation * Translation ;
 
 				FVector camPos = { cam.X, cam.Y, cam.Z};
 				FVector at = FVector::FRONT; 
@@ -107,8 +125,18 @@ private:
 				FMatrix perspect = FMatrix::MakePerspectiveMatrix(30.0f, 1.0f, 0.1f, 100.0f);
 				mvpConstants->Perspective = perspect;
 				 
+			} 
+			DeviceContext->Unmap(MVPConstantBuffer,0);
+
+			D3D11_MAPPED_SUBRESOURCE pickBufferMSR{};
+			DeviceContext->Map(PickID_CB,0,D3D11_MAP_WRITE_DISCARD,0,&pickBufferMSR); 
+			FObjectPicking* pickConst = (FObjectPicking*)pickBufferMSR.pData;
+			{
+				pickConst->Pick = PickTest;
+				pickConst->ObjectID = 1;
 			}
-			DeviceContext->Unmap(MVPConstantBuffer, 0);
+			DeviceContext->Unmap(PickID_CB,0);
+
 
 		}
 	}
@@ -120,6 +148,7 @@ private:
 
 	D3D11_VIEWPORT ViewportInfo;
 	FLOAT ClearColor[4] = { 0.025f, 0.025f, 0.025f, 1.0f };
+	
 
 	HWND HWnd;
 	CScene* PCurrentScene;
@@ -134,12 +163,25 @@ private:
 	ID3D11InputLayout* SimpleInputLayout = nullptr;
 	ID3D11VertexShader* SimpleVertexShader = nullptr;
 	ID3D11PixelShader* SimplePixelShader = nullptr;
+	ID3D11PixelShader* PickID_PixelShader = nullptr;
 
 	//테스트용 임시
 	ID3D11Buffer* ConstantBuffer = nullptr;
 	ID3D11Buffer* MVPConstantBuffer = nullptr;
 
 	ID3D11Buffer* VertexBuffer = nullptr;
+	ID3D11Buffer* CubeVertexBuffer = nullptr;
 
 	ID3D11Buffer* MVPBuffer = nullptr;
+
+	//Picking Test
+	ID3D11Texture2D* PickIDTex;
+	ID3D11Texture2D* PickDepthTex;
+	ID3D11Texture2D* PickID_Staging;
+
+	ID3D11RenderTargetView* PickID_RTV;
+	ID3D11ShaderResourceView* PickID_SRV;
+	ID3D11DepthStencilView* PickDepth_DSV;
+
+	ID3D11Buffer* PickID_CB = nullptr;
 };

@@ -46,6 +46,9 @@ public:
 	static FMatrix MakeLookAt(FVector eye, FVector at, FVector up);
 	static FMatrix MakePerspectiveMatrix(float fovy, float aspect, float zNear, float zFar); 
 
+	static FMatrix L_MakePerspectiveMatrix(float fovz, float aspect, float zNear, float zFar);
+	static FMatrix L_MakeLookAt(FVector eye, FVector at, FVector up);
+
 public:
 	float M[4][4];
 	 

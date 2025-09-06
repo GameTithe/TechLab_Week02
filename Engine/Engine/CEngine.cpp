@@ -31,6 +31,37 @@ FVertex triangle_vertices[] =
 	{ {-1.0f, -1.0f, 0.0f},  {0.0f, 0.0f, 1.0f, 1.0f} }  // Bottom-left vertex (blue)
 };
 
+//TODO d
+FVertex cube_vertices[] =
+{
+	// +X (Right, red)
+	{ {+1, -1, -1}, {1,0,0,1} }, { {+1, +1, -1}, {1,0,0,1} }, { {+1, +1, +1}, {1,0,0,1} },
+	{ {+1, -1, -1}, {1,0,0,1} }, { {+1, +1, +1}, {1,0,0,1} }, { {+1, -1, +1}, {1,0,0,1} },
+
+	// -X (Left, green)
+	{ {-1, -1, +1}, {0,1,0,1} }, { {-1, +1, +1}, {0,1,0,1} }, { {-1, +1, -1}, {0,1,0,1} },
+	{ {-1, -1, +1}, {0,1,0,1} }, { {-1, +1, -1}, {0,1,0,1} }, { {-1, -1, -1}, {0,1,0,1} },
+
+	// +Y (Top, blue)
+	{ {-1, +1, -1}, {0,0,1,1} }, { {-1, +1, +1}, {0,0,1,1} }, { {+1, +1, +1}, {0,0,1,1} },
+	{ {-1, +1, -1}, {0,0,1,1} }, { {+1, +1, +1}, {0,0,1,1} }, { {+1, +1, -1}, {0,0,1,1} },
+
+	// -Y (Bottom, yellow)
+	{ {-1, -1, +1}, {1,1,0,1} }, { {-1, -1, -1}, {1,1,0,1} }, { {+1, -1, -1}, {1,1,0,1} },
+	{ {-1, -1, +1}, {1,1,0,1} }, { {+1, -1, -1}, {1,1,0,1} }, { {+1, -1, +1}, {1,1,0,1} },
+
+	// +Z (Front, magenta)
+	{ {-1, -1, +1}, {1,0,1,1} }, { {+1, -1, +1}, {1,0,1,1} }, { {+1, +1, +1}, {1,0,1,1} },
+	{ {-1, -1, +1}, {1,0,1,1} }, { {+1, +1, +1}, {1,0,1,1} }, { {-1, +1, +1}, {1,0,1,1} },
+
+	// -Z (Back, cyan)
+	{ {+1, -1, -1}, {0,1,1,1} }, { {-1, -1, -1}, {0,1,1,1} }, { {-1, +1, -1}, {0,1,1,1} },
+	{ {+1, -1, -1}, {0,1,1,1} }, { {-1, +1, -1}, {0,1,1,1} }, { {+1, +1, -1}, {0,1,1,1} },
+};
+
+
+
+
 extern LRESULT ImGui_ImplWin32_WndProcHandler(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
 CEngine* gpCEngine = nullptr;
@@ -96,15 +127,20 @@ bool CEngine::Init(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	return true;
 }
 
+//Test 변수
 FVector camPosTest(0.0f, 0.0f, -3.0f); 
 FVector modelPosTest(0.0f, 0.0f, 0.0f); 
-float modelRotTest= 0.0f;
+FVector modelRotTest(0.0f, 0.0f, 0.0f);
+int PickTest = 0;
 
 void CEngine::UpdateGUI()
 {
+	UE_LOG("%d",PickTest);
+
 	bool changed = ImGui::SliderFloat3("Cam Pos (x,y,z)", &camPosTest.X, -4.0f, 4.0f, "%.3f");
 	bool changed1 = ImGui::SliderFloat3("Model Pos (x,y,z)", &modelPosTest.X, -4.0f, 4.0f, "%.3f");
-	bool changed2= ImGui::SliderFloat3("Model Rotation (x,y,z)", &modelRotTest, -180.0f, 180.0f, "%.3f");
+	bool changed2= ImGui::SliderFloat3("Model Rotation (x,y,z)", &modelRotTest.X, -180.0f, 180.0f, "%.3f");
+
 
 
 	/*ImGui_ImplDX11_NewFrame();
@@ -160,7 +196,11 @@ bool CEngine::Run()
 		} 
 		Update(ImGui::GetIO().DeltaTime); // Update
 
+		ImGuiIO& io = ImGui::GetIO();
+		ImVec2 mousePos = io.MousePos;
+		UE_LOG("%.2f %.2f",mousePos.x ,mousePos.y);
 
+		PickTest = RenderPickIDAndRead(mousePos.x,mousePos.y);
 		Render(); // Render
 
 		//basic movement  
@@ -176,11 +216,10 @@ bool CEngine::Run()
 
 		UpdateGUI(); // �߰������� ����� GUI
 
-		ImGui::End();
-
         bool bConsoleDraw = true;
 		ConsoleWindow::GetInstance().Draw("Example: Console", &bConsoleDraw);
 
+		ImGui::End(); 
 		ImGui::Render();
 
 		ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
@@ -210,10 +249,19 @@ bool CEngine::InitWindow(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpC
 	// ������ Ŭ���� ���
 	RegisterClassW(&wndClass);
 
-	// 1024 * 1024 ũ���� ������ ����
-	HWnd = CreateWindowExW(0, WindowClass, Title, WS_POPUP | WS_VISIBLE | WS_OVERLAPPEDWINDOW,
-		CW_USEDEFAULT, CW_USEDEFAULT, 1024, 1024, nullptr, nullptr, hInstance, nullptr);
+	DWORD style = WS_OVERLAPPEDWINDOW;   // 보더/타이틀 유지
+	DWORD ex    = 0;
 
+	RECT rc = {0,0,1024,1024};             // 원하는 "클라이언트" 크기
+	AdjustWindowRectEx(&rc,style,FALSE,ex);  // 외곽 크기로 보정
+	int W = rc.right - rc.left;
+	int H = rc.bottom - rc.top;
+
+	HWnd = CreateWindowExW(
+		ex,WindowClass,Title,style | WS_VISIBLE,
+		CW_USEDEFAULT,CW_USEDEFAULT,W,H,
+		nullptr,nullptr,hInstance,nullptr);
+	 
 	return true;
 }
 
@@ -231,7 +279,13 @@ bool CEngine::InitD3D()
 
 	// �׽�Ʈ�� �ӽ�
 	CreateConstantBuffer();
-	CreateVertexBuffer(triangle_vertices, sizeof(triangle_vertices));
+	//CreateVertexBuffer(triangle_vertices, sizeof(triangle_vertices));
+	CreateVertexBuffer(triangle_vertices, &VertexBuffer, sizeof(triangle_vertices));
+	CreateVertexBuffer(cube_vertices, &CubeVertexBuffer, sizeof(cube_vertices));
+
+	//Picking Setting
+	CreatePickTargets();
+	CreatePickDepth();
 
 	return true;
 }
@@ -301,15 +355,15 @@ void CEngine::CreateRasterizerState()
 
 void CEngine::CreateShader()
 {
+
+	// Basic Object Shader
 	ID3DBlob* vertexshaderCSO;
 	ID3DBlob* pixelshaderCSO;
 
-	D3DCompileFromFile(L"ShaderW0.hlsl", nullptr, nullptr, "mainVS", "vs_5_0", 0, 0, &vertexshaderCSO, nullptr);
-
+	D3DCompileFromFile(L"ShaderW0.hlsl", nullptr, nullptr, "mainVS", "vs_5_0", 0, 0, &vertexshaderCSO, nullptr); 
 	Device->CreateVertexShader(vertexshaderCSO->GetBufferPointer(), vertexshaderCSO->GetBufferSize(), nullptr, &SimpleVertexShader);
 
 	D3DCompileFromFile(L"ShaderW0.hlsl", nullptr, nullptr, "mainPS", "ps_5_0", 0, 0, &pixelshaderCSO, nullptr);
-
 	Device->CreatePixelShader(pixelshaderCSO->GetBufferPointer(), pixelshaderCSO->GetBufferSize(), nullptr, &SimplePixelShader);
 
 	D3D11_INPUT_ELEMENT_DESC layout[] =
@@ -326,6 +380,146 @@ void CEngine::CreateShader()
 
 	vertexshaderCSO->Release();
 	pixelshaderCSO->Release();
+
+	//Picking Shader
+	ID3DBlob* idPSCSO = nullptr;  
+	D3DCompileFromFile(L"PickingPS.hlsl", nullptr, nullptr, "mainPS", "ps_5_0", 0, 0, &idPSCSO, nullptr);
+	Device->CreatePixelShader(idPSCSO->GetBufferPointer(), idPSCSO->GetBufferSize(), nullptr, &PickID_PixelShader);
+	idPSCSO->Release();
+
+}
+
+void CEngine::CreatePickTargets()
+{
+	//write용 texture
+	D3D11_TEXTURE2D_DESC td{};
+	td.Width = (UINT)ViewportInfo.Width;
+	td.Height = (UINT)ViewportInfo.Height;
+	td.MipLevels = 1;
+	td.ArraySize = 1;
+	td.Format = DXGI_FORMAT_R32_UINT;
+	td.SampleDesc.Count = 1; // MUST OFF MSAA
+	td.Usage = D3D11_USAGE_DEFAULT;
+	td.BindFlags = D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE; 
+	Device->CreateTexture2D(&td, nullptr, &PickIDTex);
+
+	// read용 texture 
+	td.BindFlags = 0;
+	td.Usage = D3D11_USAGE_STAGING;
+	td.CPUAccessFlags = D3D11_CPU_ACCESS_READ;
+	Device->CreateTexture2D(&td, nullptr, &PickID_Staging);
+
+	// RTV
+	D3D11_RENDER_TARGET_VIEW_DESC rtvDesc{};
+	rtvDesc.Format = td.Format;
+	rtvDesc.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2D;
+	Device->CreateRenderTargetView(PickIDTex, &rtvDesc, &PickID_RTV);
+
+	// SRV
+	D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc{};
+	srvDesc.Format = td.Format;
+	srvDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
+	srvDesc.Texture2D.MipLevels = 1;
+	Device->CreateShaderResourceView(PickIDTex, &srvDesc, &PickID_SRV);
+	 
+}
+
+void CEngine::CreatePickDepth()
+{
+	D3D11_TEXTURE2D_DESC td{};
+	td.Width = (UINT)ViewportInfo.Width;
+	td.Height = (UINT)ViewportInfo.Height;
+	td.MipLevels = 1;
+	td.ArraySize = 1;
+	td.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
+	td.SampleDesc.Count = 1;
+	td.Usage = D3D11_USAGE_DEFAULT;
+	td.BindFlags = D3D11_BIND_DEPTH_STENCIL;
+
+	Device->CreateTexture2D(&td, nullptr, &PickDepthTex);
+
+	D3D11_DEPTH_STENCIL_VIEW_DESC dsvDesc{};
+	dsvDesc.Format = td.Format;
+	dsvDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
+	Device->CreateDepthStencilView(PickDepthTex, &dsvDesc, &PickDepth_DSV);	
+}
+
+int CEngine::RenderPickIDAndRead(int mouseX, int mouseY)
+{
+	// 상태 백업
+	ID3D11RenderTargetView* oldRTV = nullptr;
+	ID3D11DepthStencilView* oldDSV = nullptr;
+	DeviceContext->OMGetRenderTargets(1, &oldRTV, &oldDSV);
+
+	// clear
+	float clearID[4] = { 0, 0 ,0 , 0 };
+	DeviceContext->OMSetRenderTargets(1, &PickID_RTV, PickDepth_DSV); 
+	DeviceContext->ClearRenderTargetView(PickID_RTV, clearID);
+	DeviceContext->ClearDepthStencilView(PickDepth_DSV, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
+
+	//picking pipeline 
+	DeviceContext->RSSetViewports(1, &ViewportInfo);
+	DeviceContext->OMSetBlendState(nullptr, nullptr, 0xffffffff);
+	DeviceContext->IASetInputLayout(SimpleInputLayout);
+	DeviceContext->VSSetShader(SimpleVertexShader, nullptr, 0);
+	DeviceContext->PSSetShader(PickID_PixelShader, nullptr, 0);
+
+	// Draw All Actors For Picking
+	{
+		D3D11_MAPPED_SUBRESOURCE pickBufferMSR{};
+		DeviceContext->Map(PickID_CB, 0, D3D11_MAP_WRITE_DISCARD, 0, &pickBufferMSR);
+		
+		FObjectPicking* pickConst = (FObjectPicking*)pickBufferMSR.pData;
+		{
+			pickConst->Pick = 0.0;
+			pickConst->ObjectID = 1; 
+		}
+		DeviceContext->Unmap(PickID_CB, 0);
+
+		DeviceContext->PSSetConstantBuffers(0, 1, &PickID_CB);
+
+		// 동일한 VS 상수(MVP) 바인딩
+		if (ConstantBuffer && MVPConstantBuffer)
+		{
+			DeviceContext->VSSetConstantBuffers(0, 1, &ConstantBuffer);
+			DeviceContext->VSSetConstantBuffers(1, 1, &MVPConstantBuffer);
+		}
+
+		UINT offset = 0;
+		DeviceContext->IASetVertexBuffers(0, 1, &CubeVertexBuffer, &Stride, &offset);
+		const UINT numVertices = sizeof(cube_vertices) / sizeof(FVertex);
+		DeviceContext->Draw(numVertices, 0);
+	}
+
+	mouseX = mouseX < 0 ? 0 : mouseX;
+	mouseY = mouseY < 0 ?  0 : mouseY;
+
+	mouseX = mouseX > 1023 ?  1000 : mouseX;
+	mouseY = mouseY > 1023 ?  1000 : mouseY;
+
+    // 5) 1×1만 스테이징으로 복사 → Map
+    D3D11_BOX box{};
+    box.left   = (UINT)mouseX;
+    box.top    = (UINT)mouseY;
+    box.front  = 0;
+    box.right  = box.left + 1;
+    box.bottom = box.top  + 1;
+    box.back   = 1;
+
+    DeviceContext->CopySubresourceRegion(PickID_Staging, 0, 0, 0, 0, PickIDTex, 0, &box);
+
+    D3D11_MAPPED_SUBRESOURCE mapped{};
+    DeviceContext->Map(PickID_Staging, 0, D3D11_MAP_READ, 0, &mapped);
+    // 행 pitch 고려: 1픽셀만 읽으므로 첫 DWORD
+    int picked = *(int*)mapped.pData;
+    DeviceContext->Unmap(PickID_Staging, 0);
+
+    // 6) 상태 복원
+    DeviceContext->OMSetRenderTargets(1, &oldRTV, oldDSV);
+    if (oldRTV) oldRTV->Release();
+    if (oldDSV) oldDSV->Release();
+
+    return picked; // 0 == 히트 없음 
 }
 
 void CEngine::Update(float deltaTime)
@@ -361,16 +555,22 @@ void CEngine::Render()
 	if (ConstantBuffer && MVPConstantBuffer)
 	{
 		DeviceContext->VSSetConstantBuffers(0, 1, &ConstantBuffer); 
+		DeviceContext->PSSetConstantBuffers(0, 1, &ConstantBuffer); 
+
 		DeviceContext->VSSetConstantBuffers(1, 1, &MVPConstantBuffer);
+		
+		DeviceContext->PSSetConstantBuffers(2, 1, &PickID_CB);
+		
 	}
 
-	UpdateConstant({ 0.0f, 0.0f, 0.0f }, 1.0f , camPosTest, modelPosTest, modelRotTest);
+	UpdateConstant({ 0.0f, 0.0f, 0.0f }, 1.0f , camPosTest, modelPosTest, modelRotTest, PickTest);
 
 	UINT offset = 0;
-	DeviceContext->IASetVertexBuffers(0, 1, &VertexBuffer, &Stride, &offset);
+	//DeviceContext->IASetVertexBuffers(0, 1, &VertexBuffer, &Stride, &offset);
+	DeviceContext->IASetVertexBuffers(0, 1, &CubeVertexBuffer, &Stride, &offset);
 
-	const UINT numVertices = sizeof(triangle_vertices) / sizeof(FVertex);
-	//
+	//const UINT numVertices = sizeof(triangle_vertices) / sizeof(FVertex); //
+	const UINT numVertices = sizeof(cube_vertices) / sizeof(FVertex); //
 
 	DeviceContext->Draw(numVertices, 0);
 }
@@ -442,4 +642,15 @@ void CEngine::Release()
 		DeviceContext->Release();
 		DeviceContext = nullptr;
 	}
+
+	/*
+	PickID_SRV);
+	PickID_RTV);
+	PickIDTex);
+	PickID_Staging);
+	PickDepth_DSV);
+	PickDepthTex);
+	PickID_PixelShader);
+	PickID_CB);
+	*/
 }
