@@ -90,8 +90,7 @@ FVector USceneComponent::GetWorldScale3D()
 }
 
 FMatrix USceneComponent::GetModelMatrix()
-{
-
+{ 
 	return ModelMatrix;
 }
 
@@ -126,8 +125,7 @@ void USceneComponent::UpdateModelMatrix()
 	for (USceneComponent* child : ChildComponents)
 	{
 		child->UpdateModelMatrix();
-	}
-	
+	} 
 }
 
 void USceneComponent::Render()

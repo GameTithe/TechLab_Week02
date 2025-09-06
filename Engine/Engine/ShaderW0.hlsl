@@ -47,8 +47,8 @@ float4 mainPS(PS_INPUT input) : SV_Target
     float4 color = input.color;
     return color;
     
-    if(Pick == ObjectID)
-        color = (color + float4(0.2, 0.2, 0.2, 1.0f) * float4(1.5, 1.5, 1.5, 1.0f));
+    //if(Pick == ObjectID)
+    //    color = (color + float4(0.2, 0.2, 0.2, 1.0f) * float4(1.5, 1.5, 1.5, 1.0f));
     
     return color;
 }

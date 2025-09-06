@@ -14,6 +14,7 @@ AActor* CScene::CreateActor()
 void CScene::RenderScene()
 {
 	PSO::SimplePSO->SetRenderState();
+
 	int actorCount = SceneActors.size();
 	for(int i=0;i<actorCount;i++)
 	{

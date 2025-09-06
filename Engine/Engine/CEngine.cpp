@@ -636,8 +636,7 @@ int CEngine::RenderPickIDAndRead(int mouseX, int mouseY)
 
 void CEngine::Update(float deltaTime)
 {
-	// ������� ������Ʈ?
-
+ 
 }
 
 void CEngine::Render()
@@ -645,25 +644,21 @@ void CEngine::Render()
 	//회전 순서 : z * y * x
 	
 	//CommonConstantBuffer
-	CommonConstantBuffer commonCBufferData;
+	CommonConstantBuffer commonCBufferData; 
+	DeviceContext->ClearRenderTargetView(FrameBufferRTV,ClearColor);
+	DeviceContext->ClearDepthStencilView(DepthStencilView,D3D11_CLEAR_DEPTH,1.0f,0);
+
+	FVector eye = FVector(0,0,-10);
 	FVector at = FVector::FRONT;
 	FVector up = {0.0f,1.0f,0.0f};
-	commonCBufferData.View = FMatrix::MakeLookAt(FVector(0,0,-10),at,up);
-		
-		/*FMatrix::MakeRotationZMatrix(CamRot.Z) * FMatrix::MakeRotationYMatrix(CamRot.Y) * FMatrix::MakeRotationXMatrix(CamRot.X) * FMatrix::MakeTranslationMatrix(CamPos);
-	if(commonCBufferData.View.Inverse(commonCBufferData.View) == false)
-	{
-		int a=0;
-	}*/
+	commonCBufferData.View = FMatrix::MakeLookAt(eye, at, up);
 
 	commonCBufferData.Perspective = FMatrix::MakePerspectiveMatrix(30.0f,1.0f,0.1f,100.0f);
 	D3DUtil::CBufferUpdate(DeviceContext,CommonCBuffer,commonCBufferData);
 	DeviceContext->VSSetConstantBuffers(1,1,&CommonCBuffer);
 
 	DeviceContext->OMSetRenderTargets(1,&FrameBufferRTV,DepthStencilView);
-	DeviceContext->ClearRenderTargetView(FrameBufferRTV, ClearColor);
-	DeviceContext->ClearDepthStencilView(DepthStencilView,D3D11_CLEAR_DEPTH,1.0f,0);
-
+	
 	// IA
 	DeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	DeviceContext->RSSetViewports(1,&ViewportInfo);
@@ -671,14 +666,7 @@ void CEngine::Render()
 	UINT offset = 0;
 	DeviceContext->IASetVertexBuffers(0,1,&CubeVertexBuffer,&Stride,&offset);
 	SceneManager->GetScene().RenderScene();
-
-	//// PS
-
-	//// OM
-	//DeviceContext->OMSetRenderTargets(1, &FrameBufferRTV, DepthBufferDSV);
-	//DeviceContext->OMSetBlendState(nullptr, nullptr, 0xffffffff);
-
-	// �׽�Ʈ��
+	 
 	//if (ConstantBuffer && MVPConstantBuffer)
 	//{
 	//	DeviceContext->VSSetConstantBuffers(0, 1, &ConstantBuffer); 
