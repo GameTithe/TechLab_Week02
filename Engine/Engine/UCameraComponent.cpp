@@ -67,7 +67,7 @@ void UCameraComponent::UpdateAngleAndDirection(int mouseX,int mouseY, float scre
 	const float MouseNdcYDelta = MouseNdcY - PreMouseNdcY;
 
 	const float YawDelta = MouseNdcXDelta * 360.0f;
-	const float PitchDelta = MouseNdcYDelta * 90.0f;
+	const float PitchDelta = -MouseNdcYDelta * 90.0f;
 	//UE_LOG("YawDelta: %.2f, PitchDelta: %.2f",YawDelta,PitchDelta);
 
 	Yaw += YawDelta;
@@ -75,7 +75,7 @@ void UCameraComponent::UpdateAngleAndDirection(int mouseX,int mouseY, float scre
 
 	/*Yaw = MouseNdcX * 360.0f;
 	Pitch = MouseNdcY * 90.0f;*/
-	//UE_LOG("yaw: %.2f, pitch: %.2f",Yaw,Pitch);
+	UE_LOG("yaw: %.2f, pitch: %.2f",Yaw,Pitch);
 
 	FMatrix rotationYMTranspose = FMatrix::MakeRotationYMatrix(Yaw);
 	//rotationYMTranspose.Transpose();
@@ -83,8 +83,13 @@ void UCameraComponent::UpdateAngleAndDirection(int mouseX,int mouseY, float scre
 	FMatrix rotationXMTranspose = FMatrix::MakeRotationXMatrix(Pitch);
 	//rotationXMTranspose.Transpose(); // -z방향 바라보면 반대로 회전함
 
-	const FVector4 front4OnlyYawRoation = FVector4::FRONT * rotationYMTranspose;
-	const FVector4 Front4 = front4OnlyYawRoation * rotationXMTranspose;
+	/*const FVector4 front4OnlyYawRoation = FVector4::FRONT * rotationYMTranspose;
+	const FVector4 Front4 = front4OnlyYawRoation * rotationXMTranspose;*/
+
+	// 아래 코드 쓰면, 잘 작동. 위 코드 쓰면 -z방향 바라봤을 때, 위아래 회전이 반대가 됨. 아니 근데 위는 안되고, 아래는 잘되는 이유가 뭐야 도대체?
+	const FVector4 front4OnlyPitchRoation = FVector4::FRONT * rotationXMTranspose;
+	const FVector4 Front4 = front4OnlyPitchRoation * rotationYMTranspose;
+	//const FVector4 Front4 = front4OnlyPitchRoation;
 	Front = Front4.ToFVector();
 
 	Right = Up.Cross(Front);

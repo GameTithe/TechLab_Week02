@@ -33,9 +33,9 @@ struct PS_INPUT
 PS_INPUT mainVS(VS_INPUT input)
 {
     PS_INPUT output;
-    output.position = mul(Model, input.position);
-    output.position = mul(View, output.position);
-    output.position = mul(Perspective, output.position);
+    output.position = mul(input.position, Model);
+    output.position = mul(output.position, View);
+    output.position = mul(output.position, Perspective);
     output.color = input.color; 
     
     return output;

@@ -687,7 +687,9 @@ void CEngine::Render()
 
 	commonCBufferData.Perspective = FMatrix::MakePerspectiveMatrix(30.0f,1.0f,0.1f,100.0f);
 	commonCBufferData.Perspective.Transpose();
-	//commonCBufferData.Perspective = FMatrix::Identity;
+
+	/*commonCBufferData.View = FMatrix::Identity;
+	commonCBufferData.Perspective = FMatrix::Identity;*/
 
 	D3DUtil::CBufferUpdate(DeviceContext,CommonCBuffer,commonCBufferData);
 	DeviceContext->VSSetConstantBuffers(1,1,&CommonCBuffer);
