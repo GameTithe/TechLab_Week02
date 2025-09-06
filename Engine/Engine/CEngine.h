@@ -116,6 +116,7 @@ private:
 	ID3D11Buffer* PickingCBuffer = nullptr;
 	CSceneManager* SceneManager;
 	UINT PickActorID = 0;
+	AActor* PickedActor = nullptr;
 
 public:
 	static CEngine* gpCEngine;
