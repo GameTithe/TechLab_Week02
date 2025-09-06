@@ -124,6 +124,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="AActor.cpp" />
+    <ClCompile Include="Camera.cpp" />
     <ClCompile Include="CEngine.cpp" />
     <ClCompile Include="CScene.cpp" />
     <ClCompile Include="CSceneManager.cpp" />
@@ -146,6 +147,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AActor.h" />
+    <ClInclude Include="Camera.h" />
     <ClInclude Include="CEngine.h" />
     <ClInclude Include="ConsoleWindow.h" />
     <ClInclude Include="CScene.h" />

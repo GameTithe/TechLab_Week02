@@ -28,7 +28,7 @@ public:
 	void UpdateModelMatrix();
 	void Render();
 
-private:
+protected:
 	FVector RelativeLocation;
 	FVector RelativeRotation;
 	FVector RelativeScale3D;
