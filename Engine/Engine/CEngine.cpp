@@ -1,4 +1,7 @@
-﻿#include "CEngine.h"
+#define UE_LOG(fmt, ...) ConsoleWindow::GetInstance().AddLog(fmt, ##__VA_ARGS__)
+
+#include "CEngine.h"
+#include "ConsoleWindow.h"
 
 #include <windows.h>
 
@@ -63,10 +66,8 @@ CEngine::CEngine()
 	//PCurrentScene = new CScene();
 	gpCEngine = this;
 
-	// UE_LOG()는 무조건 아래가 생성되고 나서 해야함!
-	PConsoleWindow = new ConsoleWindow();
-
-	UE_LOG("hi");
+	ConsoleWindow::GetInstance().AddLog("hi");
+	//UE_LOG("hi");
 }
 
 CEngine::~CEngine()
@@ -135,6 +136,8 @@ void CEngine::UpdateGUI()
 
 bool CEngine::Run()
 {
+	UE_LOG("hi");
+
 	bool bIsExit = false;
 
 	// Main Loop 
@@ -176,7 +179,7 @@ bool CEngine::Run()
 		ImGui::End();
 
         bool bConsoleDraw = true;
-		PConsoleWindow->Draw("Example: Console", &bConsoleDraw);
+		ConsoleWindow::GetInstance().Draw("Example: Console", &bConsoleDraw);
 
 		ImGui::Render();
 
@@ -188,10 +191,10 @@ bool CEngine::Run()
 	return true;
 }
 
-void CEngine::AddLog(const char* fmt, ...)
-{
-	PConsoleWindow->AddLog(fmt);
-}
+//void CEngine::AddLog(const char* fmt, ...)
+//{
+//	PConsoleWindow->AddLog(fmt);
+//}
 
 bool CEngine::InitWindow(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nShowCmd)
 {

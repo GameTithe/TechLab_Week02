@@ -2,11 +2,28 @@
 
 #include <ctype.h>
 #include <stdio.h> 
+#include <cassert>
 
 #include "ImGui/imgui.h"
 
 struct ConsoleWindow
 {
+private:
+    bool Initialized = false;
+private:
+    ConsoleWindow() = default;
+
+    ~ConsoleWindow()
+    {
+        ClearLog();
+        for(int i = 0; i < History.Size; i++)
+            ImGui::MemFree(History[i]);
+    }
+
+    ConsoleWindow(const ConsoleWindow&) = delete;
+    ConsoleWindow& operator=(const ConsoleWindow&) = delete;
+
+public:
     char                  InputBuf[256];
     ImVector<char*>       Items;
     ImVector<const char*> Commands;
@@ -16,11 +33,17 @@ struct ConsoleWindow
     bool                  AutoScroll;
     bool                  ScrollToBottom;
 
-    ConsoleWindow()
+    static ConsoleWindow& GetInstance()
+    {
+        static ConsoleWindow instance;
+        return instance;
+    }
+
+    void Init()
     {
         //IMGUI_DEMO_MARKER("Examples/Console");
         ClearLog();
-        memset(InputBuf, 0, sizeof(InputBuf));
+        memset(InputBuf,0,sizeof(InputBuf));
         HistoryPos = -1;
 
         // "CLASSIFY" is here to provide the test case where "C"+[tab] completes to "CL" and display multiple matches.
@@ -30,13 +53,9 @@ struct ConsoleWindow
         Commands.push_back("CLASSIFY");
         AutoScroll = true;
         ScrollToBottom = false;
-        AddLog("Hello World % d", 2025);
-    }
-    ~ConsoleWindow()
-    {
-        ClearLog();
-        for (int i = 0; i < History.Size; i++)
-            ImGui::MemFree(History[i]);
+
+        Initialized = true;
+        AddLog("Hello World % d",2025);
     }
 
     // Portable helpers
@@ -54,6 +73,8 @@ struct ConsoleWindow
 
     void    AddLog(const char* fmt, ...) IM_FMTARGS(2)
     {
+        assert(Initialized);
+
         // FIXME-OPT
         char buf[1024];
         va_list args;
@@ -356,8 +377,8 @@ struct ConsoleWindow
     }
 };
 
-static void ShowExampleAppConsole(bool* p_open)
-{
-    static ConsoleWindow console;
-    console.Draw("Example: Console", p_open);
-}
+//static void ShowExampleAppConsole(bool* p_open)
+//{
+//    static ConsoleWindow console;
+//    console.Draw("Example: Console", p_open);
+//}
