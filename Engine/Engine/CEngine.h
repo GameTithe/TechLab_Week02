@@ -7,18 +7,38 @@
 #include "FVertex.h"
 
 #include "FConstant.h"
+#include "CSceneManager.h"
 
 class CEngine
 {
+
+public:
+	//test 
+	static CEngine* gpCEngine;
+
+	FVector CamPos;
+	FVector CamRot;
+private:
+	CSceneManager* SceneManager;
 public:
 	CEngine();
 	~CEngine();
+
 	bool Init(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nShowCmd);
 	bool Run();
 
 	LRESULT MsgProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
 
-	//void AddLog(const char* fmt, ...);
+
+	ID3D11Device* GetDevice()
+	{
+		return Device;
+	}
+	ID3D11DeviceContext* GetDeviceContext()
+	{
+		return DeviceContext;
+	}
+	//void AddLog(const char* fmt, ...)
 
 private:
 
@@ -26,6 +46,7 @@ private:
 	bool InitD3D();
 	bool InitImGui();
 	 
+	void Load();
 	void UpdateGUI();
 	void Update(float deltaTime);
 	void Render();
@@ -158,8 +179,8 @@ private:
 	IDXGISwapChain* SwapChain = nullptr;
 	ID3D11Texture2D* FrameBuffer = nullptr;
 	ID3D11RenderTargetView* FrameBufferRTV = nullptr;
-	ID3D11RasterizerState* RasterizerState = nullptr;
 
+	ID3D11RasterizerState* RasterizerState = nullptr;
 	ID3D11InputLayout* SimpleInputLayout = nullptr;
 	ID3D11VertexShader* SimpleVertexShader = nullptr;
 	ID3D11PixelShader* SimplePixelShader = nullptr;

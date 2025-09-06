@@ -1,12 +1,13 @@
 #pragma once
 
-#include <vector>
+#include "Typedef.h"
 #include <string>
 #include <fstream>
 #include <sstream>
 #include <iostream>
 
 #include "CScene.h"
+#include "FVector.h"
 
 using namespace std;
 
@@ -25,35 +26,48 @@ using namespace std;
 //
 //};
 
-
+enum class EComponentType
+{
+	USceneComponent = 0,
+	UCamera = 1,
+};
 class CSceneManager
 {
 public:
-	const static string CurSceneNameKey;
-	const static string SceneNamesKey;
-	const static string SceneFolderPath;
-	const static string SceneManagerInfoPath;
-	const static string DefaultSceneName;
+	const static string UScenePositionNameKey;
+	const static string USceneRotationNameKey;
+	const static string USceneScaleNameKey;
+	const static FString ActorNameKey;
+	const static FString USceneComponentNameKey;
+	const static FString CurSceneNameKey;
+	const static FString SceneNamesKey;
+	const static FString SceneFolderPath;
+	const static FString SceneManagerInfoPath;
+	const static FString DefaultSceneName;
+
+	static CSceneManager* Ins;
 
 private:
-	vector<string> SceneNames;
+	TArray<FString> SceneNames;
+	CScene Scene;
 
 public:
 	CSceneManager();
 	//~CSceneManager();
 
-
-	//¾ÀÀ» ºÒ·¯¿À·Á¸é ¾î¶² ¾ÀÀÌ ÀÖ´ÂÁö ¸ÕÀú ¾Ë¾Æ¾ß ÇÑ´Ù.
-	//ºÒ·¯¿Ã ¾ÀÀÌ ¾øÀ»°æ¿ì Ã¹ ¾ÀÀ» »ı¼ºÇÏµµ·Ï ÇÑ´Ù.
+	//ì”¬ì„ ë¶ˆëŸ¬ì˜¤ë ¤ë©´ ì–´ë–¤ ì”¬ì´ ìˆëŠ”ì§€ ë¨¼ì € ì•Œì•„ì•¼ í•œë‹¤.
+	//ë¶ˆëŸ¬ì˜¬ ì”¬ì´ ì—†ì„ê²½ìš° ì²« ì”¬ì„ ìƒì„±í•˜ë„ë¡ í•œë‹¤.
 	bool CreateScene(const string& sceneName);
-	bool LoadScene(const string& sceneName, CScene& outScene);
-	//bool SaveScene(const string& sceneName);
-
-	//void CreateActor();
-	//void RemoveActor();
+	bool LoadScene(const string& sceneName);
+	
+	CScene& GetScene()
+	{
+		return Scene;
+	}
 
 private:
-	bool CheckExistSceneFile(const string& sceneName);
+	bool CheckExistSceneFileName(const FString& sceneName);
+	bool CheckExistSceneFilePath(const FString& sceneFilePath);
 
-	static string GetSceneFilePath(const string& sceneName);
+	static string GetSceneFilePath(const FString& sceneName);
 };

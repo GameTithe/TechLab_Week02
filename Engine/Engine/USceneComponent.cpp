@@ -14,7 +14,6 @@ USceneComponent::~USceneComponent()
 
 void USceneComponent::AttachToComponent(USceneComponent* parent)
 {
-	// 기존에 부모 있으면
 	if (ParentComponent)
 	{
 		// 부모의 자식 목록에서 나를 지움
@@ -23,6 +22,7 @@ void USceneComponent::AttachToComponent(USceneComponent* parent)
 			ParentComponent->ChildComponents.end());
 	} 
 
+	ParentComponent = parent;
 	// 새 부모 설정
 	ParentComponent = parent;
 
