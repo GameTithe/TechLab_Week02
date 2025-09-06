@@ -34,9 +34,9 @@ public:
 		context->Unmap(cBuffer,0);
 	}
 	template <typename T>
-	static void CreateCBufferUpdate(ID3D11DeviceContext* context,ID3D11Buffer** cBuffer,T& cBufferData)
+	static void CreateCBufferUpdate(ID3D11DeviceContext* context,ID3D11Buffer** cBuffer,T& cBufferData, UINT size)
 	{
-		CreateCBuffer(cBuffer);
+		CreateCBuffer(cBuffer,size);
 		CBufferUpdate(context,*cBuffer,cBufferData);
 	}
 

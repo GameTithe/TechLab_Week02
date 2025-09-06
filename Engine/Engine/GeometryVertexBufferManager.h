@@ -4,9 +4,13 @@
 class GeometryVertexBufferManager
 {
 public:
-	static GeometryVertexBufferManager& GetInstance()
-	{
+
+	static GeometryVertexBufferManager& GetInstance() {
 		static GeometryVertexBufferManager instance;
+		if(!instance.bIsInitialized) {
+			instance.Init(); // 최초 접근 시 자동 초기화
+			
+		}
 		return instance;
 	}
 	void Init();
@@ -15,6 +19,7 @@ public:
 	ID3D11Buffer* GetPlaneVertexBuffer() const;
 
 private:
+	bool bIsInitialized = false;
 	ID3D11Buffer* SphereVertexBuffer; 
 	ID3D11Buffer* CubeVertexBuffer;
 	ID3D11Buffer* PlaneVertexBuffer;
