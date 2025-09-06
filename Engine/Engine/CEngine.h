@@ -10,11 +10,6 @@
 #include "CSceneManager.h"
 #include "PSOResource.h"
 
-struct CommonConstantBuffer
-{
-	FMatrix View;
-	FMatrix Perspective;
-};
 
 class CEngine
 {
@@ -55,7 +50,7 @@ private:
 	 
 	//Picking
 	void CreatePickTargets();
-	void CreateDepthBuffer();
+	//void CreateDepthBuffer();
 	void CreatePickDepth();
 	int RenderPickIDAndRead(int mouseX, int mouseY);
 	 
@@ -100,8 +95,8 @@ private:
 	ID3D11Buffer* QuadVertexBuffer = nullptr;
 
 	//Picking Test
-	ID3D11Texture2D* DepthBuffer;
-	ID3D11DepthStencilView* DepthBufferDSV; 
+	//ID3D11Texture2D* DepthBuffer;
+	//ID3D11DepthStencilView* DepthBufferDSV; 
 
 	ID3D11Texture2D* PickingTex;
 	ID3D11Texture2D* PickDepthTex;
