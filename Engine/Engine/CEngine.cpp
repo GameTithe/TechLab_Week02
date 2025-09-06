@@ -131,8 +131,11 @@ FVector camPosTest(0.0f, 0.0f, -3.0f);
 FVector modelPosTest(0.0f, 0.0f, 0.0f); 
 FVector modelRotTest(0.0f, 0.0f, 0.0f);
 int PickTest = 0;
+
 void CEngine::UpdateGUI()
 {
+	UE_LOG("%d",PickTest);
+
 	bool changed = ImGui::SliderFloat3("Cam Pos (x,y,z)", &camPosTest.X, -4.0f, 4.0f, "%.3f");
 	bool changed1 = ImGui::SliderFloat3("Model Pos (x,y,z)", &modelPosTest.X, -4.0f, 4.0f, "%.3f");
 	bool changed2= ImGui::SliderFloat3("Model Rotation (x,y,z)", &modelRotTest.X, -180.0f, 180.0f, "%.3f");
@@ -190,7 +193,11 @@ bool CEngine::Run()
 		} 
 		Update(ImGui::GetIO().DeltaTime); // Update
 
-		PickTest = RenderPickIDAndRead(0,0);
+		ImGuiIO& io = ImGui::GetIO();
+		ImVec2 mousePos = io.MousePos;
+		UE_LOG("%.2f %.2f",mousePos.x ,mousePos.y);
+
+		PickTest = RenderPickIDAndRead(mousePos.x,mousePos.y);
 		Render(); // Render
 
 		//basic movement  
@@ -239,9 +246,23 @@ bool CEngine::InitWindow(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpC
 	// ������ Ŭ���� ���
 	RegisterClassW(&wndClass);
 
+	DWORD style = WS_OVERLAPPEDWINDOW;   // 보더/타이틀 유지
+	DWORD ex    = 0;
+
+	RECT rc = {0,0,1024,1024};             // 원하는 "클라이언트" 크기
+	AdjustWindowRectEx(&rc,style,FALSE,ex);  // 외곽 크기로 보정
+	int W = rc.right - rc.left;
+	int H = rc.bottom - rc.top;
+
+	HWnd = CreateWindowExW(
+		ex,WindowClass,Title,style | WS_VISIBLE,
+		CW_USEDEFAULT,CW_USEDEFAULT,W,H,
+		nullptr,nullptr,hInstance,nullptr);
+
+
 	// 1024 * 1024 ũ���� ������ ����
-	HWnd = CreateWindowExW(0, WindowClass, Title, WS_POPUP | WS_VISIBLE | WS_OVERLAPPEDWINDOW,
-		CW_USEDEFAULT, CW_USEDEFAULT, 1024, 1024, nullptr, nullptr, hInstance, nullptr);
+	//HWnd = CreateWindowExW(0, WindowClass, Title, WS_POPUP | WS_VISIBLE | WS_OVERLAPPEDWINDOW,
+	//	CW_USEDEFAULT, CW_USEDEFAULT, 1024, 1024, nullptr, nullptr, hInstance, nullptr);
 
 	return true;
 }
@@ -471,6 +492,12 @@ int CEngine::RenderPickIDAndRead(int mouseX, int mouseY)
 		DeviceContext->Draw(numVertices, 0);
 	}
 
+	mouseX = mouseX < 0 ? 0 : mouseX;
+	mouseY = mouseY < 0 ?  0 : mouseY;
+
+	mouseX = mouseX > 1023 ?  1000 : mouseX;
+	mouseY = mouseY > 1023 ?  1000 : mouseY;
+
     // 5) 1×1만 스테이징으로 복사 → Map
     D3D11_BOX box{};
     box.left   = (UINT)mouseX;
@@ -493,9 +520,7 @@ int CEngine::RenderPickIDAndRead(int mouseX, int mouseY)
     if (oldRTV) oldRTV->Release();
     if (oldDSV) oldDSV->Release();
 
-    return picked; // 0 == 히트 없음
-	
-	
+    return picked; // 0 == 히트 없음 
 }
 
 void CEngine::Update(float deltaTime)
@@ -532,6 +557,8 @@ void CEngine::Render()
 	{
 		DeviceContext->VSSetConstantBuffers(0, 1, &ConstantBuffer); 
 		DeviceContext->VSSetConstantBuffers(1, 1, &MVPConstantBuffer);
+		
+		DeviceContext->PSSetConstantBuffers(0, 1, &ConstantBuffer); 
 	}
 
 	UpdateConstant({ 0.0f, 0.0f, 0.0f }, 1.0f , camPosTest, modelPosTest, modelRotTest, PickTest);

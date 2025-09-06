@@ -142,6 +142,7 @@ private:
 
 	D3D11_VIEWPORT ViewportInfo;
 	FLOAT ClearColor[4] = { 0.025f, 0.025f, 0.025f, 1.0f };
+	
 
 	HWND HWnd;
 	CScene* PCurrentScene;
