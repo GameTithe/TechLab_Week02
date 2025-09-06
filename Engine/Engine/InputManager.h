@@ -13,6 +13,7 @@ enum class MouseButton
 
 struct Mouse
 {
+	Mouse();
 	FVector CurPos;
 	FVector PrevPos;
 
@@ -46,8 +47,17 @@ public:
 
 		case WM_LBUTTONDOWN:
 		{
-			mouse.LeftDown = true; 
+			mouse.LeftDown = true;
+			UE_LOG("C");
+
 			break;
+		}
+		case WM_LBUTTONUP:
+		{
+			mouse.LeftDown = false;
+			UE_LOG("D");
+			break;
+
 		}
 
 		case WM_RBUTTONDOWN:
@@ -61,24 +71,7 @@ public:
 	inline int GetX() {	return mouse.CurPos.X; 	}
 	inline int GetY() {	return mouse.CurPos.Y; 	}
 
-	inline bool IsDown(MouseButton button) const
-	{
-		switch(button)
-		{
-		case MouseButton::Right:
-		{
-			return mouse.RightDown;
-		}
-		break;
-		
-		case MouseButton::Left:
-		{
-			return mouse.LeftDown;
-		}
-		break;
-
-		}
-	}
+	bool IsDown(MouseButton button) const;
 
 public:
 	Mouse mouse;

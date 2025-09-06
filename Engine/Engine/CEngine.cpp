@@ -222,19 +222,27 @@ void CEngine::UpdateGUI()
 {
 	//UE_LOG("%d",PickTest);
 
-	//transform
-	ImGui::SliderFloat3("modelPos (x,y,z)",&modelPos.X,-4.0f,4.0f,"%.3f");
-	ImGui::SliderFloat3("modelRot(x,y,z)",&modelRot.X,-180.0f,180.0f,"%.3f");
-	ImGui::SliderFloat3("modelScale(x,y,z)",&modelScale.X,-4.0f,4.0f,"%.3f");
-	ImGui::SliderFloat3("camPos (x,y,z)",&CamPos.X, -10, 10);
+	//cam
+	ImGui::SliderFloat3("camPos (x,y,z)",&CamPos.X,-10,10);
 	ImGui::SliderFloat3("camRot(x,y,z)",&CamRot.X,-10,10);
 
-	//cam
-	if(SceneManager->GetScene().SceneActors.size()>0){
-		SceneManager->GetScene().SceneActors[0]->GetRootComponent()->SetRelativeLocation(modelPos);
-		SceneManager->GetScene().SceneActors[0]->GetRootComponent()->SetRelativeRotation(modelRot);
-		SceneManager->GetScene().SceneActors[0]->GetRootComponent()->SetRelativeScale3D(modelScale);
+	ImGui::Text("%d",PickActorID);
+	if(PickedActor != nullptr)
+	{
+		FVector pos = PickedActor->GetRootComponent()->GetRelativeLocation();
+		FVector rot = PickedActor->GetRootComponent()->GetRelativeRotation();
+		FVector scale = PickedActor->GetRootComponent()->GetRelativeScale3D();
+
+		//transform
+		ImGui::SliderFloat3("modelPos (x,y,z)",&pos.X,-4.0f,4.0f,"%.3f");
+		ImGui::SliderFloat3("modelRot(x,y,z)",&rot.X,-180.0f,180.0f,"%.3f");
+		ImGui::SliderFloat3("modelScale(x,y,z)",&scale.X,-4.0f,4.0f,"%.3f");
+
+		PickedActor->GetRootComponent()->SetRelativeLocation(pos);
+		PickedActor->GetRootComponent()->SetRelativeRotation(rot);
+		PickedActor->GetRootComponent()->SetRelativeScale3D(scale);
 	}
+	
 
 	//SceneEditor
 	//오브젝트 생성
@@ -309,9 +317,6 @@ bool CEngine::Run()
 		Update(ImGui::GetIO().DeltaTime); // Update
 
 		PickActorID = RenderPickIDAndRead(gInput.GetX(),gInput.GetY());
-		UE_LOG("%d",PickActorID);
-
-
 
 		Render(); // Render
 
@@ -570,7 +575,13 @@ int CEngine::RenderPickIDAndRead(int mouseX, int mouseY)
 
 void CEngine::Update(float deltaTime)
 {
- 
+	if(gInput.IsDown(MouseButton::Left))
+	{
+		if(PickActorID != 0)
+		{
+			PickedActor = SceneManager->GetScene().SceneActors[PickActorID - 1];
+		}
+	}
 }
 
 void CEngine::Render()
