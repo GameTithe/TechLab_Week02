@@ -1,4 +1,8 @@
-#pragma once
+Ôªø#pragma once
+#define UE_LOG(fmt, ...) AddLog(fmt, ##__VA_ARGS__)
+
+#include "ConsoleWindow.h"
+
 #include <d3d11.h>
 #include <windows.h>
 
@@ -16,6 +20,8 @@ public:
 	bool Run();
 
 	LRESULT MsgProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
+
+	void AddLog(const char* fmt, ...);
 
 private:
 
@@ -37,7 +43,7 @@ private:
 	//void CreateTextureSampler();
 	//void SetRenderingPipeline();
 
-	// ≈◊Ω∫∆ÆøÎ ¿”Ω√ «‘ºˆµÈ
+	// ÌÖåÏä§Ìä∏Ïö© ÏûÑÏãú Ìï®ÏàòÎì§
 	void CreateVertexBuffer(FVertex* vertices, UINT byteWidth)
 	{
 		// 2. Create a vertex buffer
@@ -56,7 +62,7 @@ private:
 	{
 		//const Offset Scale
 		D3D11_BUFFER_DESC constantbufferdesc = {};
-		constantbufferdesc.ByteWidth = sizeof(FConstants) + 0xf & 0xfffffff0; // ensure constant buffer size is multiple of 16 bytes(+∞° ∏’¿˙ ∞ËªÍµ )
+		constantbufferdesc.ByteWidth = sizeof(FConstants) + 0xf & 0xfffffff0; // ensure constant buffer size is multiple of 16 bytes(+Í∞Ä Î®ºÏ†Ä Í≥ÑÏÇ∞Îê®)
 		constantbufferdesc.Usage = D3D11_USAGE_DYNAMIC; // will be updated from CPU every frame
 		constantbufferdesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
 		constantbufferdesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
@@ -65,7 +71,7 @@ private:
 
 		//const MVP
 		D3D11_BUFFER_DESC ConstantMVPBufferDesc = {};
-		ConstantMVPBufferDesc.ByteWidth = sizeof(FMVPConstants) + 0xf & 0xfffffff0; // ensure constant buffer size is multiple of 16 bytes(+∞° ∏’¿˙ ∞ËªÍµ )
+		ConstantMVPBufferDesc.ByteWidth = sizeof(FMVPConstants) + 0xf & 0xfffffff0; // ensure constant buffer size is multiple of 16 bytes(+Í∞Ä Î®ºÏ†Ä Í≥ÑÏÇ∞Îê®)
 		ConstantMVPBufferDesc.Usage = D3D11_USAGE_DYNAMIC; // will be updated from CPU every frame
 		ConstantMVPBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
 		ConstantMVPBufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
@@ -121,6 +127,8 @@ private:
 	HWND HWnd;
 	CScene* PCurrentScene;
 
+	ConsoleWindow* PConsoleWindow = nullptr;
+
 	ID3D11Device* Device = nullptr;
 	ID3D11DeviceContext* DeviceContext = nullptr;
 	IDXGISwapChain* SwapChain = nullptr;
@@ -132,7 +140,7 @@ private:
 	ID3D11VertexShader* SimpleVertexShader = nullptr;
 	ID3D11PixelShader* SimplePixelShader = nullptr;
 
-	//≈◊Ω∫∆ÆøÎ ¿”Ω√
+	//ÌÖåÏä§Ìä∏Ïö© ÏûÑÏãú
 	ID3D11Buffer* ConstantBuffer = nullptr;
 	ID3D11Buffer* MVPConstantBuffer = nullptr;
 
