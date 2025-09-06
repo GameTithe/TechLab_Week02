@@ -1,8 +1,6 @@
-#define UE_LOG(fmt, ...) ConsoleWindow::GetInstance().AddLog(fmt, ##__VA_ARGS__)
-#include "ConsoleWindow.h"
-
 #include <windows.h>
 #include "CEngine.h"
+#include "Log.h"
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nShowCmd)
 {
