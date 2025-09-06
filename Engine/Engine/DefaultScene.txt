@@ -8,9 +8,9 @@
   }, {
     "USceneComponent" : {
       "EComponentType" : 0,
-      "RelativeLocation" : [0.000000, 3.064000, -2.000000],
-      "RelativeRotation" : [141.701996, 0.000000, -120.000000],
-      "RelativeScale3D" : [1.787000, 1.000000, 1.000000]
+      "RelativeLocation" : [-1.277000, 0.000000, 0.000000],
+      "RelativeRotation" : [0.000000, 0.000000, 0.000000],
+      "RelativeScale3D" : [1.000000, 1.000000, 1.000000]
     }
   }, {
     "USceneComponent" : {

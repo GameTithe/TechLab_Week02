@@ -17,6 +17,8 @@ public:
 	AActor* CreateActor();
 	void DestroyActor();
 
+
+	void RenderPickingScene();
 	void RenderScene();
 	
 };

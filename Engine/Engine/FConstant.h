@@ -18,6 +18,11 @@ struct FObjectPicking
 {
 	int Pick;
 	int ObjectID; 
-	int Padding[2];
-	       
-}; 
+	int Padding[2]; 
+};
+
+struct FCommonConstantBuffer
+{
+	FMatrix View;
+	FMatrix Perspective;
+};
