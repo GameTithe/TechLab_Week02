@@ -16,11 +16,14 @@ public:
 	void BeginPlay();
 	void Tick(float deltaTime);
 	void EndPlay();
+	void Render();
 
 	USceneComponent* GetRootComponent() const;
+
 protected:
 	void SetRootComponent(USceneComponent* rootComponent);
 protected:
 	USceneComponent* RootComponent;				// 루트 컴포넌트(USceneComponent)를 통해 AActor의 위치 결정 
 	TArray<UActorComponent*> OwnedComponents;	// '소유'한 컴포넌트 목록 -> 컴포넌트의 Tick 호출을 위함
+	
 }; 

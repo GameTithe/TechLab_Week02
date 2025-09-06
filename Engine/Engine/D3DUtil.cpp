@@ -11,6 +11,10 @@ void D3DUtil::CreateCBuffer(ID3D11Buffer** cBuffer,UINT size)
 	constantbufferdesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
 	CEngine::gpCEngine->GetDevice()->CreateBuffer(&constantbufferdesc,nullptr,cBuffer);
 }
+void D3DUtil::CreateDepthStencilState(ID3D11DepthStencilState** dss, D3D11_DEPTH_STENCIL_DESC& desc)
+{
+	CEngine::gpCEngine->GetDevice()->CreateDepthStencilState(&desc,dss);
+}
 
 void D3DUtil::CreateRasterizerState(ID3D11RasterizerState** rasterizerState,D3D11_RASTERIZER_DESC& desc)
 {
@@ -32,7 +36,12 @@ void D3DUtil::CreateVertexBuffer(FVertex* vertices,ID3D11Buffer** vertexBuffer,U
 void D3DUtil::CreateVSAndInputLayout(const wstring& filePath,ID3D11VertexShader** vs,ID3D11InputLayout** inputLayout)
 {
 	ID3DBlob* vsCSO;
-	D3DCompileFromFile(filePath.c_str(),nullptr,nullptr,"mainVS","vs_5_0",0,0,&vsCSO,nullptr);
+	HRESULT hResult = D3DCompileFromFile(filePath.c_str(),nullptr,nullptr,"mainVS","vs_5_0",D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION,0,&vsCSO,nullptr);
+	if(FAILED(hResult))
+	{
+		cout<<"CreateVSAndInputLayout Failed"<<endl;
+		return;
+	}
 	CEngine::gpCEngine->GetDevice()->CreateVertexShader(vsCSO->GetBufferPointer(),vsCSO->GetBufferSize(),nullptr,vs);
 	D3D11_INPUT_ELEMENT_DESC layout[] =
 	{
@@ -47,7 +56,7 @@ void D3DUtil::CreateVSAndInputLayout(const wstring& filePath,ID3D11VertexShader*
 void D3DUtil::CreatePS(const wstring& filePath,ID3D11PixelShader** ps)
 {
 	ID3DBlob* psCSO;
-	D3DCompileFromFile(filePath.c_str(),nullptr,nullptr,"mainPS","ps_5_0",0,0,&psCSO,nullptr);
+	D3DCompileFromFile(filePath.c_str(),nullptr,nullptr,"mainPS","ps_5_0",D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION,0,&psCSO,nullptr);
 	CEngine::gpCEngine->GetDevice()->CreatePixelShader(psCSO->GetBufferPointer(),psCSO->GetBufferSize(),nullptr,ps);
 	psCSO->Release();
 }

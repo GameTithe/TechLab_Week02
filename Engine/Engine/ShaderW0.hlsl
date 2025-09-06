@@ -1,15 +1,15 @@
-cbuffer constants : register(b0)
-{
-    float3 Offset;
-    float Scale; 
-}
-
-cbuffer MVPTransform : register(b1)
+cbuffer TransformCBuffer : register(b0)
 {
     float4x4 Model;
+}
+
+cbuffer CommonCBUffer : register(b1)
+{
     float4x4 View;
     float4x4 Perspective;
 }
+
+
 
 cbuffer PickCB : register(b2)
 {
@@ -33,7 +33,6 @@ struct PS_INPUT
 PS_INPUT mainVS(VS_INPUT input)
 {
     PS_INPUT output;
-    //output.position = input.position * float4(Scale, Scale, Scale,1) + float4(Offset, 0);
     output.position = mul(Model, input.position);
     output.position = mul(View, output.position);
     output.position = mul(Perspective, output.position);

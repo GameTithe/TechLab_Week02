@@ -8,12 +8,13 @@
 
 class CScene
 {
-private:
-	TArray<UObject*> GUObjectArray;
+public:
+	TArray<AActor*> SceneActors;
 public:
 	
 	void ClearScene();
 	AActor* CreateActor();
+	void RenderScene();
 	
 };
  

@@ -41,7 +41,7 @@ public:
 	}
 
 	static void CreateCBuffer(ID3D11Buffer** cBuffer,UINT size);
-
+	static void CreateDepthStencilState(ID3D11DepthStencilState** dss, D3D11_DEPTH_STENCIL_DESC& desc);
 	static void CreateRasterizerState(ID3D11RasterizerState** rasterizerState,D3D11_RASTERIZER_DESC& desc);
 	static void CreateVertexBuffer(FVertex* vertices,ID3D11Buffer** vertexBuffer,UINT byteWidth);
 	static void CreateVSAndInputLayout(const wstring& filePath,ID3D11VertexShader** vs,ID3D11InputLayout** inputLayout);
