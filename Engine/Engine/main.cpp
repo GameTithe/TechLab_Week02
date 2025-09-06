@@ -3,13 +3,14 @@
 
 #include <windows.h>
 #include "CEngine.h"
-
+#include "CSceneManager.h"
+void main()
+{
+	CSceneManager m;
+	return;
+}
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nShowCmd)
 {
-	ConsoleWindow::GetInstance().Init();
-
-	UE_LOG("hi22");
-
 	CEngine cEngine;
 
 	if (!cEngine.Init(hInstance, hPrevInstance, lpCmdLine, nShowCmd)) {

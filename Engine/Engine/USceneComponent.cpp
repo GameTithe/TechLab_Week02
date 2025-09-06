@@ -14,19 +14,19 @@ USceneComponent::~USceneComponent()
 
 void USceneComponent::AttachToComponent(USceneComponent* parent)
 {
-	// ë‚˜ì˜ ë¶€ëª¨ ì»´í¬ë„ŒíŠ¸ê°€ ì¡´ìž¬í•˜ë©´
+	// ?ì„ì“½ éºÂ€ï§?è€ŒëŒ„ë£·?ëš°ë“ƒåª›Â€ è­°ëŒì˜±?ì„Žãˆƒ
 	if (ParentComponent)
 	{
-		// ë¶€ëª¨ ì»´í¬ë„ŒíŠ¸ì˜ ìžì‹ ëª©ë¡ì—ì„œ ë‚˜ë¥¼ ì œê±°
+		// éºÂ€ï§?è€ŒëŒ„ë£·?ëš°ë“ƒ???ë¨¯ë–‡ ï§â‘¸ì¤‰?ë¨¯ê½Œ ?ì„Ž? ?ì’“êµ…
 		ParentComponent->ChildComponents.erase(
 			std::remove(ParentComponent->ChildComponents.begin(), ParentComponent->ChildComponents.end(), this), 
 			ParentComponent->ChildComponents.end());
 	} 
 
-	// ë‚˜ì˜ ìƒˆ ë¶€ëª¨ ì„¤ì •
+	// ?ì„ì“½ ??éºÂ€ï§??ã…¼ì ™
 	ParentComponent = parent;
 
-	// ë¶€ëª¨ì˜ ìžì‹ ëª©ë¡ì— ë‚˜ ì¶”ê°€
+	// éºÂ€ï§â‘¥ì“½ ?ë¨¯ë–‡ ï§â‘¸ì¤‰????ç•°ë¶½?
 	if (parent)
 	{
 		ParentComponent->ChildComponents.push_back(this);
@@ -88,7 +88,7 @@ FMatrix USceneComponent::GetModelMatrix()
 
 void USceneComponent::UpdateModelMatrix()
 {
-	// »ó´ë TransformÀ¸·Î »ó´ë Çà·Ä ±¸ÇÏ±â
+	// ìƒëŒ€ Transformìœ¼ë¡œ ìƒëŒ€ í–‰ë ¬ êµ¬í•˜ê¸°
 	// Calculate relative matrix(transform matrix) using relative transform
 	FMatrix relativeMatrix = FMatrix::MakeScaleMatrix(RelativeScale3D.X, RelativeScale3D.Y, RelativeScale3D.Z)
 		* FMatrix::MakeRotationXMatrix(RelativeRotation.X)
@@ -97,20 +97,20 @@ void USceneComponent::UpdateModelMatrix()
 		* FMatrix::MakeTranslationMatrix({ RelativeLocation.X, RelativeLocation.Y, RelativeLocation.Z, 1 });
 	if (!ParentComponent)
 	{
-		// ºÎ¸ð°¡ ¾øÀ¸¸é
-		// ³ªÀÇ Model Matrix = °è»êÇÑ »ó´ë Çà·Ä
+		// ë¶€ëª¨ê°€ ì—†ìœ¼ë©´
+		// ë‚˜ì˜ Model Matrix = ê³„ì‚°í•œ ìƒëŒ€ í–‰ë ¬
 		// my model matrix is just relative matrix calculated 
 		ModelMatrix = relativeMatrix;
 	}
 	else
 	{
-		// ºÎ¸ð ÀÖÀ¸¸é
-		// ³ªÀÇ Model Matrix = °è»êÇÑ »ó´ë Çà·Ä * ºÎ¸ðÀÇ Model Matrix
+		// ë¶€ëª¨ ìžˆìœ¼ë©´
+		// ë‚˜ì˜ Model Matrix = ê³„ì‚°í•œ ìƒëŒ€ í–‰ë ¬ * ë¶€ëª¨ì˜ Model Matrix
 		// my model matrix is relative matrix * parent's model matrix
 		ModelMatrix = relativeMatrix * ParentComponent->GetModelMatrix();
 		
 	}
-	// ÀÚ½Ä ÄÄÆ÷³ÍÆ®¿¡ ºÎ¸ðÀÇ Model Matrix º¯°æµÊÀ» ÀüÆÄ
+	// ìžì‹ ì»´í¬ë„ŒíŠ¸ì— ë¶€ëª¨ì˜ Model Matrix ë³€ê²½ë¨ì„ ì „íŒŒ
 	for (USceneComponent* child : ChildComponents)
 	{
 		child->UpdateModelMatrix();

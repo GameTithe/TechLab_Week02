@@ -7,18 +7,27 @@
 #include "FVertex.h"
 
 #include "FConstant.h"
+#include "CSceneManager.h"
 
 class CEngine
 {
 public:
 	CEngine();
 	~CEngine();
+	CSceneManager* SceneManager;
+
 	bool Init(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nShowCmd);
 	bool Run();
 
 	LRESULT MsgProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
 
 	//void AddLog(const char* fmt, ...);
+public:
+	//test 
+	static CEngine* gpCEngine;
+
+	FVector CamPos;
+	FVector CamRot;
 
 private:
 
@@ -26,6 +35,7 @@ private:
 	bool InitD3D();
 	bool InitImGui();
 	 
+	void Load();
 	void UpdateGUI();
 	void Update(float deltaTime);
 	void Render();

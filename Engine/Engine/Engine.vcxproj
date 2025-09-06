@@ -126,6 +126,7 @@
     <ClCompile Include="AActor.cpp" />
     <ClCompile Include="CEngine.cpp" />
     <ClCompile Include="CScene.cpp" />
+    <ClCompile Include="CSceneManager.cpp" />
     <ClCompile Include="D3DUtil.cpp" />
     <ClCompile Include="FMatrix.cpp" />
     <ClCompile Include="FVector.cpp" />
@@ -161,7 +162,6 @@
     <ClInclude Include="PipelineStateObject.h" />
     <ClInclude Include="Resources.h" />
     <ClInclude Include="Sphere.h" />
-    <ClInclude Include="TArray.h" />
     <ClInclude Include="Typedef.h" />
     <ClInclude Include="UObject.h" />
     <ClInclude Include="UPrimitiveComponent.h" />
