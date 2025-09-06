@@ -250,11 +250,12 @@ void CEngine::UpdateGUI()
 	{
 		SceneManager->GetScene().DestroyActor();
 	}
-	
-	if(ImGui::Button("Change Scene"))
-	{
 
+	if(ImGui::Button("Save Scene"))
+	{
+		SceneManager->SaveScene();
 	}
+	
 	if(ImGui::Button("Create Scene"))
 	{
 

@@ -172,7 +172,7 @@ bool CSceneManager::LoadScene(const string& sceneName)
 		JSON sceneInfoJson = JSON::Load(ss.str());
 
 		Scene.ClearScene();
-
+		Scene.SceneName = sceneName;
 		for(auto& j : sceneInfoJson.ArrayRange())
 		{
 			int componentType = j[USceneComponentNameKey][EComponentTypeNameKey].ToInt();
@@ -234,27 +234,28 @@ bool CSceneManager::SaveScene()
 	cameraJson[CSceneManager::USceneComponentNameKey][CSceneManager::UScenePositionNameKey] = json::Array(camPos.X,camPos.Y,camPos.Z);
 	cameraJson[CSceneManager::USceneComponentNameKey][CSceneManager::USceneRotationNameKey] = json::Array(camRot.X,camRot.Y,camRot.Z);
 	cameraJson[CSceneManager::USceneComponentNameKey][CSceneManager::USceneScaleNameKey] = json::Array(1.0f,1.0f,1.0f);
-
+	sceneJson.append(cameraJson);
 	int actorCount = Scene.SceneActors.size();
 	
 	for(int i=0;i<actorCount;i++)
 	{
-
+		JSON actorJson;
+		FVector pos = Scene.SceneActors[i]->GetRootComponent()->GetRelativeLocation();
+		FVector rot = Scene.SceneActors[i]->GetRootComponent()->GetRelativeRotation();
+		FVector scale = Scene.SceneActors[i]->GetRootComponent()->GetRelativeScale3D();
+		actorJson = CSceneManager::USceneComponentNameKey;
+		actorJson[CSceneManager::USceneComponentNameKey][EComponentTypeNameKey] = (int)EComponentType::USceneComponent;
+		actorJson[CSceneManager::USceneComponentNameKey][CSceneManager::UScenePositionNameKey] = json::Array(pos.X,pos.Y,pos.Z);
+		actorJson[CSceneManager::USceneComponentNameKey][CSceneManager::USceneRotationNameKey] = json::Array(rot.X,rot.Y,rot.Z);
+		actorJson[CSceneManager::USceneComponentNameKey][CSceneManager::USceneScaleNameKey] = json::Array(scale.X,scale.Y,scale.Z);
+		sceneJson.append(actorJson);
 	}
+
 	
-	JSON actorJson;
-	actorJson = CSceneManager::USceneComponentNameKey;
-	actorJson[CSceneManager::USceneComponentNameKey][EComponentTypeNameKey] = (int)EComponentType::USceneComponent;
-	actorJson[CSceneManager::USceneComponentNameKey][CSceneManager::UScenePositionNameKey] = json::Array(0.0f,0.0f,0.0f);
-	actorJson[CSceneManager::USceneComponentNameKey][CSceneManager::USceneRotationNameKey] = json::Array(0.0f,0.0f,0.0f);
-	actorJson[CSceneManager::USceneComponentNameKey][CSceneManager::USceneScaleNameKey] = json::Array(1.0f,1.0f,1.0f);
-	sceneJson.append(cameraJson);
-	sceneJson.append(actorJson);
-	cameraJson = CSceneManager::USceneComponentNameKey;
-	cameraJson[CSceneManager::USceneComponentNameKey][EComponentTypeNameKey] = (int)EComponentType::UCamera;
-	cameraJson[CSceneManager::USceneComponentNameKey][CSceneManager::UScenePositionNameKey] = json::Array(FVector(0,0,0));
-	cameraJson[CSceneManager::USceneComponentNameKey][CSceneManager::USceneRotationNameKey] = json::Array(0.0f,0.0f,0.0f);
-	cameraJson[CSceneManager::USceneComponentNameKey][CSceneManager::USceneScaleNameKey] = json::Array(1.0f,1.0f,1.0f);
+	ofstream createSceneFileSteam(GetSceneFilePath(Scene.SceneName));
+	createSceneFileSteam << sceneJson;
+	createSceneFileSteam.close();
+	
 	return true;
 }
 

@@ -9,6 +9,7 @@
 class CScene
 {
 public:
+	FString SceneName;
 	TArray<AActor*> SceneActors;
 public:
 	
