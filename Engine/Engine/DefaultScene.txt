@@ -8,15 +8,22 @@
   }, {
     "USceneComponent" : {
       "EComponentType" : 0,
-      "RelativeLocation" : [0.426000, 2.213000, 1.667000],
-      "RelativeRotation" : [-84.254997, 0.000000, 0.000000],
-      "RelativeScale3D" : [1.000000, 1.000000, 1.000000]
+      "RelativeLocation" : [-4.000000, 2.468000, 1.667000],
+      "RelativeRotation" : [164.681000, 0.000000, 0.000000],
+      "RelativeScale3D" : [1.851000, 1.000000, 1.000000]
     }
   }, {
     "USceneComponent" : {
       "EComponentType" : 0,
-      "RelativeLocation" : [4.000000, 4.000000, 0.000000],
+      "RelativeLocation" : [4.000000, 2.638000, 0.000000],
       "RelativeRotation" : [-99.573997, 0.000000, 0.000000],
       "RelativeScale3D" : [2.021000, 1.000000, 1.000000]
+    }
+  }, {
+    "USceneComponent" : {
+      "EComponentType" : 0,
+      "RelativeLocation" : [0.000000, 1.447000, 0.000000],
+      "RelativeRotation" : [-122.553001, 0.000000, 0.000000],
+      "RelativeScale3D" : [1.000000, 1.000000, 1.000000]
     }
   }]

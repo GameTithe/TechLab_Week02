@@ -38,7 +38,7 @@ public:
 	}
 	UINT GetPickID()
 	{
-		return PickActorID;
+		return PickID;
 	}
 	//void AddLog(const char* fmt, ...)
 
@@ -115,8 +115,9 @@ private:
 
 	ID3D11Buffer* PickingCBuffer = nullptr;
 	CSceneManager* SceneManager;
-	UINT PickActorID = 0;
-	AActor* PickedActor = nullptr;
+	UINT PickID = 0;
+	UPrimitiveComponent* PickedPrimitive = nullptr;
+	uint32 PickedPrimitiveID = 0;
 
 public:
 	static CEngine* gpCEngine;
