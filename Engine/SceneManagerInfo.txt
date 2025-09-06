@@ -1,0 +1,4 @@
+{
+  "CurSceneName" : "DefaultScene",
+  "SceneNames" : ["DefaultScene"]
+}

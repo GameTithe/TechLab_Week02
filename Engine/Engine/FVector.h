@@ -71,6 +71,7 @@ public:
 	float Length3Squared() const;
 	void Normalize();
 	FVector4 Direction() const;
+	FVector ToFVector() const;
 
 	static FVector4 Lerp(const FVector4& v1, const FVector4& v2, float t);
 

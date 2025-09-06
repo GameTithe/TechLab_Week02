@@ -402,7 +402,7 @@ FMatrix FMatrix::MakeLookAt(FVector eye, FVector at, FVector up)
 		FVector4(f.X, f.Y, f.Z, 0.0f),   // col2
 		FVector4(0.0f, 0.0f, 0.0f, 1.0f) // col3 
 	);
-	FMatrix view = R_inv * T_inv;
+	FMatrix view = T_inv * R_inv;
 	return view;
 }
    

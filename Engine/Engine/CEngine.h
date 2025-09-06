@@ -10,6 +10,8 @@
 #include "CSceneManager.h"
 #include "PSOResource.h"
 
+#include "UCameraComponent.h"
+
 struct CommonConstantBuffer
 {
 	FMatrix View;
@@ -208,5 +210,7 @@ public:
 	//test 
 	FVector CamPos;
 	FVector CamRot;
+
+	UCameraComponent CameraComponent;
 private:
 };

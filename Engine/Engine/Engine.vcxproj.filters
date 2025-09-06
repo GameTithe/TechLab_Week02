@@ -81,6 +81,9 @@
     <ClCompile Include="PSOResource.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="UCameraComponent.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ImGui\imconfig.h">
@@ -159,6 +162,9 @@
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="PSOResource.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="UCameraComponent.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>

@@ -237,7 +237,12 @@ FVector4 FVector4::Direction() const
 	{
 		return FVector4(0.0f, 0.0f, 0.0f, 0.0f);
 	}
-} 
+}
+FVector FVector4::ToFVector() const
+{
+	return FVector(X,Y,Z);
+}
+
 
 FVector4 FVector4::Lerp(const FVector4& v1, const FVector4& v2, float t)
 {

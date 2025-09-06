@@ -135,7 +135,7 @@ extern LRESULT ImGui_ImplWin32_WndProcHandler(HWND hwnd, UINT msg, WPARAM wParam
 
 CEngine* CEngine::gpCEngine = nullptr;
 // ���� �޼����� ó���� �Լ�
-InputManager gInput = InputManager::Get();
+//InputManager gInput = InputManager::Get();
 
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
@@ -149,7 +149,7 @@ LRESULT CEngine::MsgProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		return true;
 	}
 	 
-	gInput.ProcessMessage(message,wParam,lParam);
+	InputManager::Get().ProcessMessage(message,wParam,lParam);
 	
 	switch (message)
 	{
@@ -170,6 +170,7 @@ CEngine::CEngine()
 	//PCurrentScene = new CScene();
 	gpCEngine = this;
 
+	CameraComponent = UCameraComponent();
 	//ConsoleWindow::GetInstance().AddLog("hi");
 }
 
@@ -218,8 +219,17 @@ void CEngine::UpdateGUI()
 	ImGui::SliderFloat3("modelPos (x,y,z)",&modelPos.X,-4.0f,4.0f,"%.3f");
 	ImGui::SliderFloat3("modelRot(x,y,z)",&modelRot.X,-180.0f,180.0f,"%.3f");
 	ImGui::SliderFloat3("modelScale(x,y,z)",&modelScale.X,-4.0f,4.0f,"%.3f");
-	ImGui::SliderFloat3("camPos (x,y,z)",&CamPos.X, -10, 10);
-	ImGui::SliderFloat3("camRot(x,y,z)",&CamRot.X,-10,10);
+	if(ImGui::SliderFloat3("camPos (x,y,z)",&CamPos.X,-360.0f, 360.0f))
+	{
+		CameraComponent.SetPosition(CamPos);
+	}
+	if(ImGui::SliderFloat3("camRot(x,y,z)",&CamRot.X,-10,10))
+	{
+		CameraComponent.SetRotation(CamRot);
+	}
+
+	CamPos = CameraComponent.GetPosition();
+	CamRot = CameraComponent.GetRotation();
 
 	SceneManager->GetScene().SceneActors[0]->GetRootComponent()->SetRelativeLocation(modelPos);
 	SceneManager->GetScene().SceneActors[0]->GetRootComponent()->SetRelativeRotation(modelRot);
@@ -269,6 +279,10 @@ bool CEngine::Run()
 		{
 			TranslateMessage(&msg);
 			DispatchMessage(&msg);
+
+			/*float mouseX = gInput.GetX();
+			float mouseY = gInput.GetY();
+			UE_LOG("%.2f, %.2f",mouseX,mouseY);*/
 
 			if (msg.message == WM_QUIT)
 			{
@@ -648,9 +662,26 @@ void CEngine::Render()
 	DeviceContext->ClearRenderTargetView(FrameBufferRTV,ClearColor);
 	DeviceContext->ClearDepthStencilView(DepthStencilView,D3D11_CLEAR_DEPTH,1.0f,0);
 
-	FVector eye = FVector(0,0,-10);
+	/*FVector eye = FVector(0,0,-10);
 	FVector at = FVector::FRONT;
-	FVector up = {0.0f,1.0f,0.0f};
+	FVector up = {0.0f,1.0f,0.0f};*/
+
+	float mouseX = InputManager::Get().GetX();
+	float mouseY = InputManager::Get().GetY();
+	//UE_LOG("%.2f, %.2f",mouseX,mouseY);
+	CameraComponent.UpdateAngleAndDirection(mouseX,mouseY,ViewportInfo.Width,ViewportInfo.Height);
+	/*if(InputManager::Get().IsDown(MouseButton::Right))
+	{
+		CameraComponent.UpdateAngleAndDirection(mouseX,mouseY,ViewportInfo.Width,ViewportInfo.Height);
+	}*/
+	CameraComponent.UpdatePosition();
+
+	FVector eye = CameraComponent.GetPosition();
+	FVector at = CameraComponent.GetFront();
+	FVector up = CameraComponent.GetUp();
+
+	//UE_LOG("eye: (%f, %f, %f)",eye.X,eye.Y,eye.Z);
+	UE_LOG("at: (%f, %f, %f)",at.X,at.Y,at.Z);
 	commonCBufferData.View = FMatrix::MakeLookAt(eye, at, up);
 
 	commonCBufferData.Perspective = FMatrix::MakePerspectiveMatrix(30.0f,1.0f,0.1f,100.0f);
