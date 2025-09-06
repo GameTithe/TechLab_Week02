@@ -11,6 +11,18 @@ AActor* CScene::CreateActor()
 	SceneActors.push_back(actor);
 	return actor;
 }
+
+void CScene::RenderPickingScene()
+{
+	PSO::PickingPSO->SetRenderState();
+
+	int actorCount = SceneActors.size();
+	for(int i=0;i<actorCount;i++)
+	{
+		SceneActors[i]->Render();
+	}
+}
+
 void CScene::RenderScene()
 {
 	PSO::SimplePSO->SetRenderState();

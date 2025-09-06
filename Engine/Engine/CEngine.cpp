@@ -196,7 +196,8 @@ bool CEngine::Init(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 }
 void CEngine::Load()
 {
-	D3DUtil::CreateCBuffer(&CommonCBuffer,sizeof(CommonConstantBuffer));
+	D3DUtil::CreateCBuffer(&CommonCBuffer,sizeof(FCommonConstantBuffer));
+	D3DUtil::CreateCBuffer(&PickingCBuffer,sizeof(FObjectPicking));
 	//Picking
 	//D3DUtil::CreateCBuffer()
 	/* 
@@ -231,17 +232,7 @@ void CEngine::UpdateGUI()
 	SceneManager->GetScene().SceneActors[0]->GetRootComponent()->SetRelativeLocation(modelPos);
 	SceneManager->GetScene().SceneActors[0]->GetRootComponent()->SetRelativeRotation(modelRot);
 	SceneManager->GetScene().SceneActors[0]->GetRootComponent()->SetRelativeScale3D(modelScale);
-
-	/*ImGui_ImplDX11_NewFrame();
-	ImGui_ImplWin32_NewFrame();
-	ImGui::NewFrame();*/
-	// ImGui UI ��Ʈ�� �߰��� ImGui::NewFrame()�� ImGui::Render() ���̿�
-	/*ImGui::Begin("Jungle Property Window");
-	ImGui::Text("Hello Jungle World!");*/
-	//ImGui TODO 
-	/*ImGui::End();
-	ImGui::Render();
-	ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());*/
+	 
 }
 
 //void CEngine::Update(float deltaTime)
@@ -285,12 +276,7 @@ bool CEngine::Run()
 		} 
 		Update(ImGui::GetIO().DeltaTime); // Update
 
-		//PickTest = RenderPickIDAndRead(gInput.GetX(),gInput.GetY());
-		ImGuiIO& io = ImGui::GetIO();
-		ImVec2 mousePos = io.MousePos;
-		//UE_LOG("%.2f %.2f",mousePos.x ,mousePos.y);
-
-		//PickTest = RenderPickIDAndRead(mousePos.x,mousePos.y);
+		PickTest = RenderPickIDAndRead(gInput.GetX(),gInput.GetY()); 
 		Render(); // Render
 
 		//basic movement  
@@ -319,21 +305,13 @@ bool CEngine::Run()
 
 	return true;
 }
-
-//void CEngine::AddLog(const char* fmt, ...)
-//{
-//	PConsoleWindow->AddLog(fmt);
-//}
-
+ 
 bool CEngine::InitWindow(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nShowCmd)
-{
-	// ������ Ŭ���� �̸�
+{ 
 	WCHAR WindowClass[] = L"JungleWindowClass";
-
-	// ������ Ÿ��Ʋ�� �̸�
+	 
 	WCHAR Title[] = L"Game Tech Lab";
-
-	// ���� �޼����� ó���� �Լ��� WndProc�� �Լ� �����͸� WindowClass ����ü�� ���
+	 
 	WNDCLASSW wndClass = { 0, WndProc, 0, 0, 0, 0, 0, 0, 0, WindowClass };
 
 	// ������ Ŭ���� ���
@@ -367,7 +345,7 @@ bool CEngine::InitD3D()
 	CreateVertexBuffer(quad_vertices, &QuadVertexBuffer, sizeof(quad_vertices));
 
 	//Depth Buffer
-	CreateDepthBuffer();
+	//CreateDepthBuffer();
 
 	//Picking Setting
 	CreatePickTargets();
@@ -419,8 +397,7 @@ void CEngine::CreateDeviceAndSwapChain(HWND hWindow)
 
 void CEngine::CreateFrameBuffer()
 {
-	// ���� ü�����κ��� �� ���� �ؽ�ó ��������
-	SwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (void**)&FrameBuffer);
+ 	SwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (void**)&FrameBuffer);
 
 	// ���� Ÿ�� �� ����
 	D3D11_RENDER_TARGET_VIEW_DESC framebufferRTVdesc = {};
@@ -430,16 +407,16 @@ void CEngine::CreateFrameBuffer()
 	Device->CreateRenderTargetView(FrameBuffer, &framebufferRTVdesc, &FrameBufferRTV);
 
 	D3D11_TEXTURE2D_DESC frameBufferDesc = {};
-	FrameBuffer->GetDesc(&frameBufferDesc);
+	FrameBuffer->GetDesc(&frameBufferDesc); 
 
 
-
+	//Create Depth
 	D3D11_TEXTURE2D_DESC depthTex = {};
 	depthTex.Width =	frameBufferDesc.Width;
 	depthTex.Height = frameBufferDesc.Height;
 	depthTex.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
 	depthTex.Usage = D3D11_USAGE_DEFAULT;
-	depthTex.BindFlags = D3D11_BIND_DEPTH_STENCIL;
+	depthTex.BindFlags =  D3D11_BIND_DEPTH_STENCIL ; //| D3D11_BIND_SHADER_RESOURCE;;
 	depthTex.MipLevels = 1;
 	depthTex.ArraySize = 1;
 	depthTex.SampleDesc.Count = 1;
@@ -450,7 +427,7 @@ void CEngine::CreateFrameBuffer()
 		int a=0;
 		return;
 	}
-
+	 
 	D3D11_DEPTH_STENCIL_VIEW_DESC depthStencilViewDesc ={};
 	depthStencilViewDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
 	depthStencilViewDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
@@ -494,35 +471,34 @@ void CEngine::CreatePickTargets()
 	srvDesc.Format = td.Format;
 	srvDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
 	srvDesc.Texture2D.MipLevels = 1;
-	Device->CreateShaderResourceView(PickingTex, &srvDesc, &PickingSRV);
-	 
+	Device->CreateShaderResourceView(PickingTex, &srvDesc, &PickingSRV); 
 }
 
-void CEngine::CreateDepthBuffer()
-{
-	D3D11_TEXTURE2D_DESC depthDesc = {};
-	depthDesc.Width = (UINT)ViewportInfo.Width;
-	depthDesc.Height = (UINT)ViewportInfo.Height;
-	depthDesc.MipLevels = 1;
-	depthDesc.ArraySize = 1;
-	depthDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
-	depthDesc.SampleDesc.Count = 1;
-	depthDesc.SampleDesc.Quality = 0;
-	depthDesc.Usage = D3D11_USAGE_DEFAULT;
-	depthDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
-
-	Device->CreateTexture2D(&depthDesc,nullptr,&DepthBuffer);
-
-	// 깊이 스텐실 뷰 생성
-	D3D11_DEPTH_STENCIL_VIEW_DESC dsvDesc = {};
-	dsvDesc.Format = depthDesc.Format;
-	dsvDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
-	dsvDesc.Texture2D.MipSlice = 0;
-
-	Device->CreateDepthStencilView(DepthBuffer,&dsvDesc,&DepthBufferDSV);
-
-
-}
+//void CEngine::CreateDepthBuffer()
+//{
+//	D3D11_TEXTURE2D_DESC depthDesc = {};
+//	depthDesc.Width = (UINT)ViewportInfo.Width;
+//	depthDesc.Height = (UINT)ViewportInfo.Height;
+//	depthDesc.MipLevels = 1;
+//	depthDesc.ArraySize = 1;
+//	depthDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
+//	depthDesc.SampleDesc.Count = 1;
+//	depthDesc.SampleDesc.Quality = 0;
+//	depthDesc.Usage = D3D11_USAGE_DEFAULT;
+//	depthDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
+//
+//	Device->CreateTexture2D(&depthDesc,nullptr,&DepthBuffer);
+//
+//	// 깊이 스텐실 뷰 생성
+//	D3D11_DEPTH_STENCIL_VIEW_DESC dsvDesc = {};
+//	dsvDesc.Format = depthDesc.Format;
+//	dsvDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
+//	dsvDesc.Texture2D.MipSlice = 0;
+//
+//	Device->CreateDepthStencilView(DepthBuffer,&dsvDesc,&DepthBufferDSV);
+//
+//
+//}
 
 void CEngine::CreatePickDepth()
 {
@@ -551,7 +527,7 @@ int CEngine::RenderPickIDAndRead(int mouseX, int mouseY)
 	ID3D11DepthStencilView* oldDSV = nullptr;
 	DeviceContext->OMGetRenderTargets(1, &oldRTV, &oldDSV);
 
-	// clear
+	// clear black background
 	float clearID[4] = { 0, 0 ,0 , 0 };
 	DeviceContext->OMSetRenderTargets(1, &PickingRTV, PickingDSV); 
 	DeviceContext->ClearRenderTargetView(PickingRTV, clearID);
@@ -560,23 +536,22 @@ int CEngine::RenderPickIDAndRead(int mouseX, int mouseY)
 	//picking pipeline 
 	DeviceContext->RSSetViewports(1, &ViewportInfo);
 	DeviceContext->OMSetBlendState(nullptr, nullptr, 0xffffffff);
+
 	/*DeviceContext->IASetInputLayout(SimpleInputLayout);
 	DeviceContext->VSSetShader(SimpleVertexShader, nullptr, 0);
 	DeviceContext->PSSetShader(PickID_PixelShader, nullptr, 0);*/
 
 	// Draw All Actors For Picking
-	for(int i = 1; i <= 2; i++)
+	//for(int i = 1; i <= 2; i++)
 	{
-		D3D11_MAPPED_SUBRESOURCE pickBufferMSR{};
-		DeviceContext->Map(PickingCBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &pickBufferMSR);
-		
-		FObjectPicking* pickConst = (FObjectPicking*)pickBufferMSR.pData;
-		{
-			pickConst->Pick = 0.0;
-			pickConst->ObjectID = i; 
-		}
-		DeviceContext->Unmap(PickingCBuffer, 0);
+		  
+		FObjectPicking pickingData;
+		pickingData.Pick = 0.0f;
+		pickingData.ObjectID = 1;
 
+		///D3DUtil::CBufferUpdate(DeviceContext, )
+		
+		D3DUtil::CBufferUpdate(DeviceContext, PickingCBuffer, pickingData);
 		DeviceContext->PSSetConstantBuffers(0, 1, &PickingCBuffer);
 
 		//// 동일한 VS 상수(MVP) 바인딩
@@ -605,7 +580,8 @@ int CEngine::RenderPickIDAndRead(int mouseX, int mouseY)
 		}
 		}*/
 		 
-		DeviceContext->Draw(numVertices, 0);
+	//	DeviceContext->Draw(numVertices, 0); 
+		SceneManager->GetScene().RenderPickingScene(); 
 	}
 
 	mouseX = mouseX < 0 ? 0 : mouseX;
@@ -647,38 +623,30 @@ void CEngine::Update(float deltaTime)
 void CEngine::Render()
 {
 	//회전 순서 : z * y * x
-	
-	//CommonConstantBuffer
-	CommonConstantBuffer commonCBufferData; 
 	DeviceContext->ClearRenderTargetView(FrameBufferRTV,ClearColor);
 	DeviceContext->ClearDepthStencilView(DepthStencilView,D3D11_CLEAR_DEPTH,1.0f,0);
 
+	//CommonConstantBuffer
+	FCommonConstantBuffer commonCBufferData;
+	
 	FVector eye = FVector(0,0,-10);
 	FVector at = FVector::FRONT;
 	FVector up = {0.0f,1.0f,0.0f};
 	commonCBufferData.View = FMatrix::MakeLookAt(eye, at, up); 
 	commonCBufferData.Perspective = FMatrix::MakePerspectiveMatrix(30.0f,1.0f,0.1f,100.0f); 
 	D3DUtil::CBufferUpdate(DeviceContext,CommonCBuffer,commonCBufferData);
-
-	//TODO 
+	 
 	//Picking Constant Buffer
-	FObjectPicking pickingCBufferData;
-	//ID Test
-	pickingCBufferData.ObjectID = 1; 
-	//D3DUtil::CBufferUpdate(DeviceContext,PickID_CB,pickingCBufferData);
-	/*
-	
-			D3D11_MAPPED_SUBRESOURCE pickBufferMSR{};
-			DeviceContext->Map(PickID_CB,0,D3D11_MAP_WRITE_DISCARD,0,&pickBufferMSR); 
-			FObjectPicking* pickConst = (FObjectPicking*)pickBufferMSR.pData;
-			{
-				pickConst->Pick = PickTest;
-				pickConst->ObjectID = objId;
-			}
-			DeviceContext->Unmap(PickID_CB,0);
+	FObjectPicking pickingCBufferData;  
 
-	*/
-	DeviceContext->VSSetConstantBuffers(1,1,&CommonCBuffer);
+	pickingCBufferData.Pick = PickTest;
+	pickingCBufferData.ObjectID = 1; //TODO UUID  
+	D3DUtil::CBufferUpdate(DeviceContext,PickingCBuffer,pickingCBufferData);
+
+	DeviceContext->VSSetConstantBuffers(1,1,&CommonCBuffer); 
+	DeviceContext->VSSetConstantBuffers(2,1,&PickingCBuffer); 
+	
+	DeviceContext->PSSetConstantBuffers(2,1,&PickingCBuffer);
 
 	DeviceContext->OMSetRenderTargets(1,&FrameBufferRTV,DepthStencilView);
 	
@@ -686,52 +654,10 @@ void CEngine::Render()
 	DeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	DeviceContext->RSSetViewports(1,&ViewportInfo);
 
+	// for문 돌면서 actor 그리기 
 	UINT offset = 0;
 	DeviceContext->IASetVertexBuffers(0,1,&CubeVertexBuffer,&Stride,&offset);
-	SceneManager->GetScene().RenderScene();
-	 
-	//if (ConstantBuffer && MVPConstantBuffer)
-	//{
-	//	DeviceContext->VSSetConstantBuffers(0, 1, &ConstantBuffer); 
-	//	DeviceContext->PSSetConstantBuffers(0, 1, &ConstantBuffer); 
-
-	//	DeviceContext->VSSetConstantBuffers(1, 1, &MVPConstantBuffer);
-	//	
-	//	DeviceContext->PSSetConstantBuffers(2, 1, &PickID_CB);
-	//	
-	//}
-	//UINT numVertices = 0;
-	//for(int i = 1; i <= 2; i++)
-	//{ 
-	//	UINT offset = 0;
-	//	switch(i)
-	//	{
-	//	case 1:
-	//	{
-	//		UpdateConstant({0.0f,0.0f,0.0f},1.0f,camPosTest,modelPosTest,modelRotTest,PickTest, i);
-
-	//UpdateConstant({ 0.0f, 0.0f, 0.0f }, 1.0f , camPosTest, modelPosTest, modelRotTest, PickTest);
-
-	//		const UINT numVertices = sizeof(triangle_vertices) / sizeof(FVertex); //
-	//		numVertices = sizeof(cube_vertices) / sizeof(FVertex); //  
-	//		 
-	//	}break;
-	//	case 2:
-	//	{
-	//		UpdateConstant({0.0f,0.0f,0.0f},1.0f,camPosTest,FVector(0.5, 0.0, 0.0),FVector(0,0,0),PickTest, i);
-
-	//		DeviceContext->IASetVertexBuffers(0, 1, &VertexBuffer, &Stride, &offset);
-	//		DeviceContext->IASetVertexBuffers(0,1,&QuadVertexBuffer,&Stride,&offset); 
-	//		const UINT numVertices = sizeof(triangle_vertices) / sizeof(FVertex); // 
-	//		 numVertices = sizeof(quad_vertices) / sizeof(FVertex); //
-	//	}
-	//	break;
-	//	}
-
-
-	//	DeviceContext->Draw(numVertices,0);
-
-	//}
+	SceneManager->GetScene().RenderScene(); 
 }
 
 void CEngine::Release()
