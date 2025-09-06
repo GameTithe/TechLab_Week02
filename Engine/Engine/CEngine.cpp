@@ -74,6 +74,61 @@ FVertex quad_vertices[] =
 	{{-1.0f,-1.0f,1.0f},{1.0f,1.0f,0.0f,1.0f}},  // Bottom-left (yellow)
 	{{-1.0f,1.0f,1.0f},{1.0f,0.0f,0.0f,1.0f}}, // Top-left (red)
 };
+////////////Have to move to Camera.h////////////
+
+struct Ray
+{
+	FVector Origin ;
+	FVector Dir;
+};
+
+Ray ScreenToRay(int mouseX,int mouseY,
+				const FMatrix& InvView,const FMatrix& invProj,
+				float viewportW,float viewportH)
+{
+	auto ndc = [&](float x,float y,float z)
+	{
+		float nx = 2.0f * (x / viewportW) - 1.0f;
+		float ny = 1.0f - 2.0f * (y / viewportH);
+
+		return FVector4(nx,ny,z,1.0f);
+	};
+
+	FVector4 pNear = ndc((float)mouseX, (float)mouseY, 0.0f);
+	FVector4 pFar = ndc((float)mouseX,(float)mouseY,1.0f);
+
+	auto Unproject = [&](FVector4 p)
+	{
+		FVector4 v = p *invProj;	v /= v.W;
+		FVector4 w = v * InvView;	w /= w.W;
+		return FVector(w.X,w.Y,w.Z);
+	};
+
+	FVector nearWS = Unproject(pNear);
+	FVector farWS = Unproject(pFar);
+
+	Ray r;
+	r.Origin = nearWS;
+	r.Dir = (farWS - nearWS);
+	r.Dir.Normalize();
+	
+	return r; 
+}
+
+bool RayPlaneHit(const Ray& r,const FVector& p0,const FVector& N,FVector& outHit)
+{
+	// normal dot ( p - p )  
+	float denom = N.Dot(r.Dir);
+	
+	if(abs(denom) < 1e-10) return false;
+	
+	float t = (p0 - r.Origin).Dot(N) / denom;
+	if(t < 0.0f) return false;
+
+	outHit = r.Origin + r.Dir * t;
+	return true;
+}
+////////////////////////////////////////////////
  
 extern LRESULT ImGui_ImplWin32_WndProcHandler(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
@@ -667,8 +722,7 @@ void CEngine::Release()
 		ConstantBuffer->Release();
 		ConstantBuffer = nullptr;
 	}
-
-	// Shader ���� ���ҽ� ����
+	 
 	if (SimpleInputLayout)
 	{
 		SimpleInputLayout->Release();
