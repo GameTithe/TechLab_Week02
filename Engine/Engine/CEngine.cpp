@@ -232,17 +232,7 @@ void CEngine::UpdateGUI()
 	SceneManager->GetScene().SceneActors[0]->GetRootComponent()->SetRelativeLocation(modelPos);
 	SceneManager->GetScene().SceneActors[0]->GetRootComponent()->SetRelativeRotation(modelRot);
 	SceneManager->GetScene().SceneActors[0]->GetRootComponent()->SetRelativeScale3D(modelScale);
-
-	/*ImGui_ImplDX11_NewFrame();
-	ImGui_ImplWin32_NewFrame();
-	ImGui::NewFrame();*/
-	// ImGui UI ��Ʈ�� �߰��� ImGui::NewFrame()�� ImGui::Render() ���̿�
-	/*ImGui::Begin("Jungle Property Window");
-	ImGui::Text("Hello Jungle World!");*/
-	//ImGui TODO 
-	/*ImGui::End();
-	ImGui::Render();
-	ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());*/
+	 
 }
 
 //void CEngine::Update(float deltaTime)
@@ -481,8 +471,7 @@ void CEngine::CreatePickTargets()
 	srvDesc.Format = td.Format;
 	srvDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
 	srvDesc.Texture2D.MipLevels = 1;
-	Device->CreateShaderResourceView(PickingTex, &srvDesc, &PickingSRV);
-	 
+	Device->CreateShaderResourceView(PickingTex, &srvDesc, &PickingSRV); 
 }
 
 //void CEngine::CreateDepthBuffer()
@@ -649,6 +638,7 @@ void CEngine::Render()
 	 
 	//Picking Constant Buffer
 	FObjectPicking pickingCBufferData;  
+
 	pickingCBufferData.Pick = PickTest;
 	pickingCBufferData.ObjectID = 1; //TODO UUID  
 	D3DUtil::CBufferUpdate(DeviceContext,PickingCBuffer,pickingCBufferData);
