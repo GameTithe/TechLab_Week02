@@ -18,6 +18,6 @@ struct FObjectPicking
 {
 	int Pick;
 	int ObjectID; 
-	float Padding[2];
+	int Padding[2];
 	       
 }; 

@@ -15,7 +15,7 @@ cbuffer PickCB : register(b2)
 {
     int Pick;
     int ObjectID;
-    float2 Padding;
+    int2 Padding;
 }
    
 struct VS_INPUT

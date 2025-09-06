@@ -60,6 +60,7 @@ private:
 
 	//Picking
 	void CreatePickTargets();
+	void CreateDepthBuffer();
 	void CreatePickDepth();
 	int RenderPickIDAndRead(int mouseX, int mouseY);
 
@@ -108,7 +109,7 @@ private:
 		Device->CreateBuffer(&pickingBufferDesc, nullptr, &PickID_CB);
 	}
 
-	void UpdateConstant(FVector Offset, float radius, FVector cam, FVector model, FVector rot, int PickTest)
+	void UpdateConstant(FVector Offset, float radius, FVector cam, FVector model, FVector rot, int PickTest, int objId)
 	{
 		//if (ConstantBuffer && MVPConstantBuffer)
 		//{
@@ -146,14 +147,14 @@ private:
 		//	} 
 		//	DeviceContext->Unmap(MVPConstantBuffer,0);
 
-		//	D3D11_MAPPED_SUBRESOURCE pickBufferMSR{};
-		//	DeviceContext->Map(PickID_CB,0,D3D11_MAP_WRITE_DISCARD,0,&pickBufferMSR); 
-		//	FObjectPicking* pickConst = (FObjectPicking*)pickBufferMSR.pData;
-		//	{
-		//		pickConst->Pick = PickTest;
-		//		pickConst->ObjectID = 1;
-		//	}
-		//	DeviceContext->Unmap(PickID_CB,0);
+			D3D11_MAPPED_SUBRESOURCE pickBufferMSR{};
+			DeviceContext->Map(PickID_CB,0,D3D11_MAP_WRITE_DISCARD,0,&pickBufferMSR); 
+			FObjectPicking* pickConst = (FObjectPicking*)pickBufferMSR.pData;
+			{
+				pickConst->Pick = PickTest;
+				pickConst->ObjectID = objId;
+			}
+			DeviceContext->Unmap(PickID_CB,0);
 
 
 		//}
@@ -180,8 +181,12 @@ private:
 	//테스트용 임시
 	ID3D11Buffer* CommonCBuffer = nullptr;
 	ID3D11Buffer* CubeVertexBuffer = nullptr;
+	ID3D11Buffer* QuadVertexBuffer = nullptr;
 
 	//Picking Test
+	ID3D11Texture2D* DepthBuffer;
+	ID3D11DepthStencilView* DepthBufferDSV; 
+
 	ID3D11Texture2D* PickIDTex;
 	ID3D11Texture2D* PickDepthTex;
 	ID3D11Texture2D* PickID_Staging;
