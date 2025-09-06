@@ -75,3 +75,8 @@ USceneComponent* AActor::GetRootComponent() const
 	return RootComponent; 
 }
 
+
+void AActor::Render()
+{
+	RootComponent->Render();
+}

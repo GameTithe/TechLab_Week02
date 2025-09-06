@@ -1,21 +1,21 @@
-cbuffer constants : register(b0)
-{
-    float3 Offset;
-    float Scale; 
-}
-
-cbuffer MVPTransform : register(b1)
+cbuffer TransformCBuffer : register(b0)
 {
     float4x4 Model;
+}
+
+cbuffer CommonCBUffer : register(b1)
+{
     float4x4 View;
     float4x4 Perspective;
 }
+
+
 
 cbuffer PickCB : register(b2)
 {
     int Pick;
     int ObjectID;
-    float2 Padding;
+    int2 Padding;
 }
    
 struct VS_INPUT
@@ -33,7 +33,6 @@ struct PS_INPUT
 PS_INPUT mainVS(VS_INPUT input)
 {
     PS_INPUT output;
-    //output.position = input.position * float4(Scale, Scale, Scale,1) + float4(Offset, 0);
     output.position = mul(Model, input.position);
     output.position = mul(View, output.position);
     output.position = mul(Perspective, output.position);
@@ -46,10 +45,10 @@ PS_INPUT mainVS(VS_INPUT input)
 float4 mainPS(PS_INPUT input) : SV_Target
 {
     float4 color = input.color;
-     
+    return color;
     
-    if(Pick == ObjectID)
-        color = (color + float4(0.2, 0.2, 0.2, 1.0f) * float4(1.5, 1.5, 1.5, 1.0f));
+    //if(Pick == ObjectID)
+    //    color = (color + float4(0.2, 0.2, 0.2, 1.0f) * float4(1.5, 1.5, 1.5, 1.0f));
     
     return color;
 }

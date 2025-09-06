@@ -364,7 +364,15 @@ FMatrix FMatrix::MakeRotationZMatrix(float degree)
 		FVector4(0.0f, 0.0f, 0.0f, 1.0f)
 	);
 }
- 
+FMatrix FMatrix::MakeTranslationMatrix(FVector tranlation)
+{
+	return FMatrix(
+		FVector4(1.0f,0.0f,0.0f,tranlation.X),
+		FVector4(0.0f,1.0f,0.0f,tranlation.Y),
+		FVector4(0.0f,0.0f,1.0f,tranlation.Z),
+		FVector4(0.0f,0.0f,0.0,1.0f)
+	);
+}
 FMatrix FMatrix::MakeTranslationMatrix(FVector4 tranlation)
 {
 	return FMatrix(

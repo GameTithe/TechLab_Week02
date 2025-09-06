@@ -1,15 +1,20 @@
 #include "USceneComponent.h"
+#include "CEngine.h"
 
 USceneComponent::USceneComponent()
 {
+	D3DUtil::CreateCBuffer(&TransformCBuffer,sizeof(FMatrix));
 }
 
 USceneComponent::USceneComponent(AActor* owner): UActorComponent(owner)
 {
+	D3DUtil::CreateCBuffer(&TransformCBuffer,sizeof(FMatrix));
+
 }
 
 USceneComponent::~USceneComponent()
 {
+	TransformCBuffer->Release();
 }
 
 void USceneComponent::AttachToComponent(USceneComponent* parent)
@@ -85,8 +90,7 @@ FVector USceneComponent::GetWorldScale3D()
 }
 
 FMatrix USceneComponent::GetModelMatrix()
-{
-
+{ 
 	return ModelMatrix;
 }
 
@@ -121,6 +125,13 @@ void USceneComponent::UpdateModelMatrix()
 	for (USceneComponent* child : ChildComponents)
 	{
 		child->UpdateModelMatrix();
-	}
-	
+	} 
+}
+
+void USceneComponent::Render()
+{
+	FMatrix modelMat = GetModelMatrix();
+	D3DUtil::CBufferUpdate(CEngine::gpCEngine->GetDeviceContext(),TransformCBuffer, modelMat);
+	CEngine::gpCEngine->GetDeviceContext()->VSSetConstantBuffers(0,1,&TransformCBuffer);
+	CEngine::gpCEngine->GetDeviceContext()->Draw(36, 0);
 }

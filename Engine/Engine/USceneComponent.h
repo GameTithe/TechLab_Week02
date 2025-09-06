@@ -3,6 +3,7 @@
 #include "FVector.h"
 #include "FMatrix.h"
 #include "Typedef.h"
+#include "D3DUtil.h"
 class USceneComponent : public UActorComponent
 {
 public:
@@ -25,6 +26,7 @@ public:
 	FVector GetWorldScale3D();
 	FMatrix GetModelMatrix();
 	void UpdateModelMatrix();
+	void Render();
 
 private:
 	FVector RelativeLocation;
@@ -36,4 +38,8 @@ protected:
 	USceneComponent* ParentComponent; // nullptr이면 해당 컴포넌트가 루트
 	TArray<USceneComponent*> ChildComponents; 
 
+
+public:
+	//test용 후에 renderer로 옮겨야함
+	ID3D11Buffer* TransformCBuffer;
 };
