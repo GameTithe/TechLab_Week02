@@ -8,6 +8,9 @@ void GeometryVertexBufferManager::Init()
     D3DUtil::CreateVertexBuffer(cube_vertices, &CubeVertexBuffer, sizeof(cube_vertices));
     D3DUtil::CreateVertexBuffer(plane_vertices, &PlaneVertexBuffer, sizeof(plane_vertices));
     
+    NumSphereVertices = sizeof(sphere_vertices) / sizeof(FVertex);
+    NumCubeVertices = sizeof(cube_vertices) / sizeof(FVertex);
+    NumPlaneVertices = sizeof(plane_vertices) / sizeof(FVertex);
 }
 
 ID3D11Buffer* GeometryVertexBufferManager::GetSphereVertexBuffer() const
@@ -27,7 +30,19 @@ ID3D11Buffer* GeometryVertexBufferManager::GetPlaneVertexBuffer() const
 
 GeometryVertexBufferManager::~GeometryVertexBufferManager()
 {
-    SphereVertexBuffer->Release();
-    CubeVertexBuffer->Release();
-    PlaneVertexBuffer->Release();
+    if(SphereVertexBuffer)
+    {
+        SphereVertexBuffer->Release();
+        SphereVertexBuffer = nullptr;
+    }
+    if(CubeVertexBuffer)
+    {
+        CubeVertexBuffer->Release();
+        CubeVertexBuffer = nullptr;
+    }
+    if(PlaneVertexBuffer)
+    {
+        PlaneVertexBuffer->Release();
+        PlaneVertexBuffer = nullptr;
+    }
 }

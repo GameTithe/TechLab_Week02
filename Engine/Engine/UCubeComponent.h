@@ -7,7 +7,7 @@ public:
 	UCubeComponent();
 
 	//void Initialize() override;
-	void UpdateConstant(float deltaTime) override;
+	void UpdateConstantBuffer(float deltaTime) override;
 	void Render() override;
 
 private:

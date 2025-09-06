@@ -6,17 +6,17 @@ class UActorComponent : public UObject
 	friend class AActor; // AActor는 protected, private 접근 가능하도록
 
 public:
-	UActorComponent() {}
-	UActorComponent(AActor* owner) : OwnerActor(owner), bIsActive(true) {}
+	UActorComponent(): bIsActive(true) {}
+	//UActorComponent(AActor* owner) : OwnerActor(owner), bIsActive(true) {}
 	virtual ~UActorComponent() {}
 
 	// ======= 해당 컴포넌트의 Active 상태 관리 ========
 	void SetActive(bool active) { bIsActive = active; }
 	bool IsActive() { return bIsActive; }
 	
-	// 해당 컴포넌트의 소유자(AActor) 반환
-	virtual AActor* GetActor() const { return OwnerActor; }
-
+	// 해당 컴포넌트의 소유자(AActor) set, get
+	virtual AActor* GetOwner() const { return OwnerActor; }
+	void SetOwner(AActor* owner){OwnerActor = owner;}
 
 protected:
 	// ======== 컴포넌트 생명 주기 ======== 

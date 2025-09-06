@@ -18,11 +18,19 @@ public:
 	ID3D11Buffer* GetCubeVertexBuffer() const;
 	ID3D11Buffer* GetPlaneVertexBuffer() const;
 
+	int GetNumSphereVertices();
+	int GetNumCubeVertices();
+	int GetNumPlaneVertices();
 private:
 	bool bIsInitialized = false;
 	ID3D11Buffer* SphereVertexBuffer; 
 	ID3D11Buffer* CubeVertexBuffer;
 	ID3D11Buffer* PlaneVertexBuffer;
+	
+	int NumSphereVertices;
+	int NumCubeVertices;
+	int NumPlaneVertices;
+
 	GeometryVertexBufferManager() = default;
 	~GeometryVertexBufferManager();
 

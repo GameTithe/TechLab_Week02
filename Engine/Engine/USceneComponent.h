@@ -8,7 +8,7 @@ class USceneComponent : public UActorComponent
 {
 public:
 	USceneComponent();
-	USceneComponent(AActor* owner);
+	//USceneComponent(AActor* owner);
 	virtual ~USceneComponent();
   
 	void AttachToComponent(USceneComponent* parent); // 부모 컴포넌트에 나의 컴포넌트 부착
@@ -39,7 +39,7 @@ protected:
 	TArray<USceneComponent*> ChildComponents; 
 
 
-public:
-	//test용 후에 renderer로 옮겨야함
-	ID3D11Buffer* TransformCBuffer;
+//public:
+//	//test용 후에 renderer로 옮겨야함
+//	ID3D11Buffer* TransformCBuffer;
 };

@@ -3,38 +3,38 @@
 
 USceneComponent::USceneComponent()
 {
-	D3DUtil::CreateCBuffer(&TransformCBuffer,sizeof(FMatrix));
+	//D3DUtil::CreateCBuffer(&TransformCBuffer,sizeof(FMatrix));
 }
 
-USceneComponent::USceneComponent(AActor* owner): UActorComponent(owner)
-{
-	D3DUtil::CreateCBuffer(&TransformCBuffer,sizeof(FMatrix));
+//USceneComponent::USceneComponent(AActor* owner): UActorComponent(owner)
+//{
+//	D3DUtil::CreateCBuffer(&TransformCBuffer,sizeof(FMatrix));
+//
+//}
 
-}
-
-USceneComponent::~USceneComponent()
-{
-	TransformCBuffer->Release();
-}
+//USceneComponent::~USceneComponent()
+//{
+//	TransformCBuffer->Release();
+//}
 
 void USceneComponent::AttachToComponent(USceneComponent* parent)
 {
+	// 1. 부모의 자식 목록에서 나를 지움
 	if (ParentComponent)
 	{
-		// 부모의 자식 목록에서 나를 지움
 		ParentComponent->ChildComponents.erase(
 			std::remove(ParentComponent->ChildComponents.begin(), ParentComponent->ChildComponents.end(), this), 
 			ParentComponent->ChildComponents.end());
 	} 
 
-	ParentComponent = parent;
-	// 새 부모 설정
+	// 2. 새 부모 설정
 	ParentComponent = parent;
 
-	// 부모의 자식 목록의 나를 추가
+	// 3. 부모의 자식 목록에 나를 추가
 	if (parent)
 	{
 		ParentComponent->ChildComponents.push_back(this);
+		// 자신의 model matrix 및 자식의 model matrix 갱신
 		UpdateModelMatrix();
 	}
 
@@ -128,10 +128,10 @@ void USceneComponent::UpdateModelMatrix()
 	} 
 }
 
-void USceneComponent::Render()
-{
-	FMatrix modelMat = GetModelMatrix();
-	D3DUtil::CBufferUpdate(CEngine::gpCEngine->GetDeviceContext(),TransformCBuffer, modelMat);
-	CEngine::gpCEngine->GetDeviceContext()->VSSetConstantBuffers(0,1,&TransformCBuffer);
-	CEngine::gpCEngine->GetDeviceContext()->Draw(36, 0);
-}
+//void USceneComponent::Render()
+//{
+//	FMatrix modelMat = GetModelMatrix();
+//	D3DUtil::CBufferUpdate(CEngine::gpCEngine->GetDeviceContext(),TransformCBuffer, modelMat);
+//	CEngine::gpCEngine->GetDeviceContext()->VSSetConstantBuffers(0,1,&TransformCBuffer);
+//	CEngine::gpCEngine->GetDeviceContext()->Draw(36, 0);
+//}
