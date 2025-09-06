@@ -177,6 +177,8 @@ private:
 	IDXGISwapChain* SwapChain = nullptr;
 	ID3D11Texture2D* FrameBuffer = nullptr;
 	ID3D11RenderTargetView* FrameBufferRTV = nullptr;
+	ID3D11Texture2D* DepthStencilTex = nullptr;
+	ID3D11DepthStencilView* DepthStencilView = nullptr;
 
 	//테스트용 임시
 	ID3D11Buffer* CommonCBuffer = nullptr;

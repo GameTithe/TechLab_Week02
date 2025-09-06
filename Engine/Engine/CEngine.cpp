@@ -207,15 +207,23 @@ void CEngine::Load()
 
 int PickTest = 0;
 
+FVector modelPos;
+FVector modelRot;
+FVector modelScale = FVector(1,1,1);
+
 void CEngine::UpdateGUI()
 {
 	//UE_LOG("%d",PickTest);
 
-	//bool changed = ImGui::SliderFloat3("Cam Pos (x,y,z)", &camPosTest.X, -4.0f, 4.0f, "%.3f");
-	//bool changed1 = ImGui::SliderFloat3("Model Pos (x,y,z)", &modelPosTest.X, -4.0f, 4.0f, "%.3f");
-	//bool changed2= ImGui::SliderFloat3("Model Rotation (x,y,z)", &modelRotTest.X, -180.0f, 180.0f, "%.3f");
+	ImGui::SliderFloat3("modelPos (x,y,z)",&modelPos.X,-4.0f,4.0f,"%.3f");
+	ImGui::SliderFloat3("modelRot(x,y,z)",&modelRot.X,-180.0f,180.0f,"%.3f");
+	ImGui::SliderFloat3("modelScale(x,y,z)",&modelScale.X,-4.0f,4.0f,"%.3f");
+	ImGui::SliderFloat3("camPos (x,y,z)",&CamPos.X, -10, 10);
+	ImGui::SliderFloat3("camRot(x,y,z)",&CamRot.X,-10,10);
 
-
+	SceneManager->GetScene().SceneActors[0]->GetRootComponent()->SetRelativeLocation(modelPos);
+	SceneManager->GetScene().SceneActors[0]->GetRootComponent()->SetRelativeRotation(modelRot);
+	SceneManager->GetScene().SceneActors[0]->GetRootComponent()->SetRelativeScale3D(modelScale);
 
 	/*ImGui_ImplDX11_NewFrame();
 	ImGui_ImplWin32_NewFrame();
@@ -415,6 +423,39 @@ void CEngine::CreateFrameBuffer()
 	framebufferRTVdesc.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2D; // 2D �ؽ�ó
 
 	Device->CreateRenderTargetView(FrameBuffer, &framebufferRTVdesc, &FrameBufferRTV);
+
+	D3D11_TEXTURE2D_DESC frameBufferDesc = {};
+	FrameBuffer->GetDesc(&frameBufferDesc);
+
+
+
+	D3D11_TEXTURE2D_DESC depthTex = {};
+	depthTex.Width =	frameBufferDesc.Width;
+	depthTex.Height = frameBufferDesc.Height;
+	depthTex.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
+	depthTex.Usage = D3D11_USAGE_DEFAULT;
+	depthTex.BindFlags = D3D11_BIND_DEPTH_STENCIL;
+	depthTex.MipLevels = 1;
+	depthTex.ArraySize = 1;
+	depthTex.SampleDesc.Count = 1;
+	depthTex.SampleDesc.Quality = 0;
+	HRESULT hResult = Device->CreateTexture2D(&depthTex,nullptr,&DepthStencilTex);
+	if(FAILED(hResult))
+	{
+		int a=0;
+		return;
+	}
+
+	D3D11_DEPTH_STENCIL_VIEW_DESC depthStencilViewDesc ={};
+	depthStencilViewDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
+	depthStencilViewDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
+	depthStencilViewDesc.Texture2D.MipSlice = 0;
+	hResult =Device->CreateDepthStencilView(DepthStencilTex,&depthStencilViewDesc,&DepthStencilView);
+	if(FAILED(hResult))
+	{
+		int a=0;
+		return;
+	}
 }
 
 void CEngine::CreatePickTargets()
@@ -606,13 +647,17 @@ void CEngine::Render()
 	//CommonConstantBuffer
 	CommonConstantBuffer commonCBufferData;
 	commonCBufferData.View = FMatrix::MakeRotationZMatrix(CamRot.Z) * FMatrix::MakeRotationYMatrix(CamRot.Y) * FMatrix::MakeRotationXMatrix(CamRot.X) * FMatrix::MakeTranslationMatrix(CamPos);
+	if(commonCBufferData.View.Inverse(commonCBufferData.View) == false)
+	{
+		int a=0;
+	}
 	FVector at = FVector::FRONT;
 	FVector up = {0.0f,1.0f,0.0f};
 	commonCBufferData.Perspective = FMatrix::MakePerspectiveMatrix(30.0f,1.0f,0.1f,100.0f);
 	D3DUtil::CBufferUpdate(DeviceContext,CommonCBuffer,commonCBufferData);
 	DeviceContext->VSSetConstantBuffers(1,1,&CommonCBuffer);
 
-	DeviceContext->OMSetRenderTargets(1,&FrameBufferRTV,nullptr);
+	DeviceContext->OMSetRenderTargets(1,&FrameBufferRTV,DepthStencilView);
 	DeviceContext->ClearRenderTargetView(FrameBufferRTV, ClearColor);
 	DeviceContext->ClearDepthStencilView(DepthBufferDSV,D3D11_CLEAR_DEPTH,1.0f,0);
 
@@ -624,55 +669,55 @@ void CEngine::Render()
 	DeviceContext->IASetVertexBuffers(0,1,&CubeVertexBuffer,&Stride,&offset);
 	SceneManager->GetScene().RenderScene();
 
-	// PS
+	//// PS
 
-	// OM
-	DeviceContext->OMSetRenderTargets(1, &FrameBufferRTV, DepthBufferDSV);
-	DeviceContext->OMSetBlendState(nullptr, nullptr, 0xffffffff);
+	//// OM
+	//DeviceContext->OMSetRenderTargets(1, &FrameBufferRTV, DepthBufferDSV);
+	//DeviceContext->OMSetBlendState(nullptr, nullptr, 0xffffffff);
 
 	// �׽�Ʈ��
-	/*if (ConstantBuffer && MVPConstantBuffer)
-	{
-		DeviceContext->VSSetConstantBuffers(0, 1, &ConstantBuffer); 
-		DeviceContext->PSSetConstantBuffers(0, 1, &ConstantBuffer); 
+	//if (ConstantBuffer && MVPConstantBuffer)
+	//{
+	//	DeviceContext->VSSetConstantBuffers(0, 1, &ConstantBuffer); 
+	//	DeviceContext->PSSetConstantBuffers(0, 1, &ConstantBuffer); 
 
-		DeviceContext->VSSetConstantBuffers(1, 1, &MVPConstantBuffer);
-		
-		DeviceContext->PSSetConstantBuffers(2, 1, &PickID_CB);
-		
-	}
-	UINT numVertices = 0;
-	for(int i = 1; i <= 2; i++)
-	{ 
-		UINT offset = 0;
-		switch(i)
-		{
-		case 1:
-		{
-			UpdateConstant({0.0f,0.0f,0.0f},1.0f,camPosTest,modelPosTest,modelRotTest,PickTest, i);
+	//	DeviceContext->VSSetConstantBuffers(1, 1, &MVPConstantBuffer);
+	//	
+	//	DeviceContext->PSSetConstantBuffers(2, 1, &PickID_CB);
+	//	
+	//}
+	//UINT numVertices = 0;
+	//for(int i = 1; i <= 2; i++)
+	//{ 
+	//	UINT offset = 0;
+	//	switch(i)
+	//	{
+	//	case 1:
+	//	{
+	//		UpdateConstant({0.0f,0.0f,0.0f},1.0f,camPosTest,modelPosTest,modelRotTest,PickTest, i);
 
-	UpdateConstant({ 0.0f, 0.0f, 0.0f }, 1.0f , camPosTest, modelPosTest, modelRotTest, PickTest);
+	//UpdateConstant({ 0.0f, 0.0f, 0.0f }, 1.0f , camPosTest, modelPosTest, modelRotTest, PickTest);
 
-			//const UINT numVertices = sizeof(triangle_vertices) / sizeof(FVertex); //
-			numVertices = sizeof(cube_vertices) / sizeof(FVertex); //  
-			 
-		}break;
-		case 2:
-		{
-			UpdateConstant({0.0f,0.0f,0.0f},1.0f,camPosTest,FVector(0.5, 0.0, 0.0),FVector(0,0,0),PickTest, i);
+	//		const UINT numVertices = sizeof(triangle_vertices) / sizeof(FVertex); //
+	//		numVertices = sizeof(cube_vertices) / sizeof(FVertex); //  
+	//		 
+	//	}break;
+	//	case 2:
+	//	{
+	//		UpdateConstant({0.0f,0.0f,0.0f},1.0f,camPosTest,FVector(0.5, 0.0, 0.0),FVector(0,0,0),PickTest, i);
 
-			//DeviceContext->IASetVertexBuffers(0, 1, &VertexBuffer, &Stride, &offset);
-			DeviceContext->IASetVertexBuffers(0,1,&QuadVertexBuffer,&Stride,&offset); 
-			//const UINT numVertices = sizeof(triangle_vertices) / sizeof(FVertex); // 
-			 numVertices = sizeof(quad_vertices) / sizeof(FVertex); //
-		}
-		break;
-		}
+	//		DeviceContext->IASetVertexBuffers(0, 1, &VertexBuffer, &Stride, &offset);
+	//		DeviceContext->IASetVertexBuffers(0,1,&QuadVertexBuffer,&Stride,&offset); 
+	//		const UINT numVertices = sizeof(triangle_vertices) / sizeof(FVertex); // 
+	//		 numVertices = sizeof(quad_vertices) / sizeof(FVertex); //
+	//	}
+	//	break;
+	//	}
 
 
-		DeviceContext->Draw(numVertices,0);
+	//	DeviceContext->Draw(numVertices,0);
 
-	}
+	//}
 }
 
 void CEngine::Release()
@@ -680,7 +725,6 @@ void CEngine::Release()
 	PSO::ReleasePSOResource();
 	DeviceContext->OMSetRenderTargets(0, nullptr, nullptr);
 
-	// FrameBuffer ���� ���ҽ� ����
 	if (FrameBuffer)
 	{
 		FrameBuffer->Release();
@@ -692,7 +736,6 @@ void CEngine::Release()
 		FrameBufferRTV = nullptr;
 	}
 
-	// Direct3D ��ġ �� ���� ü���� ����
 	if (DeviceContext)
 	{
 		DeviceContext->Flush(); // �����ִ� GPU ���� ����
@@ -716,8 +759,8 @@ void CEngine::Release()
 		DeviceContext = nullptr;
 	}
 
-	/*
-	PickID_SRV);
+	
+	/*PickID_SRV);
 	PickID_RTV);
 	PickIDTex);
 	PickID_Staging);
@@ -728,6 +771,6 @@ void CEngine::Release()
 
 	DepthByuffERDSV
 	DepthBuffer
-
 	*/
+	
 }

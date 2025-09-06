@@ -5,6 +5,7 @@
 
 namespace PSO
 {
+extern ID3D11DepthStencilState* SimpleDSS;
 extern ID3D11RasterizerState* RasterizerState;
 extern ID3D11InputLayout* SimpleInputLayout;
 extern ID3D11VertexShader* SimpleVS;

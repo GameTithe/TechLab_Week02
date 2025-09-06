@@ -8,7 +8,7 @@
 
 class CScene
 {
-private:
+public:
 	TArray<AActor*> SceneActors;
 public:
 	
