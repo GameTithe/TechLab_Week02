@@ -646,20 +646,23 @@ void CEngine::Render()
 	
 	//CommonConstantBuffer
 	CommonConstantBuffer commonCBufferData;
-	commonCBufferData.View = FMatrix::MakeRotationZMatrix(CamRot.Z) * FMatrix::MakeRotationYMatrix(CamRot.Y) * FMatrix::MakeRotationXMatrix(CamRot.X) * FMatrix::MakeTranslationMatrix(CamPos);
+	FVector at = FVector::FRONT;
+	FVector up = {0.0f,1.0f,0.0f};
+	commonCBufferData.View = FMatrix::MakeLookAt(FVector(0,0,-10),at,up);
+		
+		/*FMatrix::MakeRotationZMatrix(CamRot.Z) * FMatrix::MakeRotationYMatrix(CamRot.Y) * FMatrix::MakeRotationXMatrix(CamRot.X) * FMatrix::MakeTranslationMatrix(CamPos);
 	if(commonCBufferData.View.Inverse(commonCBufferData.View) == false)
 	{
 		int a=0;
-	}
-	FVector at = FVector::FRONT;
-	FVector up = {0.0f,1.0f,0.0f};
+	}*/
+
 	commonCBufferData.Perspective = FMatrix::MakePerspectiveMatrix(30.0f,1.0f,0.1f,100.0f);
 	D3DUtil::CBufferUpdate(DeviceContext,CommonCBuffer,commonCBufferData);
 	DeviceContext->VSSetConstantBuffers(1,1,&CommonCBuffer);
 
 	DeviceContext->OMSetRenderTargets(1,&FrameBufferRTV,DepthStencilView);
 	DeviceContext->ClearRenderTargetView(FrameBufferRTV, ClearColor);
-	DeviceContext->ClearDepthStencilView(DepthBufferDSV,D3D11_CLEAR_DEPTH,1.0f,0);
+	DeviceContext->ClearDepthStencilView(DepthStencilView,D3D11_CLEAR_DEPTH,1.0f,0);
 
 	// IA
 	DeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
