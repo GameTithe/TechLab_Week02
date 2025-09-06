@@ -9,10 +9,10 @@ ID3D11InputLayout* SimpleInputLayout= nullptr;
 ID3D11VertexShader* SimpleVS= nullptr;
 
 ID3D11PixelShader* SimplePS= nullptr;
-ID3D11PixelShader* MousePickingPS= nullptr;
+ID3D11PixelShader* PickingPS= nullptr;
 
 CPipelineStateObject* SimplePSO = nullptr;
-CPipelineStateObject* MousePickingPSO= nullptr;
+CPipelineStateObject* PickingPSO= nullptr;
 
 void InitDSS()
 {
@@ -34,7 +34,7 @@ void InitShader()
 {
 	D3DUtil::CreateVSAndInputLayout(L"ShaderW0.hlsl",&SimpleVS,&SimpleInputLayout);
 	D3DUtil::CreatePS(L"ShaderW0.hlsl",&SimplePS);
-	D3DUtil::CreatePS(L"PickingPS.hlsl",&MousePickingPS);
+	D3DUtil::CreatePS(L"PickingPS.hlsl",&PickingPS);
 }
 void InitPSO()
 {
@@ -45,12 +45,12 @@ void InitPSO()
 	SimplePSO->PS = SimplePS;
 	SimplePSO->DepthStencilState = SimpleDSS;
 
-	MousePickingPSO = new CPipelineStateObject();
-	MousePickingPSO->RasterizerState = RasterizerState;
-	MousePickingPSO->Inputlayout = SimpleInputLayout;
-	MousePickingPSO->VS = SimpleVS;
-	MousePickingPSO->PS = MousePickingPS;
-	MousePickingPSO->DepthStencilState = SimpleDSS;
+	PickingPSO = new CPipelineStateObject();
+	PickingPSO->RasterizerState = RasterizerState;
+	PickingPSO->Inputlayout = SimpleInputLayout;
+	PickingPSO->VS = SimpleVS;
+	PickingPSO->PS = PickingPS;
+	PickingPSO->DepthStencilState = SimpleDSS;
 }
 void InitPSOResource()
 {
@@ -68,11 +68,11 @@ void ReleasePSOResource()
 	SimpleVS->Release();
 
 	SimplePS->Release();
-	MousePickingPS->Release();
+	PickingPS->Release();
 
 
 	delete SimplePSO;
-	delete MousePickingPSO;
+	delete PickingPSO;
 
 }
 }
