@@ -1,15 +1,15 @@
 #include "CScene.h"
 
-//Actor¿¡¼­ URootComponentºÎÅÍ DFS·Î »ı¼º
+//Actorì—ì„œ URootComponentë¶€í„° DFSë¡œ ìƒì„±
 // 
-//¾À Á¤º¸±¸Á¶
+//ì”¬ ì •ë³´êµ¬ì¡°
 //Actor
 //	USceneComponent
 //		pos : x, y, z
 //		rot : x, y, z
 //		scale : x, y, z
 //	USceneComponent
-//		pos : x, y, z
+//		pos : x, y, z 
 //		rot : x, y, z
 //		scale : x, y, z
 //		USceneComponent

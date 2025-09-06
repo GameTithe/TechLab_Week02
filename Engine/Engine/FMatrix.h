@@ -27,7 +27,7 @@ public:
 	FMatrix operator*(const FMatrix& rhs) const;   
 	FMatrix  operator*(const float rhs) const; 
 
-	FMatrix& operator*=(const float rhs); 
+	FMatrix& operator*=(const float rhs);  
 
 	static const FMatrix Identity;
 

@@ -1,7 +1,7 @@
 #pragma once
 
 #define _CRT_SECURE_NO_WARNINGS
-// À§ defineÀº Ç×»ó ¸ğµç includeº¸´Ù »ó´Ü¿¡ ÀÖ¾î¾ß ÇÔ.
+// ìœ„ defineì€ í•­ìƒ ëª¨ë“  includeë³´ë‹¤ ìƒë‹¨ì— ìˆì–´ì•¼ í•¨.
 
 #include <ctype.h>
 #include <stdio.h> 

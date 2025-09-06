@@ -4,7 +4,7 @@
 AActor::AActor()
 {
 	USceneComponent* rootComponent = new USceneComponent(this);
-	SetRootComponent(rootComponent); // »ı¼ºÀÚ¿¡¼­ ±âº»À¸·Î ·çÆ® ÄÄÆ÷³ÍÆ® ¼³Á¤
+	SetRootComponent(rootComponent); // ìƒì„±ìì—ì„œ ê¸°ë³¸ìœ¼ë¡œ ë£¨íŠ¸ ì»´í¬ë„ŒíŠ¸ ì„¤ì •
 }
 
 void AActor::SetRootComponent(USceneComponent* rootComponent)
@@ -12,14 +12,14 @@ void AActor::SetRootComponent(USceneComponent* rootComponent)
 	RootComponent = rootComponent;
 	OwnedComponents.push_back(RootComponent);
 }
-
+ 
 void AActor::AddComponent(UActorComponent* component)
 {
 	if (component == nullptr) return;
-	// ¼ÒÀ¯ ÄÄÆ÷³ÍÆ® ¸ñ·Ï¿¡ Ãß°¡
+	// ì†Œìœ  ì»´í¬ë„ŒíŠ¸ ëª©ë¡ì— ì¶”ê°€
 	OwnedComponents.push_back(component);
 	
-	// USceneComponent* ¶ó¸é ÄÄÆ÷³ÍÆ® °èÃş±¸Á¶ ÀÚµ¿ ¼³Á¤ (·çÆ® ÄÄÆ÷³ÍÆ®¿¡ ºÙ¿©ÁØ´Ù)
+	// USceneComponent* ë¼ë©´ ì»´í¬ë„ŒíŠ¸ ê³„ì¸µêµ¬ì¡° ìë™ ì„¤ì • (ë£¨íŠ¸ ì»´í¬ë„ŒíŠ¸ì— ë¶™ì—¬ì¤€ë‹¤)
 	USceneComponent* childComponent = dynamic_cast<USceneComponent*>(component);
 	if (childComponent && RootComponent)
 	{
@@ -33,7 +33,7 @@ void AActor::AddComponent(UActorComponent* component, USceneComponent* parent)
 	
 	OwnedComponents.push_back(component);
 
-	// USceneComponent* ¶ó¸é ÄÄÆ÷³ÍÆ® °èÃş±¸Á¶ ÀÚµ¿ ¼³Á¤ (ÀÎÀÚ·Î ¹ŞÀº parent¿¡ ºÙ¿©ÁØ´Ù)
+	// USceneComponent* ë¼ë©´ ì»´í¬ë„ŒíŠ¸ ê³„ì¸µêµ¬ì¡° ìë™ ì„¤ì • (ì¸ìë¡œ ë°›ì€ parentì— ë¶™ì—¬ì¤€ë‹¤)
 	USceneComponent* childComponent = dynamic_cast<USceneComponent*>(component);
 	if (childComponent && parent)
 	{

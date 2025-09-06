@@ -14,19 +14,19 @@ USceneComponent::~USceneComponent()
 
 void USceneComponent::AttachToComponent(USceneComponent* parent)
 {
-	// ³ªÀÇ ºÎ¸ð ÄÄÆ÷³ÍÆ®°¡ Á¸ÀçÇÏ¸é
+	// ë‚˜ì˜ ë¶€ëª¨ ì»´í¬ë„ŒíŠ¸ê°€ ì¡´ìž¬í•˜ë©´
 	if (ParentComponent)
 	{
-		// ºÎ¸ð ÄÄÆ÷³ÍÆ®ÀÇ ÀÚ½Ä ¸ñ·Ï¿¡¼­ ³ª¸¦ Á¦°Å
+		// ë¶€ëª¨ ì»´í¬ë„ŒíŠ¸ì˜ ìžì‹ ëª©ë¡ì—ì„œ ë‚˜ë¥¼ ì œê±°
 		ParentComponent->ChildComponents.erase(
 			std::remove(ParentComponent->ChildComponents.begin(), ParentComponent->ChildComponents.end(), this), 
 			ParentComponent->ChildComponents.end());
-	}
+	} 
 
-	// ³ªÀÇ »õ ºÎ¸ð ¼³Á¤
+	// ë‚˜ì˜ ìƒˆ ë¶€ëª¨ ì„¤ì •
 	ParentComponent = parent;
 
-	// ºÎ¸ðÀÇ ÀÚ½Ä ¸ñ·Ï¿¡ ³ª Ãß°¡
+	// ë¶€ëª¨ì˜ ìžì‹ ëª©ë¡ì— ë‚˜ ì¶”ê°€
 	if (parent)
 	{
 		ParentComponent->ChildComponents.push_back(this);

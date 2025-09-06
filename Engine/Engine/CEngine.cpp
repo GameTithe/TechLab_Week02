@@ -8,7 +8,7 @@
 #pragma comment(lib, "d3d11")
 #pragma comment(lib, "d3dcompiler")	
 
-// D3D headers
+// D3D headers 
 #include <d3d11.h>
 #include <d3dcompiler.h>	
 
