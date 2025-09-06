@@ -4,6 +4,7 @@
 #include "UObject.h"
 #include "AActor.h"
 #include "Typedef.h"
+#include "FConstant.h"
 
 
 class CScene

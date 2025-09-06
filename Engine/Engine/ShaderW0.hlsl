@@ -1,3 +1,12 @@
+
+#define PICKING_CBUFFER b2
+   
+cbuffer PickCB : register(PICKING_CBUFFER)
+{
+    int Pick;
+    int ObjectID;
+    int2 Padding;
+}
 cbuffer TransformCBuffer : register(b0)
 {
     float4x4 Model;
@@ -8,14 +17,6 @@ cbuffer CommonCBUffer : register(b1)
     float4x4 View;
     float4x4 Perspective;
 } 
-
-cbuffer PickCB : register(b2)
-{
-    int Pick;
-    int ObjectID;
-    int2 Padding;
-}
-   
 struct VS_INPUT
 {
     float4 position : POSITION;    // input position
