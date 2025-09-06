@@ -3,7 +3,6 @@
 #include "D3DUtil.h"
 #include "FVertex.h"
 #include "FConstant.h"
-#include "CEngine.h"
 // 렌더링 기능이 포함된 컴포넌트
 class UPrimitiveComponent : public USceneComponent
 {
@@ -19,7 +18,7 @@ public:
 	}
 
 	/*virtual void Initialize() = 0;*/
-	virtual void UpdateConstantBuffer(float deltaTime) = 0;
+	virtual void UpdateConstantBuffer() = 0;
 	virtual void Render() = 0;
 
 protected:

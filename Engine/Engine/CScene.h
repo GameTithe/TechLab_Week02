@@ -5,7 +5,7 @@
 #include "AActor.h"
 #include "Typedef.h"
 #include "FConstant.h"
-
+#include "UPrimitiveComponent.h"
 
 class CScene
 {

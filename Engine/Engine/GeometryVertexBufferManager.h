@@ -1,5 +1,5 @@
 #pragma once
-#include "UGeometry.h"
+//#include "UGeometry.h"
 #include "D3DUtil.h"
 class GeometryVertexBufferManager
 {
@@ -18,9 +18,9 @@ public:
 	ID3D11Buffer* GetCubeVertexBuffer() const;
 	ID3D11Buffer* GetPlaneVertexBuffer() const;
 
-	int GetNumSphereVertices();
-	int GetNumCubeVertices();
-	int GetNumPlaneVertices();
+	int GetNumSphereVertices()const ;
+	int GetNumCubeVertices() const;
+	int GetNumPlaneVertices() const;
 private:
 	bool bIsInitialized = false;
 	ID3D11Buffer* SphereVertexBuffer; 

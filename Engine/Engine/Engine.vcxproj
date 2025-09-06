@@ -130,6 +130,7 @@
     <ClCompile Include="D3DUtil.cpp" />
     <ClCompile Include="FMatrix.cpp" />
     <ClCompile Include="FVector.cpp" />
+    <ClCompile Include="GeometryVertexBufferManager.cpp" />
     <ClCompile Include="ImGui\imgui.cpp" />
     <ClCompile Include="ImGui\imgui_demo.cpp" />
     <ClCompile Include="ImGui\imgui_draw.cpp" />
@@ -142,6 +143,8 @@
     <ClCompile Include="PipelineStateObject.cpp" />
     <ClCompile Include="PSOResource.cpp" />
     <ClCompile Include="UActorComponent.h" />
+    <ClCompile Include="UCubeComponent.cpp" />
+    <ClCompile Include="UGeometry.cpp" />
     <ClCompile Include="USceneComponent.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -153,6 +156,8 @@
     <ClInclude Include="FConstant.h" />
     <ClInclude Include="FMatrix.h" />
     <ClInclude Include="FVector.h" />
+    <ClInclude Include="FVertex.h" />
+    <ClInclude Include="GeometryVertexBufferManager.h" />
     <ClInclude Include="ImGui\imconfig.h" />
     <ClInclude Include="ImGui\imgui.h" />
     <ClInclude Include="ImGui\imgui_impl_dx11.h" />
@@ -168,6 +173,8 @@
     <ClInclude Include="Resources.h" />
     <ClInclude Include="Sphere.h" />
     <ClInclude Include="Typedef.h" />
+    <ClInclude Include="UCubeComponent.h" />
+    <ClInclude Include="UGeometry.h" />
     <ClInclude Include="UObject.h" />
     <ClInclude Include="UPrimitiveComponent.h" />
     <ClInclude Include="USceneComponent.h" />

@@ -1,14 +1,6 @@
 #include <algorithm>
 #include "AActor.h"
 
-AActor::AActor()
-{
-	//USceneComponent* rootComponent = new USceneComponent(this);
-	
-	//USceneComponent* rootComponent = new USceneComponent();
-	//SetRootComponent(rootComponent); // 생성자에서 기본으로 루트 컴포넌트 설정
-}
-
 // 루트 컴포넌트 등록 필수
 void AActor::SetRootComponent(USceneComponent* rootComponent)
 {
@@ -56,6 +48,19 @@ void AActor::RemoveComponent(USceneComponent* component)
 {
 	OwnedComponents.erase(std::remove(OwnedComponents.begin(), OwnedComponents.end(), component), OwnedComponents.end());
 }
+
+void AActor::GetPrimitiveComponents(TArray<UPrimitiveComponent*>& inArray)
+{
+	for(UActorComponent* component: OwnedComponents)
+	{
+		UPrimitiveComponent* primitiveComponent = dynamic_cast<UPrimitiveComponent*>(component);
+		if(primitiveComponent && primitiveComponent->IsActive())
+		{
+			inArray.push_back(primitiveComponent);
+		}
+	}
+}
+
 //void AActor::RegisterComponent(UActorComponent * newComponent)
 //{
 //	if(newComponent == nullptr) return;

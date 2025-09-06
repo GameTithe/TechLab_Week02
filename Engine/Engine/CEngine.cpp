@@ -27,54 +27,6 @@
 #include "InputManager.h"
 
 
-//�׽�Ʈ��
-FVertex triangle_vertices[] =
-{
-	{  {0.0f,  1.0f, 0.0f},  {1.0f, 0.0f, 0.0f, 1.0f} }, // Top vertex (red)
-	{  {1.0f, -1.0f, 0.0f},  {0.0f, 1.0f, 0.0f, 1.0f} }, // Bottom-right vertex (green)
-	{ {-1.0f, -1.0f, 0.0f},  {0.0f, 0.0f, 1.0f, 1.0f} }  // Bottom-left vertex (blue)
-};
-
-//TODO 
-FVertex cube_vertices[] =
-{
-	// +X (Right, red)
-	{ {+1, -1, -1}, {1,0,0,1} }, { {+1, +1, -1}, {1,0,0,1} }, { {+1, +1, +1}, {1,0,0,1} },
-	{ {+1, -1, -1}, {1,0,0,1} }, { {+1, +1, +1}, {1,0,0,1} }, { {+1, -1, +1}, {1,0,0,1} },
-
-	// -X (Left, green)
-	{ {-1, -1, +1}, {0,1,0,1} }, { {-1, +1, +1}, {0,1,0,1} }, { {-1, +1, -1}, {0,1,0,1} },
-	{ {-1, -1, +1}, {0,1,0,1} }, { {-1, +1, -1}, {0,1,0,1} }, { {-1, -1, -1}, {0,1,0,1} },
-
-	// +Y (Top, blue)
-	{ {-1, +1, -1}, {0,0,1,1} }, { {-1, +1, +1}, {0,0,1,1} }, { {+1, +1, +1}, {0,0,1,1} },
-	{ {-1, +1, -1}, {0,0,1,1} }, { {+1, +1, +1}, {0,0,1,1} }, { {+1, +1, -1}, {0,0,1,1} },
-
-	// -Y (Bottom, yellow)
-	{ {-1, -1, +1}, {1,1,0,1} }, { {-1, -1, -1}, {1,1,0,1} }, { {+1, -1, -1}, {1,1,0,1} },
-	{ {-1, -1, +1}, {1,1,0,1} }, { {+1, -1, -1}, {1,1,0,1} }, { {+1, -1, +1}, {1,1,0,1} },
-
-	// +Z (Front, magenta)
-	{ {-1, -1, +1}, {1,0,1,1} }, { {+1, -1, +1}, {1,0,1,1} }, { {+1, +1, +1}, {1,0,1,1} },
-	{ {-1, -1, +1}, {1,0,1,1} }, { {+1, +1, +1}, {1,0,1,1} }, { {-1, +1, +1}, {1,0,1,1} },
-
-	// -Z (Back, cyan)
-	{ {+1, -1, -1}, {0,1,1,1} }, { {-1, -1, -1}, {0,1,1,1} }, { {-1, +1, -1}, {0,1,1,1} },
-	{ {+1, -1, -1}, {0,1,1,1} }, { {-1, +1, -1}, {0,1,1,1} }, { {+1, +1, -1}, {0,1,1,1} },
-};
- 
-// 정점 4개 (사각형)
-FVertex quad_vertices[] =
-{
-	
-	{{-1.0f,1.0f,1.0f},{1.0f,0.0f,0.0f,1.0f}}, // Top-left (red)
-	{{1.0f,1.0f,1.0f},{0.0f,1.0f,0.0f,1.0f}}, // Top-right (green)
-	{{1.0f,-1.0f,1.0f},{0.0f,0.0f,1.0f,1.0f}}, // Bottom-right (blue)
-
-	{{1.0f,-1.0f,1.0f},{0.0f,0.0f,1.0f,1.0f}}, // Bottom-right (blue)
-	{{-1.0f,-1.0f,1.0f},{1.0f,1.0f,0.0f,1.0f}},  // Bottom-left (yellow)
-	{{-1.0f,1.0f,1.0f},{1.0f,0.0f,0.0f,1.0f}}, // Top-left (red)
-};
 ////////////Have to move to Camera.h////////////
 
 struct Ray
@@ -379,10 +331,6 @@ bool CEngine::InitD3D()
 	// DeviceAndSwapChain
 	CreateDeviceAndSwapChain(HWnd);
 	CreateFrameBuffer();
-	 
-	//CreateVertexBuffer(triangle_vertices, sizeof(triangle_vertices));
-	CreateVertexBuffer(cube_vertices, &CubeVertexBuffer, sizeof(cube_vertices));
-	CreateVertexBuffer(quad_vertices, &QuadVertexBuffer, sizeof(quad_vertices));
 
 	//Picking Setting
 	CreatePickTargets();
@@ -587,20 +535,17 @@ void CEngine::Update(float deltaTime)
 void CEngine::Render()
 {
 	//회전 순서 : z * y * x
-	DeviceContext->ClearRenderTargetView(FrameBufferRTV,ClearColor);
-	DeviceContext->ClearDepthStencilView(DepthStencilView,D3D11_CLEAR_DEPTH,1.0f,0);
-
-	//CommonConstantBuffer
-	FCommonConstantBuffer commonCBufferData; 
-	DeviceContext->ClearRenderTargetView(FrameBufferRTV,ClearColor);
-	DeviceContext->ClearDepthStencilView(DepthStencilView,D3D11_CLEAR_DEPTH,1.0f,0);
-
+	FCommonConstantBuffer commonCBufferData;
 	FVector eye = FVector(0,0,-10);
 	FVector at = FVector::FRONT;
 	FVector up = {0.0f,1.0f,0.0f};
 	commonCBufferData.View = FMatrix::MakeLookAt(eye, at, up); 
 	commonCBufferData.Perspective = FMatrix::MakePerspectiveMatrix(90.0f,1.0f,0.1f,100.0f); 
 	D3DUtil::CBufferUpdate(DeviceContext,CommonCBuffer,commonCBufferData);
+
+
+	DeviceContext->ClearRenderTargetView(FrameBufferRTV,ClearColor);
+	DeviceContext->ClearDepthStencilView(DepthStencilView,D3D11_CLEAR_DEPTH,1.0f,0);
 
 	DeviceContext->VSSetConstantBuffers(1,1,&CommonCBuffer); 
 	DeviceContext->VSSetConstantBuffers(PICKING_CBUFFER,1,&PickingCBuffer); 
@@ -615,7 +560,6 @@ void CEngine::Render()
 
 	// for문 돌면서 actor 그리기 
 	UINT offset = 0;
-	DeviceContext->IASetVertexBuffers(0,1,&CubeVertexBuffer,&Stride,&offset);
 	SceneManager->GetScene().RenderScene(); 
 }
 
