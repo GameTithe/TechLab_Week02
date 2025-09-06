@@ -26,7 +26,6 @@ public:
 	FVector GetWorldScale3D();
 	FMatrix GetModelMatrix();
 	void UpdateModelMatrix();
-	void Render();
 
 private:
 	FVector RelativeLocation;

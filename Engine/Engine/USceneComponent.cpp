@@ -6,6 +6,9 @@ USceneComponent::USceneComponent()
 	//D3DUtil::CreateCBuffer(&TransformCBuffer,sizeof(FMatrix));
 }
 
+USceneComponent::~USceneComponent()
+{}
+
 //USceneComponent::USceneComponent(AActor* owner): UActorComponent(owner)
 //{
 //	D3DUtil::CreateCBuffer(&TransformCBuffer,sizeof(FMatrix));

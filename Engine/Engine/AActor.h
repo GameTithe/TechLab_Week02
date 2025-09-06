@@ -27,7 +27,6 @@ public:
 	void BeginPlay();
 	void Tick(float deltaTime);
 	void EndPlay();
-	void Render(); // 이거 왜 있음??
 
 	// ======= 루트 컴포넌트 접근 =======
 	USceneComponent* GetRootComponent() const;
