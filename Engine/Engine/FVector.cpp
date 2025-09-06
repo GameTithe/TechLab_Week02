@@ -13,6 +13,8 @@ const FVector FVector::FRONT	{ 0.0f, 0.0f, 1.0f };
 const FVector FVector::BACK	 	{ 0.0f, 0.0f, -1.0f };
 const FVector FVector::UP		{ 0.0f, 1.0f, 0.0f };
 const FVector FVector::DOWN		{ 0.0f, -1.0f, 0.0f };
+const FVector FVector::ZERO		{ 0.0f, 0.0f, 0.0f };
+const FVector FVector::ONE		{ 1.0f, 1.0f, 1.0f };
 
 float FVector::Dot(const FVector& rhs) const
 {

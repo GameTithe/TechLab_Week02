@@ -10,9 +10,9 @@ extern ID3D11RasterizerState* RasterizerState;
 extern ID3D11InputLayout* SimpleInputLayout;
 extern ID3D11VertexShader* SimpleVS;
 extern ID3D11PixelShader* SimplePS;
-extern ID3D11PixelShader* MousePickingPS;
+extern ID3D11PixelShader* PickingPS;
 extern CPipelineStateObject* SimplePSO;
-extern CPipelineStateObject* MousePickingPSO;
+extern CPipelineStateObject* PickingPSO;
 
 void InitPSOResource();
 void ReleasePSOResource();

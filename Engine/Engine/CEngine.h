@@ -10,11 +10,7 @@
 #include "CSceneManager.h"
 #include "PSOResource.h"
 
-struct CommonConstantBuffer
-{
-	FMatrix View;
-	FMatrix Perspective;
-};
+#define PICKING_CBUFFER 2
 
 class CEngine
 {
@@ -36,6 +32,14 @@ public:
 	{
 		return DeviceContext;
 	}
+	ID3D11Buffer* GetPickingCBuffer()
+	{
+		return PickingCBuffer;
+	}
+	UINT GetPickID()
+	{
+		return PickActorID;
+	}
 	//void AddLog(const char* fmt, ...)
 
 private:
@@ -55,7 +59,7 @@ private:
 	 
 	//Picking
 	void CreatePickTargets();
-	void CreateDepthBuffer();
+	//void CreateDepthBuffer();
 	void CreatePickDepth();
 	int RenderPickIDAndRead(int mouseX, int mouseY);
 	 
@@ -69,9 +73,7 @@ private:
 
 		D3D11_SUBRESOURCE_DATA vertexbufferSRD = { vertices };
 
-		Device->CreateBuffer(&vertexbufferdesc, &vertexbufferSRD, buffer);
-
-		 
+		Device->CreateBuffer(&vertexbufferdesc, &vertexbufferSRD, buffer); 
 	}  
 
 private:
@@ -100,8 +102,8 @@ private:
 	ID3D11Buffer* QuadVertexBuffer = nullptr;
 
 	//Picking Test
-	ID3D11Texture2D* DepthBuffer;
-	ID3D11DepthStencilView* DepthBufferDSV; 
+	//ID3D11Texture2D* DepthBuffer;
+	//ID3D11DepthStencilView* DepthBufferDSV; 
 
 	ID3D11Texture2D* PickingTex;
 	ID3D11Texture2D* PickDepthTex;
@@ -113,7 +115,8 @@ private:
 
 	ID3D11Buffer* PickingCBuffer = nullptr;
 	CSceneManager* SceneManager;
-
+	UINT PickActorID = 0;
+	AActor* PickedActor = nullptr;
 
 public:
 	static CEngine* gpCEngine;

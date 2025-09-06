@@ -4,16 +4,22 @@
 #include "UObject.h"
 #include "AActor.h"
 #include "Typedef.h"
+#include "FConstant.h"
 
 
 class CScene
 {
 public:
+	FString SceneName;
 	TArray<AActor*> SceneActors;
 public:
 	
 	void ClearScene();
 	AActor* CreateActor();
+	void DestroyActor();
+
+
+	void RenderPickingScene();
 	void RenderScene();
 	
 };
