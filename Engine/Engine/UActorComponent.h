@@ -16,7 +16,10 @@ public:
 	
 	// 해당 컴포넌트의 소유자(AActor) set, get
 	virtual AActor* GetOwner() const { return OwnerActor; }
-	void SetOwner(AActor* owner){OwnerActor = owner;}
+	void SetOwner(AActor* owner)
+	{
+		OwnerActor = owner;
+	}
 
 protected:
 	// ======== 컴포넌트 생명 주기 ======== 

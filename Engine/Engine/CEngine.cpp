@@ -178,21 +178,21 @@ void CEngine::UpdateGUI()
 	ImGui::SliderFloat3("camPos (x,y,z)",&CamPos.X,-10,10);
 	ImGui::SliderFloat3("camRot(x,y,z)",&CamRot.X,-10,10);
 
-	ImGui::Text("%d",PickActorID);
-	if(PickedActor != nullptr)
+	ImGui::Text("%d",PickID);
+	if(PickedPrimitive != nullptr)
 	{
-		FVector pos = PickedActor->GetRootComponent()->GetRelativeLocation();
-		FVector rot = PickedActor->GetRootComponent()->GetRelativeRotation();
-		FVector scale = PickedActor->GetRootComponent()->GetRelativeScale3D();
+		FVector pos = PickedPrimitive->GetRelativeLocation();
+		FVector rot = PickedPrimitive->GetRelativeRotation();
+		FVector scale = PickedPrimitive->GetRelativeScale3D();
 
 		//transform
 		ImGui::SliderFloat3("modelPos (x,y,z)",&pos.X,-4.0f,4.0f,"%.3f");
 		ImGui::SliderFloat3("modelRot(x,y,z)",&rot.X,-180.0f,180.0f,"%.3f");
 		ImGui::SliderFloat3("modelScale(x,y,z)",&scale.X,-4.0f,4.0f,"%.3f");
 
-		PickedActor->GetRootComponent()->SetRelativeLocation(pos);
-		PickedActor->GetRootComponent()->SetRelativeRotation(rot);
-		PickedActor->GetRootComponent()->SetRelativeScale3D(scale);
+		PickedPrimitive->SetRelativeLocation(pos);
+		PickedPrimitive->SetRelativeRotation(rot);
+		PickedPrimitive->SetRelativeScale3D(scale);
 	}
 	
 
@@ -206,9 +206,12 @@ void CEngine::UpdateGUI()
 	{
 		SceneManager->GetScene().CreateActor();
 	}
-	if(ImGui::Button("Remove Actor"))
+	if(PickedPrimitive != nullptr)
 	{
-		SceneManager->GetScene().DestroyActor();
+		if(ImGui::Button("Remove Actor"))
+		{
+			SceneManager->GetScene().DestroySceneComponent(PickedPrimitive);
+		}
 	}
 
 	if(ImGui::Button("Save Scene"))
@@ -268,7 +271,7 @@ bool CEngine::Run()
 		} 
 		Update(ImGui::GetIO().DeltaTime); // Update
 
-		PickActorID = RenderPickIDAndRead(gInput.GetX(),gInput.GetY());
+		PickID = RenderPickIDAndRead(gInput.GetX(),gInput.GetY());
 
 		Render(); // Render
 
@@ -525,10 +528,15 @@ void CEngine::Update(float deltaTime)
 {
 	if(gInput.IsDown(MouseButton::Left))
 	{
-		if(PickActorID != 0)
+		if(PickID != 0)
 		{
-			PickedActor = SceneManager->GetScene().SceneActors[PickActorID - 1];
+			PickedPrimitiveID = PickID;
+			PickedPrimitive = SceneManager->GetScene().GetPrimitiveComponent(PickID);
 		}
+	}
+	if(UObject::FindObject(PickedPrimitiveID) == nullptr)
+	{
+		PickedPrimitive = nullptr;
 	}
 }
 

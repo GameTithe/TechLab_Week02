@@ -16,8 +16,8 @@ public:
 	
 	void ClearScene();
 	AActor* CreateActor();
-	void DestroyActor();
-
+	void DestroySceneComponent(UPrimitiveComponent* primitive);
+	UPrimitiveComponent* GetPrimitiveComponent(int uuid);
 
 	void RenderPickingScene();
 	void RenderScene();

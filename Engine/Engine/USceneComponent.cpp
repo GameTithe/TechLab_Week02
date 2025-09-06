@@ -3,7 +3,7 @@
 
 USceneComponent::USceneComponent()
 {
-	//D3DUtil::CreateCBuffer(&TransformCBuffer,sizeof(FMatrix));
+
 }
 
 USceneComponent::~USceneComponent()

@@ -145,6 +145,7 @@
     <ClCompile Include="UActorComponent.h" />
     <ClCompile Include="UCubeComponent.cpp" />
     <ClCompile Include="UGeometry.cpp" />
+    <ClCompile Include="UObject.cpp" />
     <ClCompile Include="USceneComponent.cpp" />
   </ItemGroup>
   <ItemGroup>

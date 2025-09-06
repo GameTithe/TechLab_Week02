@@ -28,9 +28,9 @@ public:
 	void UpdateModelMatrix();
 
 private:
-	FVector RelativeLocation;
-	FVector RelativeRotation;
-	FVector RelativeScale3D;
+	FVector RelativeLocation = FVector::ZERO;
+	FVector RelativeRotation = FVector::ZERO;
+	FVector RelativeScale3D = FVector::ONE;
 	FMatrix ModelMatrix; 
 protected:
 	// Component간의 계층 구조를 위한 멤버들
