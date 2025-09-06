@@ -39,7 +39,7 @@ void CScene::RenderPickingScene()
 	{
 		pickingData.ObjectID = i + 1;
 		D3DUtil::CBufferUpdate(CEngine::gpCEngine->GetDeviceContext(),CEngine::gpCEngine->GetPickingCBuffer(),pickingData);
-		SceneActors[i]->Render();
+		//SceneActors[i]->Render();
 	}
 }
 void CScene::RenderScene()
@@ -52,6 +52,6 @@ void CScene::RenderScene()
 	{
 		pickingData.ObjectID = i + 1;
 		D3DUtil::CBufferUpdate(CEngine::gpCEngine->GetDeviceContext(),CEngine::gpCEngine->GetPickingCBuffer(),pickingData);
-		SceneActors[i]->Render();
+		//SceneActors[i]->Render();
 	}
 }
