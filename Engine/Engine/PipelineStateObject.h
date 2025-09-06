@@ -8,7 +8,7 @@ public:
 	CPipelineStateObject() {};
 	void PSOSetting();
 private:
-	//ÂüÁ¶¸¸ ÇÏ´Â ÇüÅÂ
+	//ì°¸ì¡°ë§Œ í•˜ëŠ” í˜•íƒœ
 	ID3D11BlendState* BlendState;
 	ID3D11DepthStencilState* DepthStencilState;
 	ID3D11RasterizerState* RasterizerState;
@@ -16,4 +16,4 @@ private:
 	ID3D11VertexShader* VS;
 	ID3D11PixelShader* PS;
 	
-};
+}; 

@@ -25,7 +25,7 @@ public:
 
 	static const FVector RIGHT;
 	static const FVector LEFT;
-	static const FVector FRONT;
+	static const FVector FRONT; 
 	static const FVector BACK;
 	static const FVector UP;
 	static const FVector DOWN;

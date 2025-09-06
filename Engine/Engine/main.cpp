@@ -6,9 +6,9 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	CEngine cEngine;
 
 	if (!cEngine.Init(hInstance, hPrevInstance, lpCmdLine, nShowCmd)) {
-		// to do: ¿¡·¯ Ã³¸® ÄÚµå
+		// to do: ì—ëŸ¬ ì²˜ë¦¬ ì½”ë“œ
 		return -1;
 	}
 
 	return cEngine.Run();
-}
+} 

@@ -7,12 +7,12 @@ class AActor : public UObject {
 public:
 	AActor();
 
-	// ======= ¼ÒÀ¯ÇÒ ÄÄÆ÷³ÍÆ® Ãß°¡ ¹× »èÁ¦ ========
+	// ======= ì†Œìœ í•  ì»´í¬ë„ŒíŠ¸ ì¶”ê°€ ë° ì‚­ì œ ========
 	void AddComponent(UActorComponent* component);
 	void AddComponent(UActorComponent* component, USceneComponent * parent);
 	void RemoveComponent(USceneComponent* component);
 
-	// ======= AActorÀÇ »ı¸íÁÖ±â ÇÔ¼ö =========
+	// ======= AActorì˜ ìƒëª…ì£¼ê¸° í•¨ìˆ˜ =========
 	void PostInitializeComponents();
 	void BeginPlay();
 	void Tick(float deltaTime);
@@ -22,6 +22,6 @@ public:
 protected:
 	void SetRootComponent(USceneComponent* rootComponent);
 protected:
-	USceneComponent* RootComponent;				// ·çÆ® ÄÄÆ÷³ÍÆ®(USceneComponent)¸¦ ÅëÇØ AActorÀÇ À§Ä¡ °áÁ¤
-	TArray<UActorComponent*> OwnedComponents;	// '¼ÒÀ¯'ÇÑ ÄÄÆ÷³ÍÆ® ¸ñ·Ï -> ÄÄÆ÷³ÍÆ®ÀÇ Tick È£ÃâÀ» À§ÇÔ
+	USceneComponent* RootComponent;				// ë£¨íŠ¸ ì»´í¬ë„ŒíŠ¸(USceneComponent)ë¥¼ í†µí•´ AActorì˜ ìœ„ì¹˜ ê²°ì • 
+	TArray<UActorComponent*> OwnedComponents;	// 'ì†Œìœ 'í•œ ì»´í¬ë„ŒíŠ¸ ëª©ë¡ -> ì»´í¬ë„ŒíŠ¸ì˜ Tick í˜¸ì¶œì„ ìœ„í•¨
 }; 

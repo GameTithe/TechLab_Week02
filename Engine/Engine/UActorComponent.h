@@ -3,24 +3,24 @@
 #include <memory>
 class UActorComponent : public UObject
 {
-	friend class AActor; // AActor´Â protected, private Á¢±Ù °¡´ÉÇÏµµ·Ï
+	friend class AActor; // AActorëŠ” protected, private ì ‘ê·¼ ê°€ëŠ¥í•˜ë„ë¡
 
 public:
 	UActorComponent() {}
 	UActorComponent(AActor* owner) : OwnerActor(owner), bIsActive(true) {}
 	virtual ~UActorComponent() {}
 
-	// ======= ÇØ´ç ÄÄÆ÷³ÍÆ®ÀÇ Active »óÅÂ °ü¸® ========
+	// ======= í•´ë‹¹ ì»´í¬ë„ŒíŠ¸ì˜ Active ìƒíƒœ ê´€ë¦¬ ========
 	void SetActive(bool active) { bIsActive = active; }
 	bool IsActive() { return bIsActive; }
 	
-	// ÇØ´ç ÄÄÆ÷³ÍÆ®ÀÇ ¼ÒÀ¯ÀÚ(AActor) ¹İÈ¯
+	// í•´ë‹¹ ì»´í¬ë„ŒíŠ¸ì˜ ì†Œìœ ì(AActor) ë°˜í™˜
 	virtual AActor* GetActor() const { return OwnerActor; }
 
 
 protected:
-	// ======== ÄÄÆ÷³ÍÆ® »ı¸í ÁÖ±â ======== 
-	virtual void InitializeComponents() {}
+	// ======== ì»´í¬ë„ŒíŠ¸ ìƒëª… ì£¼ê¸° ======== 
+	virtual void InitializeComponents() {} 
 	virtual void BeginPlay() {}
 	virtual void Tick(float deltaTime) {}
 	virtual void EndPlay() {}
@@ -30,6 +30,6 @@ protected:
 		Tick(deltaTime);
 	}
 private:
-	AActor* OwnerActor; // ÄÄÆ÷³ÍÆ®¿¡¼­ AActor¿¡ Á¢±Ù °¡´ÉÇÏµµ·Ï
+	AActor* OwnerActor; // ì»´í¬ë„ŒíŠ¸ì—ì„œ AActorì— ì ‘ê·¼ ê°€ëŠ¥í•˜ë„ë¡
 	bool bIsActive;
 };
