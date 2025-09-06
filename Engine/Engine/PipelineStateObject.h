@@ -6,8 +6,8 @@ class CPipelineStateObject
 {
 public:
 	CPipelineStateObject() {};
-	void PSOSetting();
-private:
+	void SetRenderState();
+public:
 	//참조만 하는 형태
 	ID3D11BlendState* BlendState;
 	ID3D11DepthStencilState* DepthStencilState;

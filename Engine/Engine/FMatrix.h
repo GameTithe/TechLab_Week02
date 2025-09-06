@@ -41,6 +41,7 @@ public:
 	static FMatrix MakeRotationYMatrix(float degree);
 	static FMatrix MakeRotationZMatrix(float degree);
 	  
+	static FMatrix MakeTranslationMatrix(FVector tranlation);
 	static FMatrix MakeTranslationMatrix(FVector4 tranlation);
 
 	static FMatrix MakeLookAt(FVector eye, FVector at, FVector up);

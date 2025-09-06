@@ -32,7 +32,12 @@ void D3DUtil::CreateVertexBuffer(FVertex* vertices,ID3D11Buffer** vertexBuffer,U
 void D3DUtil::CreateVSAndInputLayout(const wstring& filePath,ID3D11VertexShader** vs,ID3D11InputLayout** inputLayout)
 {
 	ID3DBlob* vsCSO;
-	D3DCompileFromFile(filePath.c_str(),nullptr,nullptr,"mainVS","vs_5_0",0,0,&vsCSO,nullptr);
+	HRESULT hResult = D3DCompileFromFile(filePath.c_str(),nullptr,nullptr,"mainVS","vs_5_0",0,0,&vsCSO,nullptr);
+	if(FAILED(hResult))
+	{
+		cout<<"CreateVSAndInputLayout Failed"<<endl;
+		return;
+	}
 	CEngine::gpCEngine->GetDevice()->CreateVertexShader(vsCSO->GetBufferPointer(),vsCSO->GetBufferSize(),nullptr,vs);
 	D3D11_INPUT_ELEMENT_DESC layout[] =
 	{

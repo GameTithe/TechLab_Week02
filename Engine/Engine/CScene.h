@@ -9,11 +9,12 @@
 class CScene
 {
 private:
-	TArray<UObject*> GUObjectArray;
+	TArray<AActor*> SceneActors;
 public:
 	
 	void ClearScene();
 	AActor* CreateActor();
+	void RenderScene();
 	
 };
  

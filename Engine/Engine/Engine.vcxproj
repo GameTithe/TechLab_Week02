@@ -140,6 +140,7 @@
     <ClCompile Include="InputManager.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="PipelineStateObject.cpp" />
+    <ClCompile Include="PSOResource.cpp" />
     <ClCompile Include="UActorComponent.h" />
     <ClCompile Include="USceneComponent.cpp" />
   </ItemGroup>
@@ -163,6 +164,7 @@
     <ClInclude Include="InputManager.h" />
     <ClInclude Include="Log.h" />
     <ClInclude Include="PipelineStateObject.h" />
+    <ClInclude Include="PSOResource.h" />
     <ClInclude Include="Resources.h" />
     <ClInclude Include="Sphere.h" />
     <ClInclude Include="Typedef.h" />
