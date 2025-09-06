@@ -63,6 +63,7 @@ private:
 
 	//Picking
 	void CreatePickTargets();
+	void CreateDepthBuffer();
 	void CreatePickDepth();
 	int RenderPickIDAndRead(int mouseX, int mouseY);
 
@@ -111,7 +112,7 @@ private:
 		Device->CreateBuffer(&pickingBufferDesc, nullptr, &PickID_CB);
 	}
 
-	void UpdateConstant(FVector Offset, float radius, FVector cam, FVector model, FVector rot, int PickTest)
+	void UpdateConstant(FVector Offset, float radius, FVector cam, FVector model, FVector rot, int PickTest, int objId)
 	{
 		if (ConstantBuffer && MVPConstantBuffer)
 		{
@@ -154,7 +155,7 @@ private:
 			FObjectPicking* pickConst = (FObjectPicking*)pickBufferMSR.pData;
 			{
 				pickConst->Pick = PickTest;
-				pickConst->ObjectID = 1;
+				pickConst->ObjectID = objId;
 			}
 			DeviceContext->Unmap(PickID_CB,0);
 
@@ -192,10 +193,14 @@ private:
 
 	ID3D11Buffer* VertexBuffer = nullptr;
 	ID3D11Buffer* CubeVertexBuffer = nullptr;
+	ID3D11Buffer* QuadVertexBuffer = nullptr;
 
 	ID3D11Buffer* MVPBuffer = nullptr;
 
 	//Picking Test
+	ID3D11Texture2D* DepthBuffer;
+	ID3D11DepthStencilView* DepthBufferDSV; 
+
 	ID3D11Texture2D* PickIDTex;
 	ID3D11Texture2D* PickDepthTex;
 	ID3D11Texture2D* PickID_Staging;
