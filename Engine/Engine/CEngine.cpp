@@ -104,8 +104,7 @@ CEngine::CEngine()
 	//PCurrentScene = new CScene();
 	gpCEngine = this;
 
-	ConsoleWindow::GetInstance().AddLog("hi");
-	//UE_LOG("hi");
+	//ConsoleWindow::GetInstance().AddLog("hi");
 }
 
 CEngine::~CEngine()
@@ -182,7 +181,7 @@ void CEngine::UpdateGUI()
 
 bool CEngine::Run()
 {
-	UE_LOG("hi");
+	//UE_LOG("hi");
 
 	bool bIsExit = false;
 
@@ -207,6 +206,11 @@ bool CEngine::Run()
 		Update(ImGui::GetIO().DeltaTime); // Update
 
 		PickTest = RenderPickIDAndRead(gInput.GetX(),gInput.GetY());
+		ImGuiIO& io = ImGui::GetIO();
+		ImVec2 mousePos = io.MousePos;
+		//UE_LOG("%.2f %.2f",mousePos.x ,mousePos.y);
+
+		PickTest = RenderPickIDAndRead(mousePos.x,mousePos.y);
 		Render(); // Render
 
 		//basic movement  

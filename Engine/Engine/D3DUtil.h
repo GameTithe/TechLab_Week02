@@ -39,6 +39,7 @@ public:
 		CBufferUpdate(context, *cBuffer, cBufferData);
 	}
 
+	static void CreateRasterizerState(ID3D11RasterizerState** rasterizerState, D3D11_RASTERIZER_DESC& desc);
 	static void CreateCBuffer(ID3D11Buffer** cBuffer);
 	static void CreateVertexBuffer(ID3D11Buffer** vertexBuffer);
 	static void CreateIndexBuffer(ID3D11Buffer** indexBuffer); 

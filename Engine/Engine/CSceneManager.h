@@ -59,10 +59,11 @@ public:
 	//불러올 씬이 없을경우 첫 씬을 생성하도록 한다.
 	bool CreateScene(const string& sceneName);
 	bool LoadScene(const string& sceneName);
-	bool SaveScene(const string& sceneName);
-
-	void CreateActor();
-	void RemoveActor();
+	
+	CScene& GetScene()
+	{
+		return Scene;
+	}
 
 private:
 	bool CheckExistSceneFileName(const FString& sceneName);
